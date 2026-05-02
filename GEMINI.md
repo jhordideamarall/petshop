@@ -34,6 +34,15 @@ This file contains foundational mandates for the Pawvels project. These instruct
 
 - Before stating a task is "DONE" or "KELAR", you **MUST** run the project's validation commands (e.g., `pnpm type-check` or `npm run lint`) to confirm no new errors were introduced.
 
+### 5. Design Source of Truth vs. Wireframes
+
+- **`user-flow.html` is ONLY for logic & flow**: It defines _what_ pages must exist, _what_ elements must be present, and _how_ users navigate. It is essentially a wireframe.
+- **DO NOT** use `user-flow.html` as a visual or CSS reference.
+- **The True Design System** lives in the existing code (e.g., `app/(shop)/page.tsx`, `header.tsx`). When building the remaining pages based on `user-flow.html`, you **MUST** recycle the existing aesthetic:
+  - Keep the Salmon-Orange (`#E07B39`) branding.
+  - Keep the rounded radiuses, specific drop shadows, and Framer Motion spring configs.
+  - **NEVER** overwrite existing polished components just to match the raw/placeholder styling seen in `user-flow.html`.
+
 ## 🏗️ Technical Architecture
 
 - Monorepo: Turborepo + pnpm.
