@@ -106,10 +106,15 @@ This project utilizes a **Turborepo** monorepo structure to share 90% of busines
 ```bash
 petshop/
 ├── apps/
-│   └── web/        # Next.js Web Storefront
+│   ├── web/        # Next.js Web Storefront
+│   ├── admin/      # Next.js Admin Dashboard (Planned)
+│   ├── api/        # NestJS Backend API (Planned)
+│   └── mobile/     # React Native Expo App (Planned)
 ├── packages/
+│   ├── api-client/ # Shared API Client SDK (Planned)
 │   ├── config/     # Centralized ESLint/Env configurations
 │   ├── core/       # Business Logic & Services
+│   ├── hooks/      # Shared React Hooks (Planned)
 │   ├── tsconfig/   # Base TypeScript configs
 │   ├── types/      # Shared Domain Types
 │   ├── ui/         # Shared shadcn/ui components
