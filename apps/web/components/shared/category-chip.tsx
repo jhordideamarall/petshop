@@ -1,4 +1,5 @@
 'use client';
+import { m } from 'framer-motion';
 import type { CSSProperties } from 'react';
 
 interface CategoryChipProps {
@@ -12,31 +13,30 @@ export function CategoryChip({ label, active = false, onClick, href }: CategoryC
   const baseStyle: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
-    padding: '8px 16px',
+    padding: '7px 16px',
     borderRadius: 9999,
-    border: `1.5px solid ${active ? '#E07B39' : '#D8D4CE'}`,
+    border: `1px solid ${active ? '#E07B39' : '#D8D4CE/60'}`,
     background: active ? '#E07B39' : '#FDFCFB',
-    color: active ? 'white' : '#1A1714',
+    color: active ? 'white' : '#3D3830',
     fontFamily: 'var(--font-heading)',
     fontWeight: 600,
     fontSize: 13,
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    transition: 'all 0.15s',
     textDecoration: 'none',
   };
 
-  if (href) {
-    return (
-      <a href={href} style={baseStyle}>
-        {label}
-      </a>
-    );
-  }
+  const Component = href ? m.a : m.button;
 
   return (
-    <button onClick={onClick} style={{ ...baseStyle, outline: 'none' }}>
+    <Component
+      href={href}
+      onClick={onClick}
+      style={{ ...baseStyle, outline: 'none' }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+    >
       {label}
-    </button>
+    </Component>
   );
 }

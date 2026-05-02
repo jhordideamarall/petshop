@@ -8,29 +8,19 @@ import { AnimatePresence } from 'framer-motion';
 export default function ShopLayout({ children }: { children: ReactNode }) {
   return (
     <div
+      className="relative mx-auto min-h-screen w-full overflow-x-hidden bg-[#FDFCFB]"
       style={{
-        position: 'fixed',
-        inset: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        background: '#FDFCFB',
-        overflow: 'hidden',
         maxWidth: 430,
-        margin: '0 auto',
       }}
     >
       {/* Floating Header Overlay */}
       <Header />
 
       <main
+        className="flex min-h-screen flex-col bg-[#F5F3F0]"
         style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          overscrollBehavior: 'contain',
-          background: '#F5F3F0',
-          paddingTop: 140, // Space for floating header
-          paddingBottom: 90, // Space for floating bottom nav
+          paddingTop: 'calc(140px + env(safe-area-inset-top))',
+          paddingBottom: 'calc(100px + env(safe-area-inset-bottom))',
         }}
       >
         <AnimatePresence mode="wait">

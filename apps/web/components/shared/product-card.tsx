@@ -18,6 +18,7 @@ export interface ProductCardData {
   reviewCount?: number;
   soldCount?: number;
   type?: 'normal' | 'frozen' | 'parcel';
+  category?: string;
 }
 
 interface ProductCardProps {
@@ -95,28 +96,19 @@ export function ProductCard({ product, onAddToCart, href }: ProductCardProps) {
     >
       {/* Image area */}
       <div
+        className="group relative"
         style={{
-          position: 'relative',
-          padding: 16,
-          background: bgColor + '18',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
           aspectRatio: '1 / 1',
+          overflow: 'hidden',
         }}
       >
         {product.imageUrl ? (
           <NextImage
             src={product.imageUrl}
             alt={product.name}
-            width={100}
-            height={100}
-            style={{
-              width: '70%',
-              height: '70%',
-              objectFit: 'contain',
-              borderRadius: 10,
-            }}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            sizes="(max-width: 768px) 50vw, 33vw"
           />
         ) : (
           <div
