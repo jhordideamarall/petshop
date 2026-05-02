@@ -22,7 +22,7 @@ export type Database = {
           phone: string | null;
           postal_code: string | null;
           recipient_name: string | null;
-          user_id: string | null;
+          user_id: string;
         };
         Insert: {
           city?: string | null;
@@ -37,7 +37,7 @@ export type Database = {
           phone?: string | null;
           postal_code?: string | null;
           recipient_name?: string | null;
-          user_id?: string | null;
+          user_id: string;
         };
         Update: {
           city?: string | null;
@@ -52,7 +52,7 @@ export type Database = {
           phone?: string | null;
           postal_code?: string | null;
           recipient_name?: string | null;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -151,7 +151,7 @@ export type Database = {
           date: string;
           id: string;
           time_slot: string | null;
-          type: string;
+          type: Database['public']['Enums']['service_type'];
         };
         Insert: {
           booked?: number | null;
@@ -159,7 +159,7 @@ export type Database = {
           date: string;
           id?: string;
           time_slot?: string | null;
-          type: string;
+          type: Database['public']['Enums']['service_type'];
         };
         Update: {
           booked?: number | null;
@@ -167,7 +167,7 @@ export type Database = {
           date?: string;
           id?: string;
           time_slot?: string | null;
-          type?: string;
+          type?: Database['public']['Enums']['service_type'];
         };
         Relationships: [];
       };
@@ -181,15 +181,15 @@ export type Database = {
           dp_amount: number | null;
           id: string;
           notes: string | null;
-          payment_status: Database['public']['Enums']['payment_status'] | null;
-          pet_id: string | null;
-          service_id: string | null;
+          payment_status: Database['public']['Enums']['payment_status'];
+          pet_id: string;
+          service_id: string;
           slot_id: string | null;
           status: string | null;
           time_slot: string | null;
           total_amount: number;
           updated_at: string | null;
-          user_id: string | null;
+          user_id: string;
         };
         Insert: {
           booking_number: string;
@@ -200,15 +200,15 @@ export type Database = {
           dp_amount?: number | null;
           id?: string;
           notes?: string | null;
-          payment_status?: Database['public']['Enums']['payment_status'] | null;
-          pet_id?: string | null;
-          service_id?: string | null;
+          payment_status?: Database['public']['Enums']['payment_status'];
+          pet_id: string;
+          service_id: string;
           slot_id?: string | null;
           status?: string | null;
           time_slot?: string | null;
           total_amount: number;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id: string;
         };
         Update: {
           booking_number?: string;
@@ -219,15 +219,15 @@ export type Database = {
           dp_amount?: number | null;
           id?: string;
           notes?: string | null;
-          payment_status?: Database['public']['Enums']['payment_status'] | null;
-          pet_id?: string | null;
-          service_id?: string | null;
+          payment_status?: Database['public']['Enums']['payment_status'];
+          pet_id?: string;
+          service_id?: string;
           slot_id?: string | null;
           status?: string | null;
           time_slot?: string | null;
           total_amount?: number;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -556,7 +556,7 @@ export type Database = {
         };
         Update: {
           cost_price?: number;
-          discount?: number | null;
+          created_at?: string | null;
           id?: string;
           order_id?: string | null;
           price?: number;
@@ -665,19 +665,19 @@ export type Database = {
           paid_at: string | null;
           payment_id: string | null;
           payment_method: string | null;
-          payment_status: Database['public']['Enums']['payment_status'] | null;
+          payment_status: Database['public']['Enums']['payment_status'];
           profit: number | null;
           shipped_at: string | null;
           shipping_cost: number | null;
           shipping_courier: string | null;
           shipping_method: string | null;
           shipping_tracking: string | null;
-          status: Database['public']['Enums']['order_status'] | null;
+          status: Database['public']['Enums']['order_status'];
           subtotal: number;
           tax: number | null;
           total: number;
           updated_at: string | null;
-          user_id: string | null;
+          user_id: string;
           voucher_id: string | null;
         };
         Insert: {
@@ -693,19 +693,19 @@ export type Database = {
           paid_at?: string | null;
           payment_id?: string | null;
           payment_method?: string | null;
-          payment_status?: Database['public']['Enums']['payment_status'] | null;
+          payment_status?: Database['public']['Enums']['payment_status'];
           profit?: number | null;
           shipped_at?: string | null;
           shipping_cost?: number | null;
           shipping_courier?: string | null;
           shipping_method?: string | null;
           shipping_tracking?: string | null;
-          status?: Database['public']['Enums']['order_status'] | null;
+          status?: Database['public']['Enums']['order_status'];
           subtotal?: number;
           tax?: number | null;
           total?: number;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id: string;
           voucher_id?: string | null;
         };
         Update: {
@@ -721,19 +721,19 @@ export type Database = {
           paid_at?: string | null;
           payment_id?: string | null;
           payment_method?: string | null;
-          payment_status?: Database['public']['Enums']['payment_status'] | null;
+          payment_status?: Database['public']['Enums']['payment_status'];
           profit?: number | null;
           shipped_at?: string | null;
           shipping_cost?: number | null;
           shipping_courier?: string | null;
           shipping_method?: string | null;
           shipping_tracking?: string | null;
-          status?: Database['public']['Enums']['order_status'] | null;
+          status?: Database['public']['Enums']['order_status'];
           subtotal?: number;
           tax?: number | null;
           total?: number;
           updated_at?: string | null;
-          user_id?: string | null;
+          user_id?: string;
           voucher_id?: string | null;
         };
         Relationships: [
@@ -751,6 +751,13 @@ export type Database = {
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'orders_voucher_id_fkey';
+            columns: ['voucher_id'];
+            isOneToOne: false;
+            referencedRelation: 'vouchers';
+            referencedColumns: ['id'];
+          },
         ];
       };
       pets: {
@@ -762,8 +769,8 @@ export type Database = {
           id: string;
           name: string;
           notes: string | null;
-          owner_id: string | null;
-          type: string;
+          owner_id: string;
+          type: Database['public']['Enums']['pet_type'];
           updated_at: string | null;
           weight_kg: number | null;
         };
@@ -775,8 +782,8 @@ export type Database = {
           id?: string;
           name: string;
           notes?: string | null;
-          owner_id?: string | null;
-          type: string;
+          owner_id: string;
+          type: Database['public']['Enums']['pet_type'];
           updated_at?: string | null;
           weight_kg?: number | null;
         };
@@ -788,8 +795,8 @@ export type Database = {
           id?: string;
           name?: string;
           notes?: string | null;
-          owner_id?: string | null;
-          type?: string;
+          owner_id?: string;
+          type?: Database['public']['Enums']['pet_type'];
           updated_at?: string | null;
           weight_kg?: number | null;
         };
@@ -808,7 +815,7 @@ export type Database = {
           alt_text: string | null;
           created_at: string | null;
           id: string;
-          product_id: string | null;
+          product_id: string;
           sort_order: number | null;
           url: string;
         };
@@ -816,7 +823,7 @@ export type Database = {
           alt_text?: string | null;
           created_at?: string | null;
           id?: string;
-          product_id?: string | null;
+          product_id: string;
           sort_order?: number | null;
           url: string;
         };
@@ -824,7 +831,7 @@ export type Database = {
           alt_text?: string | null;
           created_at?: string | null;
           id?: string;
-          product_id?: string | null;
+          product_id?: string;
           sort_order?: number | null;
           url?: string;
         };
@@ -846,7 +853,7 @@ export type Database = {
           is_active: boolean | null;
           name: string;
           price: number;
-          product_id: string | null;
+          product_id: string;
           promo_price: number | null;
           sku: string | null;
           sort_order: number | null;
@@ -861,7 +868,7 @@ export type Database = {
           is_active?: boolean | null;
           name: string;
           price: number;
-          product_id?: string | null;
+          product_id: string;
           promo_price?: number | null;
           sku?: string | null;
           sort_order?: number | null;
@@ -876,7 +883,7 @@ export type Database = {
           is_active?: boolean | null;
           name?: string;
           price?: number;
-          product_id?: string | null;
+          product_id?: string;
           promo_price?: number | null;
           sku?: string | null;
           sort_order?: number | null;
@@ -976,11 +983,11 @@ export type Database = {
           avatar_url: string | null;
           created_at: string | null;
           email: string | null;
-          full_name: string | null;
           id: string;
           is_active: boolean | null;
-          phone_number: string | null;
-          role: Database['public']['Enums']['user_role'] | null;
+          name: string;
+          phone: string | null;
+          role: Database['public']['Enums']['user_role'];
           tier: string | null;
           updated_at: string | null;
         };
@@ -988,11 +995,11 @@ export type Database = {
           avatar_url?: string | null;
           created_at?: string | null;
           email?: string | null;
-          full_name?: string | null;
           id: string;
           is_active?: boolean | null;
-          phone_number?: string | null;
-          role?: Database['public']['Enums']['user_role'] | null;
+          name?: string;
+          phone?: string | null;
+          role?: Database['public']['Enums']['user_role'];
           tier?: string | null;
           updated_at?: string | null;
         };
@@ -1000,11 +1007,11 @@ export type Database = {
           avatar_url?: string | null;
           created_at?: string | null;
           email?: string | null;
-          full_name?: string | null;
           id?: string;
           is_active?: boolean | null;
-          phone_number?: string | null;
-          role?: Database['public']['Enums']['user_role'] | null;
+          name?: string;
+          phone?: string | null;
+          role?: Database['public']['Enums']['user_role'];
           tier?: string | null;
           updated_at?: string | null;
         };
@@ -1022,7 +1029,7 @@ export type Database = {
           product_id: string | null;
           rating: number;
           service_id: string | null;
-          user_id: string | null;
+          user_id: string;
         };
         Insert: {
           admin_reply?: string | null;
@@ -1035,7 +1042,7 @@ export type Database = {
           product_id?: string | null;
           rating: number;
           service_id?: string | null;
-          user_id?: string | null;
+          user_id: string;
         };
         Update: {
           admin_reply?: string | null;
@@ -1048,7 +1055,7 @@ export type Database = {
           product_id?: string | null;
           rating?: number;
           service_id?: string | null;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -1097,7 +1104,7 @@ export type Database = {
           review_count: number | null;
           slug: string;
           sort_order: number | null;
-          type: string;
+          type: Database['public']['Enums']['service_type'];
         };
         Insert: {
           avg_rating?: number | null;
@@ -1114,7 +1121,7 @@ export type Database = {
           review_count?: number | null;
           slug: string;
           sort_order?: number | null;
-          type: string;
+          type: Database['public']['Enums']['service_type'];
         };
         Update: {
           avg_rating?: number | null;
@@ -1131,7 +1138,7 @@ export type Database = {
           review_count?: number | null;
           slug?: string;
           sort_order?: number | null;
-          type?: string;
+          type?: Database['public']['Enums']['service_type'];
         };
         Relationships: [];
       };
@@ -1300,22 +1307,22 @@ export type Database = {
           id: string;
           order_id: string | null;
           used_at: string | null;
-          user_id: string | null;
-          voucher_id: string | null;
+          user_id: string;
+          voucher_id: string;
         };
         Insert: {
           id?: string;
           order_id?: string | null;
           used_at?: string | null;
-          user_id?: string | null;
-          voucher_id?: string | null;
+          user_id: string;
+          voucher_id: string;
         };
         Update: {
           id?: string;
           order_id?: string | null;
           used_at?: string | null;
-          user_id?: string | null;
-          voucher_id?: string | null;
+          user_id?: string;
+          voucher_id?: string;
         };
         Relationships: [
           {
@@ -1349,7 +1356,7 @@ export type Database = {
           is_active: boolean | null;
           max_discount: number | null;
           min_order: number | null;
-          type: string;
+          type: Database['public']['Enums']['voucher_type'];
           usage_limit: number | null;
           used_count: number | null;
           valid_from: string;
@@ -1363,7 +1370,7 @@ export type Database = {
           is_active?: boolean | null;
           max_discount?: number | null;
           min_order?: number | null;
-          type: string;
+          type: Database['public']['Enums']['voucher_type'];
           usage_limit?: number | null;
           used_count?: number | null;
           valid_from: string;
@@ -1377,7 +1384,7 @@ export type Database = {
           is_active?: boolean | null;
           max_discount?: number | null;
           min_order?: number | null;
-          type?: string;
+          type?: Database['public']['Enums']['voucher_type'];
           usage_limit?: number | null;
           used_count?: number | null;
           valid_from?: string;
@@ -1390,20 +1397,20 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
-          product_id: string | null;
-          user_id: string | null;
+          product_id: string;
+          user_id: string;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
-          product_id?: string | null;
-          user_id?: string | null;
+          product_id: string;
+          user_id: string;
         };
         Update: {
           created_at?: string | null;
           id?: string;
-          product_id?: string | null;
-          user_id?: string | null;
+          product_id?: string;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -1430,7 +1437,7 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean };
       is_admin_or_owner: { Args: never; Returns: boolean };
       is_owner: { Args: never; Returns: boolean };
-      is_staff: { Args: never; Returns: boolean };
+      is_staff_or_above: { Args: never; Returns: boolean };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
     };
@@ -1448,8 +1455,11 @@ export type Database = {
         | 'returned'
         | 'refunded';
       payment_status: 'unpaid' | 'paid' | 'refunded' | 'partial_refund' | 'dp_paid';
+      pet_type: 'dog' | 'cat' | 'bird' | 'hamster' | 'rabbit' | 'fish' | 'other';
       product_type: 'normal' | 'frozen' | 'parcel';
+      service_type: 'grooming' | 'hotel';
       user_role: 'admin' | 'customer' | 'staff' | 'owner';
+      voucher_type: 'percentage' | 'fixed';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1589,8 +1599,11 @@ export const Constants = {
         'refunded',
       ],
       payment_status: ['unpaid', 'paid', 'refunded', 'partial_refund', 'dp_paid'],
+      pet_type: ['dog', 'cat', 'bird', 'hamster', 'rabbit', 'fish', 'other'],
       product_type: ['normal', 'frozen', 'parcel'],
+      service_type: ['grooming', 'hotel'],
       user_role: ['admin', 'customer', 'staff', 'owner'],
+      voucher_type: ['percentage', 'fixed'],
     },
   },
 } as const;
