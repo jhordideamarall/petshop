@@ -13,7 +13,8 @@
 
 ## 🚀 Overview
 
-Petshop Platform is an integrated solution that automates core business operations:
+Pawvels Platform is an integrated solution that automates core business operations:
+
 - **E-Commerce**: Real-time inventory, variants, and seamless checkout.
 - **Service Booking**: Automated slots for Grooming and Pet Hotel with DP payments.
 - **Logistics**: Automated shipping costs (RajaOngkir) and same-day delivery rules.
@@ -26,12 +27,14 @@ Petshop Platform is an integrated solution that automates core business operatio
 This project utilizes a **Turborepo** monorepo structure to share 90% of business logic across all platforms.
 
 ### Apps
+
 - 🌐 **Web**: Customer-facing store built with **Next.js (App Router)**.
 - 🛠️ **Admin**: Internal management dashboard for orders and inventory.
 - 📱 **Mobile**: **React Native (Expo)** app sharing the same core hooks and state.
 - ⚙️ **API**: High-performance **NestJS** standalone server.
 
 ### Shared Packages
+
 - `@petshop/core`: Centralized business logic (pricing, shipping rules).
 - `@petshop/api-client`: Shared SDK for all frontend platforms.
 - `@petshop/types`: Single source of truth for TypeScript definitions.

@@ -8,8 +8,8 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
 export const metadata: Metadata = {
   title: {
-    default: 'Petshop Jakarta',
-    template: '%s | Petshop Jakarta',
+    default: 'Pawvels',
+    template: '%s | Pawvels',
   },
   description: 'Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.',
 };
