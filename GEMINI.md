@@ -43,6 +43,18 @@ This file contains foundational mandates for the Pawvels project. These instruct
   - Keep the rounded radiuses, specific drop shadows, and Framer Motion spring configs.
   - **NEVER** overwrite existing polished components just to match the raw/placeholder styling seen in `user-flow.html`.
 
+### 6. Git Hook & Stash Recovery Protocol
+
+- The project uses strict `husky` and `lint-staged` pre-commit hooks.
+- **IF A COMMIT FAILS** (e.g. `pnpm type-check` or `eslint` exits with code 1) AND the working files suddenly "revert" to an older state, **DO NOT PANIC and DO NOT REWRITE THE CODE**.
+- This happens because `lint-staged` stashed your unstaged changes before crashing.
+- **RECOVERY PROCEDURE**:
+  1. Run `git stash list` to confirm the backup exists.
+  2. Run `git checkout stash@{0} -- <affected-files>` (or `git stash apply`) to immediately restore your brilliant code.
+  3. Manually fix the specific linter/TypeScript errors that caused the hook to fail.
+  4. Run `pnpm type-check` and `npx eslint <file>` manually to verify.
+  5. Attempt the `git push` again.
+
 ## 🏗️ Technical Architecture
 
 - Monorepo: Turborepo + pnpm.

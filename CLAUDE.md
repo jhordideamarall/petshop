@@ -74,3 +74,17 @@ Work efficiently, safely, and without breaking existing behavior.
   - The invisible native scroll proxy (`overflowX: scroll`) MUST have `zIndex: 200` to allow touch-drag and click passthrough.
 
 ---
+
+## Git Hook & Stash Recovery Protocol
+
+- The project uses strict `husky` and `lint-staged` pre-commit hooks.
+- **IF A COMMIT FAILS** (e.g. `pnpm type-check` or `eslint` exits with code 1) AND the working files suddenly "revert" to an older state, **DO NOT PANIC and DO NOT REWRITE THE CODE**.
+- This happens because `lint-staged` stashed your unstaged changes before crashing.
+- **RECOVERY PROCEDURE**:
+  1. Run `git stash list` to confirm the backup exists.
+  2. Run `git checkout stash@{0} -- <affected-files>` (or `git stash apply`) to immediately restore your code.
+  3. Manually fix the linter/TypeScript errors that caused the hook to fail.
+  4. Run `pnpm type-check` and `npx eslint <file>` manually to verify.
+  5. Attempt the `git push` again.
+
+---
