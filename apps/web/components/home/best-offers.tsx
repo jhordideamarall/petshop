@@ -1,7 +1,6 @@
 'use client';
 import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
-import { toast } from 'sonner';
-
+import { useCartStore } from '@/stores/cart-store';
 const PLACEHOLDER_PRODUCTS: ProductCardData[] = [
   {
     id: '1',
@@ -50,9 +49,14 @@ const PLACEHOLDER_PRODUCTS: ProductCardData[] = [
 ];
 
 export function BestOffersGrid() {
+  const addItem = useCartStore((state) => state.addItem);
+
   const handleAddToCart = (product: ProductCardData) => {
-    toast.success(`${product.name} ditambahkan ke keranjang`, {
-      duration: 2000,
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.promoPrice ?? product.price,
+      imageUrl: product.imageUrl,
     });
   };
 

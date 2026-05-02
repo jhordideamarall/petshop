@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useCartStore } from '@/stores/cart-store';
 import Link from 'next/link';
 import { m, AnimatePresence } from 'framer-motion';
 
@@ -93,21 +94,21 @@ const iconBtnStyle = {
   transition: 'background 0.15s, transform 0.1s',
 } as const;
 
-interface HeaderProps {
-  cartCount?: number;
-}
-
-export function Header({ cartCount = 0 }: HeaderProps) {
-  const [justAdded, setJustAdded] = useState(false);
+export function Header() {
+  const [hydrated, setHydrated] = useState(false);
+  const [animTick, setAnimTick] = useState(0);
+  const items = useCartStore((state) => state.items);
+  const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
-    if (cartCount > 0) {
-      setJustAdded(true);
-      const timer = setTimeout(() => setJustAdded(false), 500);
-      return () => clearTimeout(timer);
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (cartCount > 0 && hydrated) {
+      setAnimTick((prev) => prev + 1);
     }
-    return undefined;
-  }, [cartCount]);
+  }, [cartCount, hydrated]);
 
   return (
     <div
@@ -154,11 +155,12 @@ export function Header({ cartCount = 0 }: HeaderProps) {
           >
             <CartIcon />
             <AnimatePresence>
-              {cartCount > 0 && (
+              {hydrated && cartCount > 0 && (
                 <m.div
+                  key={`badge-${animTick}`}
                   initial={{ scale: 0.5, opacity: 0 }}
                   animate={{
-                    scale: justAdded ? [1, 1.5, 1] : 1,
+                    scale: [1, 1.5, 1],
                     opacity: 1,
                   }}
                   transition={{ type: 'spring', stiffness: 500, damping: 15 }}

@@ -277,3 +277,294 @@ TypeError: Cannot convert undefined or null to object
 [ 2464787ms] [LOG] [Fast Refresh] done in 66ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [ 2512119ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [ 2512267ms] [LOG] [Fast Refresh] done in 141ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9386797ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9388323ms] [LOG] [Fast Refresh] done in 1275ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9388402ms] [ERROR] Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+
+Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 9388531ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9388646ms] [LOG] [Fast Refresh] done in 253ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9389851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9389860ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9465400ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9465808ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 9465822ms] [LOG] {file: Object} @ http://localhost:3002/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[ 9487845ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 9487890ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/:0
+[ 9488062ms] Error: ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./apps/web/app/(shop)/page.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:775:59)
+    at DevBundlerService.getCompilationError (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/lib/dev-bundler-service.js:39:55)
+    at DevServer.getCompilationError (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/next-dev-server.js:721:42)
+    at DevServer.findPageComponents (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/next-dev-server.js:691:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/base-server.js:1687:26)
+[ 9488073ms] [LOG] [HMR] connected @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753941173:2207
+[ 9488088ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_26f1e6f1._.js?ts=1777753941173:1747
+[ 9488092ms] [LOG] {file: Object} @ http://localhost:3002/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_688777fc.js?ts=1777753941173:16058
+[ 9488130ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_26f1e6f1._.js?ts=1777753941173:1747
+[ 9488207ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753941173:2495
+[ 9543053ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/:0
+[ 9543178ms] Error: ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./apps/web/app/(shop)/page.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:775:59)
+    at DevBundlerService.getCompilationError (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/lib/dev-bundler-service.js:39:55)
+    at DevServer.getCompilationError (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/next-dev-server.js:721:42)
+    at DevServer.findPageComponents (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/dev/next-dev-server.js:691:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/jhordideamarall/Projects/Petshop/node_modules/.pnpm/next@15.5.15_@babel+core@7.29.0_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/next/dist/server/base-server.js:1687:26)
+[ 9543183ms] [LOG] [HMR] connected @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753996343:2207
+[ 9543202ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_26f1e6f1._.js?ts=1777753996343:1747
+[ 9543208ms] [LOG] {file: Object} @ http://localhost:3002/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_688777fc.js?ts=1777753996343:16058
+[ 9543314ms] [ERROR] ./apps/web/app/(shop)/page.tsx:8:1
+Module not found: Can't resolve '@/stores/cart-store'
+   6 | import { BestOffersGrid } from '@/components/home/best-offers';
+   7 | import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+>  8 | import { useCartStore } from '@/stores/cart-store';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 |
+  10 | const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+  11 |
+
+Import map: aliased to relative './stores/cart-store' inside of [project]/apps/web
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/page.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/page.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3002/_next/static/chunks/afa34_next_dist_26f1e6f1._.js?ts=1777753996343:1747
+[ 9543346ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753996343:2495
+[ 9577588ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753996343:2495
+[ 9578043ms] [LOG] [Fast Refresh] done in 433ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_7f1caea4._.js?ts=1777753996343:2355
+[ 9580387ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9580489ms] [LOG] [Fast Refresh] done in 204ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9602149ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9602211ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9614591ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9614634ms] [LOG] [Fast Refresh] done in 145ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9626883ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9627123ms] [LOG] [Fast Refresh] done in 341ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9737035ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9737091ms] [LOG] [Fast Refresh] done in 223ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9737568ms] [ERROR] Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+
+Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 9737578ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/favicon.ico:0
+[ 9744691ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.4,0.88,1.08,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2462:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:6828:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:7156:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:7545:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:7650:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2403:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2340:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2340:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2119:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2156:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_e4a45d2e._.js:2218:26)
+[ 9751369ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9751444ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9998209ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9998397ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10129269ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10130611ms] [LOG] [Fast Refresh] done in 1009ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10130836ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10131525ms] [LOG] [Fast Refresh] done in 790ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10139851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10139886ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10141242ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10141245ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10151302ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10151459ms] [LOG] [Fast Refresh] done in 220ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10166653ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10167171ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
+[10167305ms] [LOG] [Fast Refresh] done in 405ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10167451ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10167715ms] [LOG] [Fast Refresh] done in 364ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10168141ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
