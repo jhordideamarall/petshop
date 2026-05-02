@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # Worktrees
 .worktrees/
+
+# TypeScript Cache
+*.tsbuildinfo
