@@ -48,11 +48,11 @@ The Database Foundation phase has been completed with extreme technical rigor. W
 
 ## 📝 Final Change Log (Phase 1)
 
-1.  **Alignment**: Synced schema to 100% PRD §15 compliance.
-2.  **Security Overhaul**: Implemented granular role-based functions (`is_owner`, `is_admin`).
-3.  **Asset Infrastructure**: Verified all image columns and storage buckets.
-4.  **Advanced Tracking**: Added `voucher_usages` and `transactions` (ledger).
-5.  **Forensic Polish**: Added Fuzzy Search, Auth-Sync triggers, and Auto-Rating logic.
+1.  **Alignment**: [Initial Schema](../supabase/migrations/20260502135048_initial_schema.sql) & [Complete Alignment](../supabase/migrations/20260502141228_complete_schema_alignment.sql).
+2.  **Security Overhaul**: [Granular Role Security](../supabase/migrations/20260502142535_granular_role_security.sql).
+3.  **Asset Infrastructure**: [Storage Buckets Setup](../supabase/migrations/20260502144000_storage_setup.sql) & [Final Asset Polish](../supabase/migrations/20260502145000_asset_infrastructure_final.sql).
+4.  **Forensic Polish**: [Automations & Auth Sync](../supabase/migrations/20260502151000_final_automations.sql).
+5.  **Seeding**: [Seed Data SQL](../supabase/seed.sql).
 
 ---
 
