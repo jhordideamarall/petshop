@@ -568,3 +568,23 @@ Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_n
     at Set.forEach (<anonymous>)
     at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
     at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
+[10198979ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10199011ms] [LOG] [Fast Refresh] done in 84ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10274824ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10275013ms] [LOG] [Fast Refresh] done in 233ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10307924ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10308030ms] [LOG] [Fast Refresh] done in 207ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10308599ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)

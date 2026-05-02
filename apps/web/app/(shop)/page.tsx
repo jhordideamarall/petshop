@@ -425,7 +425,7 @@ export default function HomePage() {
             scrollSnapType: 'x mandatory',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
-            zIndex: 20,
+            zIndex: 200,
             opacity: 0,
           }}
         >
