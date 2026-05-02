@@ -21,15 +21,28 @@
 3. **1:1 Alignment**: TypeScript enums and DB enums must match character-by-character.
 4. **Scoped Storage**: Keep upload permissions bucket-specific from the start.
 
-## Phase 2: UI/UX Vision (Current)
+## Phase 2: UI/UX Vision (Completed ✅)
 
 - **Primary Reference**: `user-flow.html` (Blueprints for clean mobile design).
 - **Core Focus**: High-conversion mobile-first checkout flow.
 - **Animation Signature**:
   - Smooth "bounce" effect for "Add to Cart".
   - Scale-pop for cart badges.
-  - Framer Motion for spring physics and premium transitions.
-- **UI Components**: To be built in `packages/ui` using shadcn/ui and Tailwind v4.
+  - Framer Motion (LazyMotion) setup complete in providers.
+- **UI Components**: Built in `apps/web/components/shared` (ProductCard, PriceTag, RatingStars, EmptyState, Skeleton, CategoryChip, ProductGrid).
+- **Layout Components**:
+  - `Header`: Liquid glass (backdrop-blur), logo + paw icon, account/bell/cart icons.
+  - `BottomNav`: Liquid glass, 4 tabs (Home, Produk, Booking, Akun). Cart is in header.
+  - `Footer`: Dark theme, shop links, account links, location, payment methods, copyright.
+- **Route Skeleton**: All Phase 2 routes in place:
+  - Shop: `/`, `/products`, `/products/[slug]`, `/categories/[slug]`, `/search`
+  - Auth: `/login`, `/register`, `/forgot-password`
+  - Account: `/account`, `/orders`, `/pets`, `/addresses`, `/loyalty`, `/wishlist`
+  - Checkout: `/cart`, `/checkout`, `/checkout/success`
+  - Booking: `/booking`, `/booking/grooming`, `/booking/hotel`
+- **SEO**: metadata, OpenGraph (id_ID, website type), sitemap.ts, robots.ts
+- **Error/Loading**: Per-route-group loading.tsx and error.tsx for (shop), (auth), (account)
+- **Toast**: Sonner configured in Providers
 
 ## Technical Notes
 

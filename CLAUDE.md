@@ -33,6 +33,7 @@ Work efficiently, safely, and without breaking existing behavior.
 - For large tasks → propose a plan first
 - For small tasks → act directly but keep changes minimal
 - Avoid modifying many files at once
+- jangan buat file worktree, fokus pada main repo atau branc utama saja
 
 ---
 

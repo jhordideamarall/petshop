@@ -48,7 +48,7 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(0.985 0.004 80);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -126,4 +126,313 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ─── Design tokens (hex) ───────────────────────────────────────── */
+:root {
+  --color-orange: #e07b39;
+  --color-orange-light: #fdf0e7;
+  --color-orange-mid: #f5a46a;
+  --color-orange-dark: #b85e22;
+  --color-ink: #1a1714;
+  --color-ink-2: #3d3830;
+  --color-ink-3: #6b6460;
+  --color-ink-4: #a09890;
+  --color-stone: #f5f3f0;
+  --color-stone-2: #eae7e2;
+  --color-stone-3: #d8d4ce;
+  --color-app-bg: #fdfcfb;
+  --color-success: #2d7d52;
+  --color-success-bg: #eaf5ee;
+  --color-danger: #c0392b;
+  --color-danger-bg: #fdecea;
+}
+
+/* ─── Typography ───────────────────────────────────────────────── */
+.t-display {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--color-ink);
+  letter-spacing: -0.5px;
+}
+.t-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  color: var(--color-ink);
+  letter-spacing: -0.3px;
+}
+.t-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+.t-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-ink-2);
+}
+.t-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-ink-2);
+}
+.t-small {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--color-ink-3);
+  line-height: 1.5;
+}
+.t-micro {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--color-ink-4);
+  letter-spacing: 0.2px;
+}
+.t-price {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 18px;
+  color: #e07b39;
+}
+.t-price-sm {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  color: #e07b39;
+}
+
+/* ─── Chip / pill ──────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+}
+.chip-orange {
+  background: #fdf0e7;
+  color: #b85e22;
+}
+.chip-green {
+  background: #eaf5ee;
+  color: #2d7d52;
+}
+.chip-stone {
+  background: #eae7e2;
+  color: #6b6460;
+}
+.chip-red {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+/* ─── Dividers ─────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: #eae7e2;
+}
+.divider-section {
+  height: 8px;
+  background: #f5f3f0;
+}
+
+/* ─── Cart badge animation ─────────────────────────────────────── */
+@keyframes cartBadgePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.6);
+  }
+  70% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.badge-bounce {
+  animation: cartBadgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Add to cart button bounce ────────────────────────────────── */
+@keyframes addToCartBounce {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.atc-bounce:active {
+  animation: addToCartBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Slot pill ────────────────────────────────────────────────── */
+.slot-pill {
+  padding: 10px 16px;
+  border-radius: 9999px;
+  border: 1.5px solid #d8d4ce;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  color: #1a1714;
+  background: #fdfcfb;
+  transition: all 0.15s;
+}
+.slot-pill.active {
+  border-color: #e07b39;
+  background: #e07b39;
+  color: white;
+}
+.slot-pill.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f5f3f0;
+  color: #a09890;
+}
+
+/* ─── Qty stepper ──────────────────────────────────────────────── */
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #d8d4ce;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  color: #1a1714;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+.qty-btn:hover {
+  background: #f5f3f0;
+}
+.qty-val {
+  width: 36px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1714;
+}
+
+/* ─── Stars ────────────────────────────────────────────────────── */
+.stars {
+  color: #e9a73e;
+  letter-spacing: -1px;
+}
+
+/* ─── Section header ───────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+}
+.see-all {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  color: #e07b39;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ─── Radio card ───────────────────────────────────────────────── */
+.radio-card {
+  border: 1.5px solid #d8d4ce;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.radio-card.selected {
+  border-color: #e07b39;
+  background: #fdf0e7;
+}
+
+/* ─── Radio dot ────────────────────────────────────────────────── */
+.radio-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #d8d4ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+.radio-dot.selected {
+  border-color: #e07b39;
+}
+.radio-dot-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e07b39;
+}
+
+/* ─── Tab bar ──────────────────────────────────────────────────── */
+.tab-btn {
+  flex: 1;
+  padding: 12px 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  color: #a09890;
+  margin-bottom: -1px;
+}
+.tab-btn.active {
+  color: #e07b39;
+  border-bottom-color: #e07b39;
+}
+
+/* ─── Safe area ────────────────────────────────────────────────── */
+.safe-bottom {
+  height: max(20px, env(safe-area-inset-bottom));
 }
