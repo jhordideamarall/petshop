@@ -66,8 +66,8 @@ export function BestOffersGrid() {
         padding: '0 16px',
       }}
     >
-      {PLACEHOLDER_PRODUCTS.map((p) => (
-        <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} />
+      {PLACEHOLDER_PRODUCTS.map((p, index) => (
+        <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} priority={index < 2} />
       ))}
     </div>
   );

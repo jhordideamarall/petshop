@@ -25,6 +25,7 @@ interface ProductCardProps {
   product: ProductCardData;
   onAddToCart?: (product: ProductCardData) => void;
   href?: string;
+  priority?: boolean;
 }
 
 const PlusIcon = () => (
@@ -58,7 +59,7 @@ const CheckIcon = () => (
   </svg>
 );
 
-export function ProductCard({ product, onAddToCart, href }: ProductCardProps) {
+export function ProductCard({ product, onAddToCart, href, priority = false }: ProductCardProps) {
   const [justAdded, setJustAdded] = useState(false);
   const discountPct = product.promoPrice
     ? Math.round((1 - product.promoPrice / product.price) * 100)
@@ -109,6 +110,7 @@ export function ProductCard({ product, onAddToCart, href }: ProductCardProps) {
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 50vw, 33vw"
+            priority={priority}
           />
         ) : (
           <div

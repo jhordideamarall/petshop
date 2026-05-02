@@ -5,7 +5,7 @@ import {
   m,
   useScroll,
   useMotionValue,
-  useSpring,
+  useTransform,
   useMotionValueEvent,
   type MotionValue,
 } from 'framer-motion';
@@ -156,6 +156,8 @@ const FEATURES = [
   { label: 'Poin loyalty', sub: 'Setiap pembelian' },
 ] as const;
 
+import Image from 'next/image';
+
 interface BannerCardProps {
   banner: (typeof BANNERS)[0];
   index: number;
@@ -164,80 +166,37 @@ interface BannerCardProps {
 }
 
 function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) {
-  const step = 1 / (count - 1);
+  const step = count > 1 ? 1 / (count - 1) : 1;
   const centerPoint = index * step;
 
-  // Faster Spring Config for snapier feel (Higher stiffness, lower damping)
-  const springConfig = { stiffness: 350, damping: 40, bounce: 0 };
+  // Use function-based mapping to completely bypass WAAPI array-based optimization errors
+  // This is much more stable and avoids the "monotonically non-decreasing" browser engine bugs
+  const x = useTransform(scrollXProgress, (v) => {
+    const dist = (v - centerPoint) / step;
+    return dist <= -1 ? 135 : dist >= 1 ? -135 : -dist * 135;
+  });
 
-  // Calculate exact initial state based on index position to prevent mount flashing
-  const getInitialState = (dist: number) => {
-    let x = 0,
-      scale = 1,
-      rotateY = 0,
-      op = 1;
-    if (dist <= 1) {
-      x = dist * 135;
-      scale = 1 - dist * 0.12;
-      rotateY = dist * -25;
-      op = 1; // Solid opacity to prevent muddy color blending
-    } else {
-      const depth = dist - 1;
-      x = 135 + depth * 18; // Spread stacked cards out slightly
-      scale = 0.88 - depth * 0.04;
-      rotateY = -25;
-      op = 1 - depth * 0.5; // Fade out deeper cards
-    }
-    return {
-      x,
-      scale,
-      rotateY,
-      op,
-      zIndex: Math.round(100 - dist * 10),
-    };
-  };
+  const scale = useTransform(scrollXProgress, (v) => {
+    const dist = Math.abs(v - centerPoint) / step;
+    return dist >= 1 ? 0.88 : 1 - dist * 0.12;
+  });
 
-  const initial = getInitialState(index);
+  const rotateY = useTransform(scrollXProgress, (v) => {
+    const dist = (v - centerPoint) / step;
+    return dist <= -1 ? 25 : dist >= 1 ? -25 : -dist * 25;
+  });
 
-  const rawScale = useMotionValue(initial.scale);
-  const rawX = useMotionValue(initial.x); // Initial direction is always positive (to the right)
-  const rawRotateY = useMotionValue(initial.rotateY);
-  const rawOpacity = useMotionValue(initial.op);
-  const rawZIndex = useMotionValue(initial.zIndex);
+  const opacity = useTransform(scrollXProgress, (v) => {
+    const dist = Math.abs(v - centerPoint) / step;
+    return dist >= 1 ? 0.98 : 1 - dist * 0.02;
+  });
 
-  const scale = useSpring(rawScale, springConfig);
-  const x = useSpring(rawX, springConfig);
-  const rotateY = useSpring(rawRotateY, springConfig);
-  const opacity = useSpring(rawOpacity, springConfig);
+  const zIndex = useMotionValue(Math.round(100 - index * step * 10));
 
-  useMotionValueEvent(scrollXProgress, 'change', (latest: number) => {
+  useMotionValueEvent(scrollXProgress, 'change', (latest) => {
     const distance = Math.abs(latest - centerPoint);
     const unCappedDistance = distance / step;
-    const direction = latest > centerPoint ? -1 : 1;
-
-    let targetX = 0,
-      targetScale = 1,
-      targetRotateY = 0,
-      targetOpacity = 1;
-
-    if (unCappedDistance <= 1) {
-      targetX = unCappedDistance * 135;
-      targetScale = 1 - unCappedDistance * 0.12;
-      targetRotateY = unCappedDistance * -25;
-      targetOpacity = 1; // Solid! No more muddy translucent blending
-    } else {
-      const depth = unCappedDistance - 1;
-      targetX = 135 + depth * 18; // True stack spread effect
-      targetScale = 0.88 - depth * 0.04;
-      targetRotateY = -25;
-      targetOpacity = 1 - depth * 0.5;
-    }
-
-    rawScale.set(targetScale);
-    rawX.set(direction * targetX);
-    rawRotateY.set(direction * targetRotateY);
-    rawOpacity.set(targetOpacity);
-    rawZIndex.set(Math.round(100 - unCappedDistance * 10));
+    zIndex.set(Math.round(100 - unCappedDistance * 10));
   });
 
   return (
@@ -257,10 +216,24 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
         x,
         rotateY,
         opacity,
-        zIndex: rawZIndex,
+        zIndex,
         boxShadow: '0 15px 45px rgba(0,0,0,0.25)',
       }}
     >
+      {/* Background Image with Priority for LCP optimization */}
+      <div className="absolute inset-0 z-0 opacity-40">
+        <Image
+          src={`https://images.unsplash.com/photo-${banner.id === 1 ? '1583337130417-3346a1be7dee' : banner.id === 2 ? '1548546738-8509cb246ed3' : '1585110396000-c9ffd4e4b308'}?w=800&q=80`}
+          alt=""
+          fill
+          priority={index === 0}
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: banner.bg, mixBlendMode: 'multiply' }}
+        />
+      </div>
       <div
         style={{
           position: 'absolute',

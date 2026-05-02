@@ -189,8 +189,8 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-1 px-5 py-6">
+    <div className="flex flex-col min-h-screen pb-10">
+      <div className="flex-1 pt-4">
         <ProductGrid products={filtered} cols={2} onAddToCart={handleAddToCart} />
       </div>
     </div>

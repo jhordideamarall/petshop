@@ -7,6 +7,15 @@ import { Providers } from '@/components/providers/providers';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#FDFCFB',
+};
+
 export const metadata: Metadata = {
   title: {
     default: 'Pawvels',
@@ -16,14 +25,6 @@ export const metadata: Metadata = {
     icon: '/icon.svg',
   },
   description: 'Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: 'cover',
-  },
-  themeColor: '#FDFCFB',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

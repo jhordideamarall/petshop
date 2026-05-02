@@ -17,8 +17,13 @@ export function ProductGrid({ products, onAddToCart, cols = 2 }: ProductGridProp
         padding: '0 16px 16px',
       }}
     >
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+      {products.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onAddToCart={onAddToCart}
+          priority={index < 4}
+        />
       ))}
     </div>
   );
