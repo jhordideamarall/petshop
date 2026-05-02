@@ -1,0 +1,10 @@
+{
+  "extends": "@petshop/tsconfig/react-library",
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "@petshop/ui/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
