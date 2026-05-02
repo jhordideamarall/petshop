@@ -10,68 +10,72 @@
 
 Petshop di Jakarta membutuhkan sistem terintegrasi untuk:
 
-* Penjualan produk hewan (makanan, aksesoris, obat) — **core revenue**
-* Layanan grooming & pet hotel
-* Pengiriman berbasis lokasi (same-day & reguler)
-* Pembayaran digital (QRIS, e-wallet, transfer)
-* Promo, loyalty & repeat order engine
-* Manajemen pet profile per customer
+- Penjualan produk hewan (makanan, aksesoris, obat) — **core revenue**
+- Layanan grooming & pet hotel
+- Pengiriman berbasis lokasi (same-day & reguler)
+- Pembayaran digital (QRIS, e-wallet, transfer)
+- Promo, loyalty & repeat order engine
+- Manajemen pet profile per customer
 
 Masalah saat ini:
 
-* Overbooking layanan grooming/hotel
-* Ongkir tidak akurat (manual)
-* Operasional manual (WhatsApp-based)
-* Tidak ada tracking order & stok
-* Sulit scaling ke multi-branch
+- Overbooking layanan grooming/hotel
+- Ongkir tidak akurat (manual)
+- Operasional manual (WhatsApp-based)
+- Tidak ada tracking order & stok
+- Sulit scaling ke multi-branch
 
 ### 1.2 Tujuan Produk
 
 Membangun platform web yang:
 
-* Menjadikan e-commerce sebagai core revenue
-* Mengintegrasikan booking grooming & pet hotel
-* Mengotomatisasi shipping (API kurir), payment, & notifikasi
-* Meningkatkan repeat order via loyalty & reorder system
-* Memberikan owner visibility penuh ke financial metrics
+- Menjadikan e-commerce sebagai core revenue
+- Mengintegrasikan booking grooming & pet hotel
+- Mengotomatisasi shipping (API kurir), payment, & notifikasi
+- Meningkatkan repeat order via loyalty & reorder system
+- Memberikan owner visibility penuh ke financial metrics
 
 ### 1.3 Product Positioning
 
-* **Core**: E-commerce (produk hewan)
-* **Service**: Grooming & Pet Hotel (booking-based)
-* **Engine**: Shipping, Payment, Promo, Loyalty, Notification
-* **Differentiator**: Pet profile, reorder, WhatsApp-first communication
+- **Core**: E-commerce (produk hewan)
+- **Service**: Grooming & Pet Hotel (booking-based)
+- **Engine**: Shipping, Payment, Promo, Loyalty, Notification
+- **Differentiator**: Pet profile, reorder, WhatsApp-first communication
 
 ---
 
 ## 2. DESIGN & BRANDING
 
-* Primary color: Orange muda / salem
-* Accent: Orange
-* Style: Clean, modern, minimal, mobile-first
-* UX: Cepat, simple, no friction
-* Typography: Inter / Outfit (Google Fonts)
-* Micro-animations: Framer Motion
+- Primary color: Orange muda / salem
+- Accent: Orange
+- Style: Clean, modern, minimal, mobile-first
+- UX: Cepat, simple, no friction
+- Typography: Inter / Outfit (Google Fonts)
+- Micro-animations: Framer Motion
 
 ---
 
 ## 3. USER TYPES & PERMISSIONS
 
-| Role | Akses |
-|------|-------|
-| **Customer** | Browse, cart, checkout, booking, pet profile, order history, loyalty |
-| **Admin** | Manage produk, order, booking, stok, CMS banner, notifikasi |
-| **Owner** | Semua akses admin + financial dashboard, analytics, settings |
+| Role         | Akses                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| **Customer** | Browse, cart, checkout, booking, pet profile, order history, loyalty                     |
+| **Staff**    | Semua akses customer + view semua orders/bookings, update status booking                 |
+| **Admin**    | Semua akses staff + manage produk, order, booking, stok, CMS banner, voucher, notifikasi |
+| **Owner**    | Semua akses admin + financial dashboard, analytics, settings, audit logs, delete orders  |
 
 ---
 
 ## 4. AUTHENTICATION
 
 ### Primary: Phone OTP (via Twilio / WhatsApp)
+
 ### Secondary: Google OAuth
+
 ### Optional: Email + Password
 
 Flow:
+
 1. Register → input phone → OTP → set name → done
 2. Login → phone → OTP → dashboard
 3. Admin/Owner → email + password (Supabase Auth)
@@ -85,117 +89,127 @@ Flow:
 **Product Types:** Normal, Frozen, Parcel
 
 **Features:**
-* Product listing with search & filter
-* Product detail (images carousel, description, reviews)
-* Variants (size, weight, flavor) with individual stock & price
-* Categories & subcategories
-* Stock management with low-stock alerts
-* Cart (persistent, server-side)
-* Checkout with address selection
-* Wishlist / favorites
-* Reorder from order history
+
+- Product listing with search & filter
+- Product detail (images carousel, description, reviews)
+- Variants (size, weight, flavor) with individual stock & price
+- Categories & subcategories
+- Stock management with low-stock alerts
+- Cart (persistent, server-side)
+- Checkout with address selection
+- Wishlist / favorites
+- Reorder from order history
 
 **Pricing:**
-* Harga normal + harga coret (strikethrough)
-* Diskon per-product & per-variant
-* Voucher / coupon code
+
+- Harga normal + harga coret (strikethrough)
+- Diskon per-product & per-variant
+- Voucher / coupon code
 
 **Search & Filter:**
-* Full-text search (Supabase `tsvector`)
-* Filter: category, price range, product type, rating
-* Sort: newest, popular, price low-high, price high-low
+
+- Full-text search (Supabase `tsvector`)
+- Filter: category, price range, product type, rating
+- Sort: newest, popular, price low-high, price high-low
 
 ### 5.2 Shipping
 
 **Kurir:**
-* JNE, JNT, Anteraja (via RajaOngkir / Biteship API)
-* Same-day (kurir internal / Grab)
-* Parcel (produk besar)
-* Gojek Instant (future)
+
+- JNE, JNT, Anteraja (via RajaOngkir / Biteship API)
+- Same-day (kurir internal / Grab)
+- Parcel (produk besar)
+- Gojek Instant (future)
 
 **Rules:**
-* Ongkir dihitung via API berdasarkan berat + lokasi
-* Frozen: hanya same-day, max 15km, wajib styrofoam packaging
-* Same-day: `IF same_city AND distance <= 15km AND order_time < 14:00 → available`
-* Cut-off time same-day: **14:00 WIB**
-* Auto-filter kurir berdasarkan product type
-* Input resi oleh admin → customer bisa tracking
+
+- Ongkir dihitung via API berdasarkan berat + lokasi
+- Frozen: hanya same-day, max 15km, wajib styrofoam packaging
+- Same-day: `IF same_city AND distance <= 15km AND order_time < 14:00 → available`
+- Cut-off time same-day: **14:00 WIB**
+- Auto-filter kurir berdasarkan product type
+- Input resi oleh admin → customer bisa tracking
 
 ### 5.3 Payment
 
 **Provider:** Midtrans atau Xendit
 
 **Methods:**
-* QRIS
-* E-wallet (GoPay, OVO, Dana, ShopeePay)
-* Virtual Account (BCA, BNI, Mandiri, BRI)
-* Credit/Debit Card
+
+- QRIS
+- E-wallet (GoPay, OVO, Dana, ShopeePay)
+- Virtual Account (BCA, BNI, Mandiri, BRI)
+- Credit/Debit Card
 
 **Support:**
-* Full payment (e-commerce)
-* DP / down payment (pet hotel)
-* Auto-expire unpaid orders (2 jam)
+
+- Full payment (e-commerce)
+- DP / down payment (pet hotel)
+- Auto-expire unpaid orders (2 jam)
 
 ### 5.4 Booking System
 
 **Services:**
 
-| Service | DP | Slot |
-|---------|-----|------|
-| Grooming Basic | Tidak wajib | Per jam |
-| Grooming Full | Tidak wajib | Per jam |
-| Pet Hotel | Wajib DP 50% | Per hari, max capacity |
+| Service        | DP           | Slot                   |
+| -------------- | ------------ | ---------------------- |
+| Grooming Basic | Tidak wajib  | Per jam                |
+| Grooming Full  | Tidak wajib  | Per jam                |
+| Pet Hotel      | Wajib DP 50% | Per hari, max capacity |
 
 **Rules:**
-* No overbooking (slot-based, real-time)
-* Booking butuh data pet (nama, jenis, berat)
-* Reminder H-1 via WhatsApp
-* Cancellation: free cancel H-1, charge 50% jika < 24 jam
+
+- No overbooking (slot-based, real-time)
+- Booking butuh data pet (nama, jenis, berat)
+- Reminder H-1 via WhatsApp
+- Cancellation: free cancel H-1, charge 50% jika < 24 jam
 
 ### 5.5 Pet Profile
 
-* Customer bisa register multiple pets
-* Data: nama, jenis (dog/cat/dll), breed, berat, tanggal lahir, foto
-* Auto-fill saat booking grooming/hotel
-* Rekomendasi produk berdasarkan jenis & ukuran pet
-* Reminder grooming berkala (opsional)
+- Customer bisa register multiple pets
+- Data: nama, jenis (dog/cat/dll), breed, berat, tanggal lahir, foto
+- Auto-fill saat booking grooming/hotel
+- Rekomendasi produk berdasarkan jenis & ukuran pet
+- Reminder grooming berkala (opsional)
 
 ### 5.6 Promo System
 
-* Harga coret (strikethrough price)
-* Diskon percentage & fixed amount
-* Campaign (flash sale, bundling)
-* Voucher/coupon code dengan: min order, max discount, usage limit, validity period
+- Harga coret (strikethrough price)
+- Diskon percentage & fixed amount
+- Campaign (flash sale, bundling)
+- Voucher/coupon code dengan: min order, max discount, usage limit, validity period
 
 ### 5.7 Loyalty System
 
-* Earn points dari setiap pembelian (1% dari total)
-* Redeem points sebagai diskon
-* Point history (earn/redeem/expire)
-* Points expire setelah 12 bulan
-* Tier system (future): Bronze → Silver → Gold
+- Earn points dari setiap pembelian (1% dari total)
+- Redeem points sebagai diskon
+- Point history (earn/redeem/expire)
+- Points expire setelah 12 bulan
+- Tier system (future): Bronze → Silver → Gold
 
 ### 5.8 Notification System
 
 **Channels:**
-* WhatsApp (primary — via Fonnte / Wablas / official API)
-* Push notification (web)
-* In-app notification
+
+- WhatsApp (primary — via Fonnte / Wablas / official API)
+- Push notification (web)
+- In-app notification
 
 **Triggers:**
-* Order: confirmation, payment received, shipped, delivered
-* Booking: confirmation, reminder H-1, completed
-* Promo: new campaign, voucher expiring
-* Stock: low stock alert (admin only)
-* Loyalty: points earned, points expiring
+
+- Order: confirmation, payment received, shipped, delivered
+- Booking: confirmation, reminder H-1, completed
+- Promo: new campaign, voucher expiring
+- Stock: low stock alert (admin only)
+- Loyalty: points earned, points expiring
 
 ### 5.9 Review & Rating
 
-* Customer bisa review produk setelah order delivered
-* Rating 1-5 bintang + komentar
-* Foto review (opsional)
-* Admin bisa reply review
-* Average rating ditampilkan di product card & detail
+- Customer bisa review produk setelah order delivered
+- Rating 1-5 bintang + komentar
+- Foto review (opsional)
+- Admin bisa reply review
+- Average rating ditampilkan di product card & detail
 
 ---
 
@@ -204,12 +218,13 @@ Flow:
 **Banner Types:** Hero, Promo, Category
 
 **Features:**
-* Upload image
-* Schedule (start/end date)
-* Priority/sort order
-* CTA link (ke produk/category/promo page)
-* Type classification
-* Toggle active/inactive
+
+- Upload image
+- Schedule (start/end date)
+- Priority/sort order
+- CTA link (ke produk/category/promo page)
+- Type classification
+- Toggle active/inactive
 
 ---
 
@@ -217,49 +232,52 @@ Flow:
 
 ### 7.1 Admin Dashboard
 
-* Manage produk (CRUD + variants + images)
-* Manage orders (status update, input resi)
-* Manage booking (approve, reschedule, cancel)
-* Manage stok (adjustment, movement log)
-* Manage banner/CMS
-* View customer list
-* Send notifications
+- Manage produk (CRUD + variants + images)
+- Manage orders (status update, input resi)
+- Manage booking (approve, reschedule, cancel)
+- Manage stok (adjustment, movement log)
+- Manage banner/CMS
+- View customer list
+- Send notifications
 
 ### 7.2 Owner Dashboard
 
 **Financial Metrics:**
-* Omset (gross revenue)
-* Net revenue (after discount & returns)
-* HPP (cost of goods sold)
-* Gross profit & net profit
-* Pajak (tax)
-* AOV (average order value)
-* Repeat customer rate
-* Revenue by category
-* Revenue by period (daily/weekly/monthly)
+
+- Omset (gross revenue)
+- Net revenue (after discount & returns)
+- HPP (cost of goods sold)
+- Gross profit & net profit
+- Pajak (tax)
+- AOV (average order value)
+- Repeat customer rate
+- Revenue by category
+- Revenue by period (daily/weekly/monthly)
 
 **Operational Metrics:**
-* Total orders & conversion rate
-* Booking utilization rate
-* Top selling products
-* Stock alerts
-* Customer growth
+
+- Total orders & conversion rate
+- Booking utilization rate
+- Top selling products
+- Stock alerts
+- Customer growth
 
 ---
 
 ## 8. INVENTORY MANAGEMENT
 
-* Real-time stock tracking per variant
-* Low stock alert (configurable threshold)
-* Stock movement history (in/out/adjustment/return)
-* Batch & expiry tracking (untuk makanan & obat hewan)
-* Overselling prevention (database-level lock)
+- Real-time stock tracking per variant
+- Low stock alert (configurable threshold)
+- Stock movement history (in/out/adjustment/return)
+- Batch & expiry tracking (untuk makanan & obat hewan)
+- Overselling prevention (database-level lock)
 
 ---
 
 ## 9. ORDER & RETURN FLOW
 
 ### Order Status Flow:
+
 ```
 pending → paid → processing → shipped → delivered → completed
                                                    → return_requested → returned → refunded
@@ -268,34 +286,38 @@ pending → paid → processing → shipped → delivered → completed
 ```
 
 ### Return/Refund Policy:
-* Request dalam 2x24 jam setelah delivered
-* Alasan: rusak, salah kirim, frozen mencair
-* Bukti foto wajib
-* Refund ke saldo / original payment method
-* Admin approve/reject return request
+
+- Request dalam 2x24 jam setelah delivered
+- Alasan: rusak, salah kirim, frozen mencair
+- Bukti foto wajib
+- Refund ke saldo / original payment method
+- Admin approve/reject return request
 
 ---
 
 ## 10. STORE LOCATION
 
 **Config per branch:**
-* Store name
-* Full address
-* City & district
-* Phone & WhatsApp number
-* Latitude & longitude
-* Operating hours (per hari)
-* Services available
+
+- Store name
+- Full address
+- City & district
+- Phone & WhatsApp number
+- Latitude & longitude
+- Operating hours (per hari)
+- Services available
 
 **Implementation:**
-* MVP: single store, hardcoded
-* Production: multi-branch, map picker (Google Maps / Leaflet)
+
+- MVP: single store, hardcoded
+- Production: multi-branch, map picker (Google Maps / Leaflet)
 
 ---
 
 ## 11. USER FLOWS
 
 ### Purchase:
+
 ```
 browse/search → product detail → add to cart → cart → checkout
 → select address → select shipping → apply voucher → payment → confirmation
@@ -303,12 +325,14 @@ browse/search → product detail → add to cart → cart → checkout
 ```
 
 ### Grooming:
+
 ```
 pilih service → pilih tanggal & slot → pilih/tambah pet → confirm → done
 → reminder H-1 → datang → selesai → review
 ```
 
 ### Pet Hotel:
+
 ```
 pilih tanggal (check-in/out) → pilih/tambah pet → DP payment → confirm
 → reminder H-1 → check-in → check-out → full payment → review
@@ -318,24 +342,24 @@ pilih tanggal (check-in/out) → pilih/tambah pet → DP payment → confirm
 
 ## 12. SEO & MARKETING
 
-* Product page: slug URL, meta title, meta description, Open Graph tags
-* Category page: SEO-friendly URLs
-* Google Business Profile integration
-* Instagram feed embed (petshop Jakarta sangat bergantung IG)
-* WhatsApp share button di product page
-* Sitemap & robots.txt
+- Product page: slug URL, meta title, meta description, Open Graph tags
+- Category page: SEO-friendly URLs
+- Google Business Profile integration
+- Instagram feed embed (petshop Jakarta sangat bergantung IG)
+- WhatsApp share button di product page
+- Sitemap & robots.txt
 
 ---
 
 ## 13. NON-FUNCTIONAL REQUIREMENTS
 
-* **Performance**: < 3s page load, < 1s API response
-* **Mobile**: Mobile-first responsive design
-* **Security**: RLS, input validation, rate limiting, HTTPS
-* **Scalability**: Horizontal scaling ready
-* **Availability**: 99.5% uptime
-* **Browser**: Chrome, Safari, Firefox (latest 2 versions)
-* **Accessibility**: WCAG 2.1 Level A minimum
+- **Performance**: < 3s page load, < 1s API response
+- **Mobile**: Mobile-first responsive design
+- **Security**: RLS, input validation, rate limiting, HTTPS
+- **Scalability**: Horizontal scaling ready
+- **Availability**: 99.5% uptime
+- **Browser**: Chrome, Safari, Firefox (latest 2 versions)
+- **Accessibility**: WCAG 2.1 Level A minimum
 
 ---
 
@@ -344,72 +368,87 @@ pilih tanggal (check-in/out) → pilih/tambah pet → DP payment → confirm
 > Arsitektur monorepo dengan **Turborepo + pnpm workspaces**. Core logic & API client bisa di-reuse di web, mobile, dan desktop. Detail lengkap di [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ### Monorepo
-* **Turborepo** (build orchestration)
-* **pnpm** (package manager + workspaces)
-* **TypeScript** (strict mode, shared tsconfig)
+
+- **Turborepo** (build orchestration)
+- **pnpm** (package manager + workspaces)
+- **TypeScript** (strict mode, shared tsconfig)
 
 ### Frontend — Web
-* React + Next.js (App Router)
-* shadcn/ui + Tailwind CSS + Radix UI
-* Framer Motion (animations)
+
+- React + Next.js (App Router)
+- shadcn/ui + Tailwind CSS + Radix UI
+- Framer Motion (animations)
 
 ### Frontend — Mobile
-* React Native (Expo + Expo Router)
-* NativeWind (Tailwind for RN) atau Tamagui
+
+- React Native (Expo + Expo Router)
+- NativeWind (Tailwind for RN) atau Tamagui
 
 ### Frontend — Desktop (Future)
-* Electron atau Tauri (wrapping web app)
+
+- Electron atau Tauri (wrapping web app)
 
 ### State Management (shared)
-* TanStack Query (server state)
-* Zustand (client state)
+
+- TanStack Query (server state)
+- Zustand (client state)
 
 ### Backend (Standalone API)
-* **NestJS** (REST API, independent dari Next.js)
-* Deploy: Railway / Fly.io / VPS / Vercel Serverless
+
+- **NestJS** (REST API, independent dari Next.js)
+- Deploy: Railway / Fly.io / VPS / Vercel Serverless
 
 ### Shared Packages
-* `@petshop/types` — TypeScript types (semua platform)
-* `@petshop/core` — Business logic (pricing, shipping rules, validations)
-* `@petshop/api-client` — API SDK (fetch wrapper, semua frontend)
-* `@petshop/hooks` — React hooks (web + mobile)
-* `@petshop/store` — Zustand stores (web + mobile)
-* `@petshop/utils` — Utility functions (semua platform)
-* `@petshop/ui` — Shared UI components (web only)
-* `@petshop/config` — Shared env & constants
+
+- `@petshop/types` — TypeScript types (semua platform)
+- `@petshop/core` — Business logic (pricing, shipping rules, validations)
+- `@petshop/api-client` — API SDK (fetch wrapper, semua frontend)
+- `@petshop/hooks` — React hooks (web + mobile)
+- `@petshop/store` — Zustand stores (web + mobile)
+- `@petshop/utils` — Utility functions (semua platform)
+- `@petshop/ui` — Shared UI components (web only)
+- `@petshop/config` — Shared env & constants
 
 ### Database & Auth
-* Supabase (PostgreSQL + Auth + Storage + Realtime + Edge Functions)
+
+- Supabase (PostgreSQL + Auth + Storage + Realtime + Edge Functions)
 
 ### Payment
-* Midtrans atau Xendit
+
+- Midtrans atau Xendit
 
 ### Shipping
-* RajaOngkir atau Biteship API
+
+- RajaOngkir atau Biteship API
 
 ### Maps
-* Google Maps API atau Leaflet + OpenStreetMap
+
+- Google Maps API atau Leaflet + OpenStreetMap
 
 ### Notification
-* WhatsApp: Fonnte / Wablas
-* Push: Web Push API + Expo Notifications (mobile)
+
+- WhatsApp: Fonnte / Wablas
+- Push: Web Push API + Expo Notifications (mobile)
 
 ### Storage
-* Supabase Storage (primary)
-* Cloudinary (image optimization, optional)
+
+- Supabase Storage (primary)
+- Cloudinary (image optimization, optional)
 
 ### Deployment
-* Vercel (web + admin frontend)
-* Railway / Fly.io (NestJS API)
-* Supabase (DB + auth + storage)
-* EAS Build (mobile app → App Store & Play Store)
+
+- Vercel (web + admin frontend)
+- Railway / Fly.io (NestJS API)
+- Supabase (DB + auth + storage)
+- EAS Build (mobile app → App Store & Play Store)
 
 ### Monitoring
-* Sentry (error tracking — web, mobile, API)
-* Vercel Analytics (web performance)
-* Grafana / Uptime Robot (API health)
----
 
+- Sentry (error tracking — web, mobile, API)
+- Vercel Analytics (web performance)
+- Grafana / Uptime Robot (API health)
+
+---
 
 # 15. DATABASE SCHEMA (SUPABASE / POSTGRESQL)
 
@@ -423,7 +462,7 @@ create table users (
   name text not null,
   email text unique,
   phone text unique,
-  role text not null default 'customer' check (role in ('customer','admin','owner')),
+  role text not null default 'customer' check (role in ('customer','staff','admin','owner')),
   avatar_url text,
   is_active boolean default true,
   created_at timestamp default now(),
@@ -910,12 +949,12 @@ create policy "reviews_public" on reviews for select using (is_visible = true);
 
 # 16. SUPABASE FEATURES USAGE
 
-* **Auth** → Phone OTP + Google OAuth + Email (admin/owner)
-* **RLS** → Role-based access (customer/admin/owner policies)
-* **Storage** → Product images, banner images, review photos, pet avatars
-* **Realtime** → Booking slot updates, order status changes, notifications
-* **Edge Functions** → Payment webhooks, shipping API calls, WhatsApp notifications
-* **Full-text Search** → Product search via `tsvector`
+- **Auth** → Phone OTP + Google OAuth + Email (admin/owner)
+- **RLS** → Role-based access (customer/admin/owner policies)
+- **Storage** → Product images, banner images, review photos, pet avatars
+- **Realtime** → Booking slot updates, order status changes, notifications
+- **Edge Functions** → Payment webhooks, shipping API calls, WhatsApp notifications
+- **Full-text Search** → Product search via `tsvector`
 
 ---
 
@@ -955,137 +994,150 @@ NEXT_PUBLIC_APP_NAME=PetshopJKT
 # 18. API ENDPOINTS OVERVIEW
 
 ### Auth
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| POST | `/api/auth/otp/send` | Kirim OTP ke phone |
-| POST | `/api/auth/otp/verify` | Verifikasi OTP |
-| POST | `/api/auth/register` | Register user baru |
-| GET | `/api/auth/me` | Get current user |
+
+| Method | Endpoint               | Desc               |
+| ------ | ---------------------- | ------------------ |
+| POST   | `/api/auth/otp/send`   | Kirim OTP ke phone |
+| POST   | `/api/auth/otp/verify` | Verifikasi OTP     |
+| POST   | `/api/auth/register`   | Register user baru |
+| GET    | `/api/auth/me`         | Get current user   |
 
 ### Products
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| GET | `/api/products` | List + search + filter |
-| GET | `/api/products/[slug]` | Detail produk |
-| GET | `/api/categories` | List kategori |
+
+| Method | Endpoint               | Desc                   |
+| ------ | ---------------------- | ---------------------- |
+| GET    | `/api/products`        | List + search + filter |
+| GET    | `/api/products/[slug]` | Detail produk          |
+| GET    | `/api/categories`      | List kategori          |
 
 ### Cart
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| GET | `/api/cart` | Get cart |
-| POST | `/api/cart/items` | Add item |
-| PATCH | `/api/cart/items/[id]` | Update qty |
+
+| Method | Endpoint               | Desc        |
+| ------ | ---------------------- | ----------- |
+| GET    | `/api/cart`            | Get cart    |
+| POST   | `/api/cart/items`      | Add item    |
+| PATCH  | `/api/cart/items/[id]` | Update qty  |
 | DELETE | `/api/cart/items/[id]` | Remove item |
 
 ### Orders
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| POST | `/api/orders` | Create order (checkout) |
-| GET | `/api/orders` | List user orders |
-| GET | `/api/orders/[id]` | Detail order |
-| POST | `/api/orders/[id]/return` | Request return |
+
+| Method | Endpoint                  | Desc                    |
+| ------ | ------------------------- | ----------------------- |
+| POST   | `/api/orders`             | Create order (checkout) |
+| GET    | `/api/orders`             | List user orders        |
+| GET    | `/api/orders/[id]`        | Detail order            |
+| POST   | `/api/orders/[id]/return` | Request return          |
 
 ### Booking
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| GET | `/api/booking/slots` | Available slots |
-| POST | `/api/booking` | Create booking |
-| GET | `/api/booking` | List user bookings |
-| PATCH | `/api/booking/[id]/cancel` | Cancel booking |
+
+| Method | Endpoint                   | Desc               |
+| ------ | -------------------------- | ------------------ |
+| GET    | `/api/booking/slots`       | Available slots    |
+| POST   | `/api/booking`             | Create booking     |
+| GET    | `/api/booking`             | List user bookings |
+| PATCH  | `/api/booking/[id]/cancel` | Cancel booking     |
 
 ### Shipping
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| POST | `/api/shipping/cost` | Cek ongkir |
-| GET | `/api/shipping/track/[resi]` | Track shipment |
+
+| Method | Endpoint                     | Desc           |
+| ------ | ---------------------------- | -------------- |
+| POST   | `/api/shipping/cost`         | Cek ongkir     |
+| GET    | `/api/shipping/track/[resi]` | Track shipment |
 
 ### Payment
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| POST | `/api/payment/create` | Create payment |
-| POST | `/api/payment/webhook` | Payment callback |
+
+| Method | Endpoint               | Desc             |
+| ------ | ---------------------- | ---------------- |
+| POST   | `/api/payment/create`  | Create payment   |
+| POST   | `/api/payment/webhook` | Payment callback |
 
 ### Admin
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| CRUD | `/api/admin/products` | Manage products |
-| CRUD | `/api/admin/orders` | Manage orders |
-| CRUD | `/api/admin/bookings` | Manage bookings |
-| CRUD | `/api/admin/banners` | Manage banners |
-| GET | `/api/admin/dashboard` | Dashboard metrics |
+
+| Method | Endpoint               | Desc              |
+| ------ | ---------------------- | ----------------- |
+| CRUD   | `/api/admin/products`  | Manage products   |
+| CRUD   | `/api/admin/orders`    | Manage orders     |
+| CRUD   | `/api/admin/bookings`  | Manage bookings   |
+| CRUD   | `/api/admin/banners`   | Manage banners    |
+| GET    | `/api/admin/dashboard` | Dashboard metrics |
 
 ### Owner
-| Method | Endpoint | Desc |
-|--------|----------|------|
-| GET | `/api/owner/financial` | Financial report |
-| GET | `/api/owner/analytics` | Analytics data |
+
+| Method | Endpoint               | Desc             |
+| ------ | ---------------------- | ---------------- |
+| GET    | `/api/owner/financial` | Financial report |
+| GET    | `/api/owner/analytics` | Analytics data   |
 
 ---
 
 # 19. MVP SCOPE & TIMELINE
 
 ### Phase 1 (MVP — 8 minggu):
-* Auth (phone OTP + email)
-* E-commerce (products, categories, variants, cart, checkout)
-* Payment integration (Midtrans/Xendit)
-* Shipping (RajaOngkir API)
-* Order management (admin)
-* Basic CMS & banner
-* Admin dashboard
-* Mobile responsive
+
+- Auth (phone OTP + email)
+- E-commerce (products, categories, variants, cart, checkout)
+- Payment integration (Midtrans/Xendit)
+- Shipping (RajaOngkir API)
+- Order management (admin)
+- Basic CMS & banner
+- Admin dashboard
+- Mobile responsive
 
 ### Phase 2 (4 minggu):
-* Booking system (grooming + pet hotel)
-* Pet profile
-* WhatsApp notifications
-* Review & rating
-* Search & filter
-* Owner dashboard (financial)
+
+- Booking system (grooming + pet hotel)
+- Pet profile
+- WhatsApp notifications
+- Review & rating
+- Search & filter
+- Owner dashboard (financial)
 
 ### Phase 3 (4 minggu):
-* Loyalty system
-* Voucher/promo system
-* Wishlist & reorder
-* Return/refund flow
-* Stock movement tracking
-* Push notifications
+
+- Loyalty system
+- Voucher/promo system
+- Wishlist & reorder
+- Return/refund flow
+- Stock movement tracking
+- Push notifications
 
 ### Phase 4 (Future):
-* Multi-branch support
-* Subscription / auto-reorder
-* Instagram feed integration
-* Gojek/Grab instant delivery
-* Loyalty tiers
-* Mobile app (React Native)
+
+- Multi-branch support
+- Subscription / auto-reorder
+- Instagram feed integration
+- Gojek/Grab instant delivery
+- Loyalty tiers
+- Mobile app (React Native)
 
 ---
 
 # 20. SUCCESS METRICS
 
-| Metric | Target (6 bulan) |
-|--------|------------------|
-| Monthly Active Users | 1,000+ |
-| Online order rate vs walk-in | 30%+ |
-| Repeat order rate | 40%+ |
-| Booking overbooking rate | 0% |
-| Average order value (AOV) | Rp 150,000+ |
-| Page load time | < 3 detik |
-| Cart abandonment rate | < 50% |
-| Customer satisfaction (rating) | 4.5+ / 5 |
+| Metric                         | Target (6 bulan) |
+| ------------------------------ | ---------------- |
+| Monthly Active Users           | 1,000+           |
+| Online order rate vs walk-in   | 30%+             |
+| Repeat order rate              | 40%+             |
+| Booking overbooking rate       | 0%               |
+| Average order value (AOV)      | Rp 150,000+      |
+| Page load time                 | < 3 detik        |
+| Cart abandonment rate          | < 50%            |
+| Customer satisfaction (rating) | 4.5+ / 5         |
 
 ---
 
 # 21. RISK MITIGATION
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Payment gateway downtime | Tinggi | Dual provider (Midtrans + Xendit fallback) |
+| Risk                       | Impact | Mitigation                                        |
+| -------------------------- | ------ | ------------------------------------------------- |
+| Payment gateway downtime   | Tinggi | Dual provider (Midtrans + Xendit fallback)        |
 | Frozen food delivery issue | Tinggi | Max distance 15km, wajib styrofoam, same-day only |
-| Overbooking grooming/hotel | Tinggi | Database-level slot locking, real-time check |
-| Stock overselling | Sedang | PostgreSQL row-level lock pada checkout |
-| WhatsApp API rate limit | Sedang | Queue system, batch sending |
-| Data breach | Tinggi | RLS, encrypted secrets, regular security audit |
-| Supabase downtime | Sedang | Health check monitoring, cached fallback |
+| Overbooking grooming/hotel | Tinggi | Database-level slot locking, real-time check      |
+| Stock overselling          | Sedang | PostgreSQL row-level lock pada checkout           |
+| WhatsApp API rate limit    | Sedang | Queue system, batch sending                       |
+| Data breach                | Tinggi | RLS, encrypted secrets, regular security audit    |
+| Supabase downtime          | Sedang | Health check monitoring, cached fallback          |
 
 ---
 
@@ -1098,4 +1150,3 @@ NEXT_PUBLIC_APP_NAME=PetshopJKT
 > **Database**: 22 tabel PostgreSQL dengan RLS, indexes, dan full-text search
 > **Timeline**: MVP 8 minggu, full platform 16 minggu
 > **Target**: 1,000+ MAU dalam 6 bulan
-
