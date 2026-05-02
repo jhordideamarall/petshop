@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     "./domain": "./src/domain/index.ts",
-    "./enums": "./src/enums.ts"
+    "./enums": "./src/enums.ts",
+    "./supabase": "./src/supabase.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit"

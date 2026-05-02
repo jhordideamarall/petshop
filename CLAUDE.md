@@ -1,7 +1,5 @@
 # CLAUDE.md
 
-## 01. Read prd.md and ARCHITECTURE.md always update and call memory pekerjaan sebelumnya agar tidak menghabiskan banyak token tiap sessi dimulai
-
 ## Purpose
 
 Work efficiently, safely, and without breaking existing behavior.
@@ -30,6 +28,7 @@ Work efficiently, safely, and without breaking existing behavior.
 
 ## Workflow
 
+- Read `prd.md` and `ARCHITECTURE.md` always update and call memory pekerjaan sebelumnya agar tidak menghabiskan banyak token tiap sessi dimulai
 - Always read the `artifacts/` folder at the start of a task to understand historical context, audit reports, and past architectural decisions.
 - For large tasks → propose a plan first
 - For small tasks → act directly but keep changes minimal
