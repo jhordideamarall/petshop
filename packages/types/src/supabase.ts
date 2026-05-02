@@ -134,7 +134,7 @@ export type Database = {
           created_at?: string | null;
           end_date?: string | null;
           id?: string;
-          image_url?: string;
+          image_url?: string | null;
           is_active?: boolean | null;
           link?: string | null;
           priority?: number | null;
@@ -909,6 +909,7 @@ export type Database = {
           price: number;
           promo_price: number | null;
           review_count: number | null;
+          search_vector: unknown;
           slug: string;
           sold_count: number | null;
           stock: number | null;
@@ -930,6 +931,7 @@ export type Database = {
           price?: number;
           promo_price?: number | null;
           review_count?: number | null;
+          search_vector?: unknown;
           slug: string;
           sold_count?: number | null;
           stock?: number | null;
@@ -951,6 +953,7 @@ export type Database = {
           price?: number;
           promo_price?: number | null;
           review_count?: number | null;
+          search_vector?: unknown;
           slug?: string;
           sold_count?: number | null;
           stock?: number | null;
@@ -978,6 +981,7 @@ export type Database = {
           is_active: boolean | null;
           phone_number: string | null;
           role: Database['public']['Enums']['user_role'] | null;
+          tier: string | null;
           updated_at: string | null;
         };
         Insert: {
@@ -989,6 +993,7 @@ export type Database = {
           is_active?: boolean | null;
           phone_number?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
+          tier?: string | null;
           updated_at?: string | null;
         };
         Update: {
@@ -1000,6 +1005,7 @@ export type Database = {
           is_active?: boolean | null;
           phone_number?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
+          tier?: string | null;
           updated_at?: string | null;
         };
         Relationships: [];
@@ -1077,43 +1083,52 @@ export type Database = {
       };
       services: {
         Row: {
+          avg_rating: number | null;
           created_at: string | null;
           description: string | null;
           dp_percentage: number | null;
           duration_minutes: number | null;
           id: string;
+          image_url: string | null;
           is_active: boolean | null;
           name: string;
           price: number;
           requires_dp: boolean | null;
+          review_count: number | null;
           slug: string;
           sort_order: number | null;
           type: string;
         };
         Insert: {
+          avg_rating?: number | null;
           created_at?: string | null;
           description?: string | null;
           dp_percentage?: number | null;
           duration_minutes?: number | null;
           id?: string;
+          image_url?: string | null;
           is_active?: boolean | null;
           name: string;
           price: number;
           requires_dp?: boolean | null;
+          review_count?: number | null;
           slug: string;
           sort_order?: number | null;
           type: string;
         };
         Update: {
+          avg_rating?: number | null;
           created_at?: string | null;
           description?: string | null;
           dp_percentage?: number | null;
           duration_minutes?: number | null;
           id?: string;
+          image_url?: string | null;
           is_active?: boolean | null;
           name?: string;
           price?: number;
           requires_dp?: boolean | null;
+          review_count?: number | null;
           slug?: string;
           sort_order?: number | null;
           type?: string;
@@ -1229,6 +1244,103 @@ export type Database = {
         };
         Relationships: [];
       };
+      transactions: {
+        Row: {
+          amount: number;
+          booking_id: string | null;
+          created_at: string | null;
+          external_id: string | null;
+          id: string;
+          order_id: string | null;
+          payment_method: string | null;
+          raw_response: Json | null;
+          status: string;
+        };
+        Insert: {
+          amount: number;
+          booking_id?: string | null;
+          created_at?: string | null;
+          external_id?: string | null;
+          id?: string;
+          order_id?: string | null;
+          payment_method?: string | null;
+          raw_response?: Json | null;
+          status: string;
+        };
+        Update: {
+          amount?: number;
+          booking_id?: string | null;
+          created_at?: string | null;
+          external_id?: string | null;
+          id?: string;
+          order_id?: string | null;
+          payment_method?: string | null;
+          raw_response?: Json | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'transactions_booking_id_fkey';
+            columns: ['booking_id'];
+            isOneToOne: false;
+            referencedRelation: 'bookings';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'transactions_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      voucher_usages: {
+        Row: {
+          id: string;
+          order_id: string | null;
+          used_at: string | null;
+          user_id: string | null;
+          voucher_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          order_id?: string | null;
+          used_at?: string | null;
+          user_id?: string | null;
+          voucher_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          order_id?: string | null;
+          used_at?: string | null;
+          user_id?: string | null;
+          voucher_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'voucher_usages_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'voucher_usages_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'voucher_usages_voucher_id_fkey';
+            columns: ['voucher_id'];
+            isOneToOne: false;
+            referencedRelation: 'vouchers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       vouchers: {
         Row: {
           code: string;
@@ -1315,7 +1427,12 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      is_admin: { Args: never; Returns: boolean };
       is_admin_or_owner: { Args: never; Returns: boolean };
+      is_owner: { Args: never; Returns: boolean };
+      is_staff: { Args: never; Returns: boolean };
+      show_limit: { Args: never; Returns: number };
+      show_trgm: { Args: { '': string }; Returns: string[] };
     };
     Enums: {
       order_status:
