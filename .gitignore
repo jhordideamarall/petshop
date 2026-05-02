@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Turbo
+.turbo/
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Worktrees
+.worktrees/
