@@ -1,4 +1,4 @@
-# 🐾 Petshop Platform — Jakarta
+# 🐾 Pawvels Platform — Jakarta
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
@@ -8,6 +8,8 @@
 [![Supabase](https://img.shields.io/badge/Database-Supabase-3ecf8e.svg)](https://supabase.com/)
 
 > **A professional-grade E-Commerce, Booking, and Delivery Platform** specifically designed for pet shops in Jakarta. Built with a modern monorepo architecture for maximum scalability and code reusability across Web, Mobile, and Desktop.
+
+🌍 **Live Demo:** [pawvels-web.vercel.app](https://pawvels-web.vercel.app) _(Coming Soon)_
 
 ---
 
@@ -36,11 +38,11 @@ This project utilizes a **Turborepo** monorepo structure to share 90% of busines
 ### Shared Packages
 
 - `@petshop/core`: Centralized business logic (pricing, shipping rules).
-- `@petshop/api-client`: Shared SDK for all frontend platforms.
 - `@petshop/types`: Single source of truth for TypeScript definitions.
-- `@petshop/hooks`: Reusable React hooks for Auth, Cart, and Booking.
+- `@petshop/ui`: Shared UI components using shadcn/ui and Tailwind v4.
+- `@petshop/utils`: Pure utility functions for formatting and calculations.
 
-> Detailed architectural diagrams can be found in [ARCHITECTURE.md](./ARCHITECTURE.md).
+> Detailed architectural diagrams and design decisions can be found in [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ---
 
@@ -56,10 +58,46 @@ This project utilizes a **Turborepo** monorepo structure to share 90% of busines
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, Next.js, Tailwind CSS, shadcn/ui, Framer Motion.
+- **Frontend**: React, Next.js, Tailwind CSS v4, shadcn/ui, Framer Motion.
 - **Backend**: NestJS, TypeScript, PostgreSQL.
-- **Infrastructure**: Supabase (Auth, DB, Storage, Edge Functions).
-- **Tooling**: pnpm, Turborepo, TanStack Query, Zustand.
+- **Infrastructure**: Supabase (Auth, DB, Storage, Edge Functions), Vercel.
+- **Tooling**: pnpm v10, Turborepo, Husky, Commitlint, GitHub Actions.
+
+---
+
+## 💻 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v20+)
+- [pnpm](https://pnpm.io/) (v10+)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/jhordideamarall/petshop.git
+   cd petshop
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Setup Environment Variables:
+
+   ```bash
+   cp .env.example .env
+   # Fill in the required variables inside .env
+   ```
+
+4. Start the development server:
+   ```bash
+   pnpm run dev
+   ```
 
 ---
 
@@ -68,16 +106,15 @@ This project utilizes a **Turborepo** monorepo structure to share 90% of busines
 ```bash
 petshop/
 ├── apps/
-│   ├── web/        # Next.js App
-│   ├── admin/      # Admin Dashboard
-│   ├── mobile/     # Expo App
-│   └── api/        # NestJS API
+│   └── web/        # Next.js Web Storefront
 ├── packages/
-│   ├── core/       # Business Logic
-│   ├── types/      # Shared Types
-│   ├── api-client/ # API SDK
-│   └── ui/         # Shared Web UI
-└── supabase/       # SQL Migrations & Seed
+│   ├── config/     # Centralized ESLint/Env configurations
+│   ├── core/       # Business Logic & Services
+│   ├── tsconfig/   # Base TypeScript configs
+│   ├── types/      # Shared Domain Types
+│   ├── ui/         # Shared shadcn/ui components
+│   └── utils/      # Shared utility functions
+└── supabase/       # SQL Migrations & Seed (Planned)
 ```
 
 ---
@@ -94,4 +131,4 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-**Developed with ❤️ as a Portfolio Project.**
+**Developed with ❤️ by Jhordi as a Portfolio Project.**
