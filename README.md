@@ -136,4 +136,4 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-**Developed with ❤️ by Jhordi as a Portfolio Project.**
+**Developed with ❤️ by Jhordi for my client as a Dedicated Project.**
