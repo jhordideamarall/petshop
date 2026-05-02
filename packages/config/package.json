@@ -1,0 +1,21 @@
+{
+  "name": "@petshop/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./env": "./src/env.ts",
+    "./constants": "./src/constants.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@petshop/tsconfig": "workspace:*",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.3"
+  }
+}
