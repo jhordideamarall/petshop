@@ -61,3 +61,16 @@ Work efficiently, safely, and without breaking existing behavior.
 - selalu update dan buat persisten memory untuk sebuah plan dan pekerjaan yang disetujui diproject ini agar setiap sesi project ini kamu tau harus ngapain aja
 
 ---
+
+## UI & Design Standards
+
+- **Source of Truth vs. Wireframes**: `user-flow.html` is ONLY for logic & flow (what pages exist, how they connect). **DO NOT** use it as a visual or CSS reference.
+- **The True Design System** lives in the existing codebase (`app/(shop)/page.tsx`, `header.tsx`, etc.). When building pages based on `user-flow.html`, you **MUST** recycle the existing aesthetic.
+- **NEVER** overwrite existing polished components just to match the raw/placeholder styling seen in `user-flow.html`.
+- **BRANDING**: Search Bar border, Category Tags, Cards (like Grooming/Same Day), and List Separators must consistently use Salmon-Orange (`rgba(224, 123, 57, 0.3)` or `#E07B39` with opacity) for their borders to maintain theme unity.
+- **3D STACK / CAROUSEL**:
+  - The custom piece-wise stacking algorithm must be preserved.
+  - **NEVER** use `transformStyle: 'preserve-3d'` on the carousel items (causes Z-fighting).
+  - The invisible native scroll proxy (`overflowX: scroll`) MUST have `zIndex: 200` to allow touch-drag and click passthrough.
+
+---
