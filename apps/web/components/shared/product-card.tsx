@@ -1,5 +1,5 @@
 'use client';
-import { useState, type CSSProperties, type MouseEvent } from 'react';
+import { useState, useRef, type CSSProperties, type MouseEvent } from 'react';
 import NextImage from 'next/image';
 import { m, AnimatePresence } from 'framer-motion';
 import { PriceTag } from './price-tag';
@@ -64,13 +64,19 @@ export function ProductCard({ product, onAddToCart, href }: ProductCardProps) {
     : null;
   const bgColor = product.imageColor ?? '#D4C4A0';
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleAddToCart = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (justAdded) return;
-    setJustAdded(true);
+
+    // Always trigger the cart addition immediately (allows spamming)
     onAddToCart?.(product);
-    setTimeout(() => setJustAdded(false), 1200);
+
+    // Visual feedback logic
+    setJustAdded(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setJustAdded(false), 800);
   };
 
   return (
@@ -182,7 +188,7 @@ export function ProductCard({ product, onAddToCart, href }: ProductCardProps) {
           <m.button
             onClick={handleAddToCart}
             whileTap={{ scale: 0.85 }}
-            animate={justAdded ? { scale: [1, 1.4, 0.88, 1.08, 1] } : { scale: 1 }}
+            animate={{ scale: justAdded ? 1.12 : 1 }}
             transition={{
               scale: { type: 'spring', stiffness: 420, damping: 14 },
             }}

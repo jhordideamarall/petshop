@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
-import { useCartStore } from '@/stores/cart-store';
 import Link from 'next/link';
-import { m, AnimatePresence } from 'framer-motion';
+import { m } from 'framer-motion';
+import { useCartStore } from '@/stores/cart-store';
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#E07B39" stroke="none">
@@ -103,7 +103,6 @@ export function Header() {
   useEffect(() => {
     setHydrated(true);
   }, []);
-
   useEffect(() => {
     if (cartCount > 0 && hydrated) {
       setAnimTick((prev) => prev + 1);
@@ -112,16 +111,17 @@ export function Header() {
 
   return (
     <div
-      className="sticky top-0 z-50 flex-shrink-0 border-b border-white/20 px-5 pt-5 pb-0"
+      className="absolute top-0 left-0 right-0 z-[100] flex-shrink-0 border-b border-white/20 px-5 pt-5 pb-0"
       style={{
-        background: 'rgba(253,252,251,0.72)',
+        background: 'rgba(253,252,251,0.82)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        borderBottomLeftRadius: 24,
+        borderBottomRightRadius: 24,
+        boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
       }}
     >
-      {/* Location + Actions row */}
       <div className="mb-4 flex items-center justify-between">
-        {/* Logo + location */}
         <Link href="/" className="flex flex-col no-underline">
           <div className="mb-1 flex items-center gap-1.5">
             <PawIcon />
@@ -138,38 +138,37 @@ export function Header() {
             </span>
           </div>
         </Link>
-
         <div className="flex gap-2">
-          {/* Notifications */}
           <button style={iconBtnStyle} aria-label="Notifikasi">
             <Bell />
             <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
           </button>
-
-          {/* Cart */}
           <Link
             href="/cart"
             style={iconBtnStyle}
             className="no-underline"
-            aria-label={`Keranjang${cartCount > 0 ? `, ${cartCount} item` : ''}`}
+            aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
           >
-            <CartIcon />
-            <AnimatePresence>
-              {hydrated && cartCount > 0 && (
-                <m.div
-                  key={`badge-${animTick}`}
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: 1,
-                  }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
-                >
-                  {cartCount}
-                </m.div>
-              )}
-            </AnimatePresence>
+            <m.div
+              key={`icon-${animTick}`}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 600, damping: 15 }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <CartIcon />
+            </m.div>
+            {hydrated && cartCount > 0 && (
+              <m.div
+                key={`badge-${animTick}`}
+                initial={{ scale: 0.6 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 700, damping: 12 }}
+                className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+              >
+                {cartCount}
+              </m.div>
+            )}
           </Link>
         </div>
       </div>
@@ -177,9 +176,9 @@ export function Header() {
       {/* Search bar */}
       <Link
         href="/search"
-        className="mb-5 flex cursor-pointer items-center gap-2.5 rounded-full border border-white/40 bg-stone/60 px-4 py-3 no-underline transition-colors hover:bg-stone/80"
+        className="mb-5 flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 py-3 no-underline transition-colors hover:bg-stone/80"
       >
-        <span className="flex items-center text-[#A09890]">
+        <span className="flex items-center text-[#E07B39]">
           <SearchIcon />
         </span>
         <span className="font-sans text-sm text-[#A09890]">Cari produk untuk peliharaanmu...</span>

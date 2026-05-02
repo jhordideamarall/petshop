@@ -112,11 +112,13 @@ export function BottomNav() {
 
   return (
     <nav
-      className="flex flex-shrink-0 border-t border-white/20 pb-[max(12px,env(safe-area-inset-bottom))] pt-2 shadow-lg"
+      className="absolute bottom-0 left-0 right-0 z-[100] flex flex-shrink-0 border-t border-white/20 pb-[max(12px,env(safe-area-inset-bottom))] pt-2 shadow-lg"
       style={{
-        background: 'rgba(253,252,251,0.72)',
+        background: 'rgba(253,252,251,0.82)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
       }}
       aria-label="Navigasi utama"
     >

@@ -1,6 +1,5 @@
 'use client';
 import { useRef, type CSSProperties } from 'react';
-import type { Route } from 'next';
 import Link from 'next/link';
 import {
   m,
@@ -336,10 +335,9 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
         >
           {banner.desc}
         </p>
-        <Link
-          href={banner.link as Route}
+        <div
           style={{
-            pointerEvents: 'auto',
+            pointerEvents: 'none',
             display: 'inline-flex',
             alignItems: 'center',
             padding: '9px 18px',
@@ -353,7 +351,7 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
           }}
         >
           {banner.cta}
-        </Link>
+        </div>
       </div>
     </m.div>
   );

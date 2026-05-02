@@ -588,3 +588,45 @@ Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_n
     at Set.forEach (<anonymous>)
     at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
     at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
+[10903118ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10903600ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
+[10904050ms] [LOG] [Fast Refresh] done in 579ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10904163ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10904352ms] [LOG] [Fast Refresh] done in 290ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10905198ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
+    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
+    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
+    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
+    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
+    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
+    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
+    at Set.forEach (<anonymous>)
+    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
+    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
+    at Set.forEach (<anonymous>)
+    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
+    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
+[10938617ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10938651ms] [LOG] [Fast Refresh] done in 55ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10982212ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10982691ms] [LOG] [Fast Refresh] done in 319ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10982845ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10983010ms] [LOG] [Fast Refresh] done in 267ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11030270ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11030293ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11065048ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11065087ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
