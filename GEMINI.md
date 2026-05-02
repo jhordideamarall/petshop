@@ -10,7 +10,13 @@ This file contains foundational mandates for the Pawvels project. These instruct
 - If a `push` or `commit` fails, provide a technical **ANALYSIS** first: explain what failed, which file is affected, and your proposed fix.
 - **WAIT** for user confirmation before executing any "emergency refactoring" or "simplification".
 
-### 2. Preserving UI Mandates
+### 2. Mandatory Context Gathering
+
+- **ALWAYS** read `prd.md` and `ARCHITECTURE.md` at the start of a session to understand the project's goal.
+- **ALWAYS** check the `artifacts/` folder (especially `phase-progress.md` and recent session reports) to understand historical context, audit reports, and past architectural decisions.
+- Do not blindly assume the project state without reading these files first.
+
+### 3. Preserving UI Mandates
 
 - Certain UI decisions are **LOCKED** and must not be reverted during code restoration or bug fixing:
   - **FOOTER**: Strictly disabled/removed in `ShopLayout` for mobile-first infinite scroll feel.
@@ -24,17 +30,17 @@ This file contains foundational mandates for the Pawvels project. These instruct
     - Must remain solid (`opacity: 1`) for the active card, dynamically fading the background cards.
 - Always cross-reference `artifacts/session-progress-report.md` before performing a large file restoration.
 
-### 3. Surgical Integrity & Type Safety
+### 4. Surgical Integrity & Type Safety
 
 - **NO SILENT SIMPLIFICATION**: Do not delete imports or variables just to pass linting without informing the user.
 - If a variable is blocking the build, report it as an insight. Ask if the variable should be implemented properly or removed.
 - Use explicit type casting (e.g., `as CSSProperties`) only when necessary and ensure the type is imported.
 
-### 4. Mandatory Pre-Validation
+### 5. Mandatory Pre-Validation
 
 - Before stating a task is "DONE" or "KELAR", you **MUST** run the project's validation commands (e.g., `pnpm type-check` or `npm run lint`) to confirm no new errors were introduced.
 
-### 5. Design Source of Truth vs. Wireframes
+### 6. Design Source of Truth vs. Wireframes
 
 - **`user-flow.html` is ONLY for logic & flow**: It defines _what_ pages must exist, _what_ elements must be present, and _how_ users navigate. It is essentially a wireframe.
 - **DO NOT** use `user-flow.html` as a visual or CSS reference.
@@ -43,7 +49,7 @@ This file contains foundational mandates for the Pawvels project. These instruct
   - Keep the rounded radiuses, specific drop shadows, and Framer Motion spring configs.
   - **NEVER** overwrite existing polished components just to match the raw/placeholder styling seen in `user-flow.html`.
 
-### 6. Git Hook & Stash Recovery Protocol
+### 7. Git Hook & Stash Recovery Protocol
 
 - The project uses strict `husky` and `lint-staged` pre-commit hooks.
 - **IF A COMMIT FAILS** (e.g. `pnpm type-check` or `eslint` exits with code 1) AND the working files suddenly "revert" to an older state, **DO NOT PANIC and DO NOT REWRITE THE CODE**.

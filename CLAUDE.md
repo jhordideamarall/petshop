@@ -28,8 +28,7 @@ Work efficiently, safely, and without breaking existing behavior.
 
 ## Workflow
 
-- Read `prd.md` and `ARCHITECTURE.md` always update and call memory pekerjaan sebelumnya agar tidak menghabiskan banyak token tiap sessi dimulai
-- Always read the `artifacts/` folder at the start of a task to understand historical context, audit reports, and past architectural decisions.
+- **MANDATORY CONTEXT GATHERING**: ALWAYS read `prd.md`, `ARCHITECTURE.md`, and the `artifacts/` folder (especially `phase-progress.md` and kickoff docs) at the start of every session. Do not blindly assume the project state without reading these files first!
 - For large tasks → propose a plan first
 - For small tasks → act directly but keep changes minimal
 - Avoid modifying many files at once
