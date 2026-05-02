@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     default: 'Pawvels',
     template: '%s | Pawvels',
   },
+  icons: {
+    icon: '/icon.svg',
+  },
   description: 'Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.',
   openGraph: {
     type: 'website',
