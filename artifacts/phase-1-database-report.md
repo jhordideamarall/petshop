@@ -15,8 +15,9 @@ The Database Foundation phase has been completed with a high level of technical 
 1.  **Schema Design**: Implemented 25 tables derived from PRD §15.
 2.  **Granular Auth**: Established 4 distinct roles (Owner, Admin, Staff, Customer) using PostgreSQL functions and RLS.
 3.  **Seeding**: Populated initial data (6 Categories, 30 Products, 6 Services) for immediate testing.
-4.  **Type Safety**: Synchronized Supabase schema with `@petshop/types` via automatic generation.
-5.  **DevOps**: Initialized Supabase migrations for version-controlled infrastructure.
+4.  **Storage**: Initialized 5 public buckets (`products`, `banners`, `pets`, `reviews`, `avatars`) with public read policies.
+5.  **Type Safety**: Synchronized Supabase schema with `@petshop/types` via automatic generation.
+6.  **DevOps**: Initialized Supabase migrations for version-controlled infrastructure.
 
 ---
 
@@ -26,6 +27,7 @@ The Database Foundation phase has been completed with a high level of technical 
 | :--------------------- | :----: | :----------------------------------------------------------------- |
 | **Table Completeness** |   ✅   | 25 tables present, covering all modules (E-comm, Booking, etc).    |
 | **Seeding**            |   ✅   | 6 Categories, 30 Products, 6 Services successfully populated.      |
+| **Storage Buckets**    |   ✅   | 5 Public buckets configured with RLS policies.                     |
 | **RLS Enforcement**    |   ✅   | 80+ policies active. No table is accessible without a policy.      |
 | **Role Distinction**   |   ✅   | `is_owner()`, `is_admin()`, and `is_staff()` functions verified.   |
 | **Data Integrity**     |   ✅   | Foreign Key constraints and Enums verified (Order/Payment status). |
