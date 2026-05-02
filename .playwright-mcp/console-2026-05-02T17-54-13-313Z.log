@@ -630,3 +630,28 @@ Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_n
 [11030293ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [11065048ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [11065087ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11261306ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11261469ms] [LOG] [Fast Refresh] done in 227ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11404729ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11404782ms] [LOG] [Fast Refresh] done in 50ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11412602ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11412651ms] [LOG] [Fast Refresh] done in 150ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11460329ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11460359ms] [LOG] [Fast Refresh] done in 44ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11468662ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11468721ms] [LOG] [Fast Refresh] done in 160ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11478519ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/favicon.ico:0
+[11498260ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11498332ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11563227ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11563285ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11676666ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11676700ms] [LOG] [Fast Refresh] done in 101ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11706765ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11706831ms] [LOG] [Fast Refresh] done in 166ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11707321ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11707348ms] [LOG] [Fast Refresh] done in 52ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11745815ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11745861ms] [LOG] [Fast Refresh] done in 60ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[11904021ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[11904112ms] [LOG] [Fast Refresh] done in 162ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809

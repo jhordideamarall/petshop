@@ -157,7 +157,7 @@ const ChevronRight = () => (
 );
 
 const FEATURES = [
-  { label: 'Same day', sub: 'Order sebelum 14:00' },
+  { label: 'Same day', sub: 'Order Before 14:00' },
   { label: 'Produk original', sub: 'Bergaransi resmi' },
   { label: 'Poin loyalty', sub: 'Setiap pembelian' },
 ] as const;
@@ -439,9 +439,11 @@ export default function HomePage() {
       {/* Feature strip */}
       <div
         style={{
-          margin: '8px 16px 0',
+          margin: '16px 16px 0',
           background: '#FDFCFB',
           borderRadius: 16,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
+          border: '1px solid rgba(224, 123, 57, 0.3)',
           display: 'grid',
           gridTemplateColumns: '1fr 1px 1fr 1px 1fr',
         }}
@@ -464,7 +466,7 @@ export default function HomePage() {
                 {feat.sub}
               </div>
             </div>
-            {i < 2 && <div style={{ background: '#EAE7E2', width: 1 }} />}
+            {i < 2 && <div style={{ background: 'rgba(224, 123, 57, 0.3)', width: 1 }} />}
           </div>
         ))}
       </div>
@@ -524,7 +526,7 @@ export default function HomePage() {
                 alignItems: 'center',
                 padding: '8px 16px',
                 borderRadius: 9999,
-                border: '1.5px solid #D8D4CE',
+                border: '1.5px solid rgba(224, 123, 57, 0.3)',
                 background: '#FDFCFB',
                 color: '#1A1714',
                 fontFamily: 'var(--font-heading)',
@@ -546,6 +548,7 @@ export default function HomePage() {
           margin: '16px 16px 0',
           background: '#FDFCFB',
           borderRadius: 16,
+          border: '1px solid rgba(224, 123, 57, 0.3)',
           padding: '16px',
           display: 'flex',
           alignItems: 'center',
@@ -590,8 +593,9 @@ export default function HomePage() {
             gap: 4,
             padding: '8px 14px',
             borderRadius: 9999,
-            border: '1.5px solid #D8D4CE',
+            border: '1.5px solid rgba(224, 123, 57, 0.3)',
             background: '#FDFCFB',
+            boxShadow: '0 4px 14px rgba(224, 123, 57, 0.35)',
             color: '#1A1714',
             fontFamily: 'var(--font-heading)',
             fontWeight: 600,
