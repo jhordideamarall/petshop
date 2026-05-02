@@ -1,4 +1,4 @@
-# 🐾 Pawvels Platform — Jakarta
+# 🐾 Pawvels E-Commerce Platform
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
@@ -9,7 +9,7 @@
 
 > **A professional-grade E-Commerce, Booking, and Delivery Platform** specifically designed for pet shops in Jakarta. Built with a modern monorepo architecture for maximum scalability and code reusability across Web, Mobile, and Desktop.
 
-🌍 **Live Demo:** [pawvels-web.vercel.app](https://pawvels-web.vercel.app) _(Coming Soon)_
+🌍 **Live Demo:** [pawvels-web.vercel.app](https://pawvels.vercel.app) _(Coming Soon)_
 
 ---
 
