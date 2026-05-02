@@ -20,6 +20,11 @@
 | Phase 8           | Pet Profile & Loyalty           | 🔲 Belum dimulai |
 | Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai |
 
+> **📝 NOTE: STRATEGI EKSEKUSI "FRONT-END FIRST"**
+> Sesuai kesepakatan terbaru, kita akan **MENGABAIKAN urutan fase konvensional** yang langsung mengikat UI dengan Backend.
+> Seluruh pengembangan dari Phase 3 hingga Phase 8 wajib memprioritaskan pembuatan **UI, Flow, dan Local Logic (Zustand/Dummy Data)** terlebih dahulu mengacu pada `user-flow.html`.
+> Jangan sentuh integrasi Supabase/Backend sebelum seluruh komponen visual dan navigasi halaman tersebut sempurna 100%.
+
 ---
 
 ## Phase 0 — Infra & Tooling ✅
