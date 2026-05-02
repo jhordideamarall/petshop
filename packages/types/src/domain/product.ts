@@ -1,3 +1,6 @@
+// Domain types synced with PRD §15 schema
+// Last synced: 2026-05-02
+
 import type { ProductType } from '../enums.js';
 
 export interface Category {
@@ -10,7 +13,6 @@ export interface Category {
   sortOrder: number;
   isActive: boolean;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface ProductImage {
@@ -19,18 +21,20 @@ export interface ProductImage {
   url: string;
   altText: string | null;
   sortOrder: number;
+  createdAt: Date;
 }
 
 export interface ProductVariant {
   id: string;
   productId: string;
   name: string;
-  sku: string;
+  sku: string | null;
   price: number;
   promoPrice: number | null;
+  costPrice: number;
   stock: number;
-  weightGram: number;
-  attributes: Record<string, string>;
+  weightGrams: number;
+  sortOrder: number;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -38,22 +42,25 @@ export interface ProductVariant {
 
 export interface Product {
   id: string;
-  categoryId: string;
+  categoryId: string | null;
   name: string;
   slug: string;
   description: string | null;
-  productType: ProductType;
-  basePrice: number;
+  price: number;
   promoPrice: number | null;
+  costPrice: number;
   stock: number;
-  weightGram: number;
+  weightGrams: number;
+  type: ProductType;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  isActive: boolean;
   avgRating: number;
   reviewCount: number;
   soldCount: number;
-  isActive: boolean;
-  isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
+  // Relations (optional, populated via joins)
   images?: ProductImage[];
   variants?: ProductVariant[];
   category?: Category;

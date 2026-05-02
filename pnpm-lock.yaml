@@ -123,6 +123,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@petshop/config':
+        specifier: workspace:*
+        version: link:../config
       '@petshop/types':
         specifier: workspace:*
         version: link:../types
@@ -198,6 +201,10 @@ importers:
         version: 5.9.3
 
   packages/utils:
+    dependencies:
+      '@petshop/config':
+        specifier: workspace:*
+        version: link:../config
     devDependencies:
       '@petshop/tsconfig':
         specifier: workspace:*

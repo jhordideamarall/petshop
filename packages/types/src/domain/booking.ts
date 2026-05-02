@@ -1,50 +1,55 @@
-import type { BookingStatus, ServiceType } from '../enums.js';
+// Domain types synced with PRD §15 schema
+// Last synced: 2026-05-02
+
+import type { BookingStatus, PaymentStatus, ServiceType } from '../enums.js';
 import type { Pet } from './user.js';
 
 export interface Service {
   id: string;
   name: string;
-  serviceType: ServiceType;
+  slug: string;
+  type: ServiceType;
   description: string | null;
   price: number;
-  dpAmount: number | null;
-  requiresDp: boolean;
   durationMinutes: number | null;
+  requiresDp: boolean;
+  dpPercentage: number;
+  imageUrl: string | null;
   isActive: boolean;
+  sortOrder: number;
+  avgRating: number;
+  reviewCount: number;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface BookingSlot {
   id: string;
-  serviceId: string;
   date: Date;
-  startTime: string;
-  endTime: string | null;
+  timeSlot: string | null;
+  type: ServiceType;
   capacity: number;
   booked: number;
-  isBlocked: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface Booking {
   id: string;
   bookingNumber: string;
   userId: string;
-  serviceId: string;
-  slotId: string;
   petId: string;
-  status: BookingStatus;
+  serviceId: string;
+  slotId: string | null;
   dateStart: Date;
   dateEnd: Date | null;
-  totalPrice: number;
-  dpPaid: number | null;
+  timeSlot: string | null;
+  status: BookingStatus;
+  dpAmount: number;
+  totalAmount: number;
+  paymentStatus: PaymentStatus;
   notes: string | null;
-  cancelledAt: Date | null;
-  cancelReason: string | null;
+  cancellationReason: string | null;
   createdAt: Date;
   updatedAt: Date;
+  // Relations
   service?: Service;
   slot?: BookingSlot;
   pet?: Pet;

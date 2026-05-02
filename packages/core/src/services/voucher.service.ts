@@ -27,19 +27,19 @@ export function validateVoucher(
     return { isValid: false, discountAmount: 0, reason: 'Voucher sudah habis digunakan.' };
   }
 
-  if (cartSubtotal < voucher.minOrderAmount) {
+  if (cartSubtotal < voucher.minOrder) {
     return {
       isValid: false,
       discountAmount: 0,
-      reason: `Minimum pembelian ${voucher.minOrderAmount} untuk menggunakan voucher ini.`,
+      reason: `Minimum pembelian ${voucher.minOrder} untuk menggunakan voucher ini.`,
     };
   }
 
   let discountAmount: number;
-  if (voucher.voucherType === 'percentage') {
+  if (voucher.type === 'percentage') {
     discountAmount = (cartSubtotal * voucher.value) / 100;
-    if (voucher.maxDiscountAmount !== null) {
-      discountAmount = Math.min(discountAmount, voucher.maxDiscountAmount);
+    if (voucher.maxDiscount !== null) {
+      discountAmount = Math.min(discountAmount, voucher.maxDiscount);
     }
   } else {
     discountAmount = Math.min(voucher.value, cartSubtotal);

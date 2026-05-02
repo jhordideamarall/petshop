@@ -1,40 +1,58 @@
-import type { VoucherType } from '../enums.js';
+// Domain types synced with PRD §15 schema
+// Last synced: 2026-05-02
+
+import type { VoucherType, LoyaltyTransactionType } from '../enums.js';
 
 export interface Voucher {
   id: string;
   code: string;
-  voucherType: VoucherType;
+  type: VoucherType;
   value: number;
-  minOrderAmount: number;
-  maxDiscountAmount: number | null;
+  minOrder: number;
+  maxDiscount: number | null;
   usageLimit: number | null;
   usedCount: number;
   validFrom: Date;
   validUntil: Date;
   isActive: boolean;
   createdAt: Date;
+}
+
+export interface LoyaltyBalance {
+  id: string;
+  userId: string;
+  totalPoints: number;
+  lifetimePoints: number;
   updatedAt: Date;
 }
 
 export interface LoyaltyTransaction {
   id: string;
   userId: string;
-  points: number;
-  transactionType: string;
-  referenceId: string | null;
-  expiresAt: Date | null;
+  orderId: string | null;
+  pointsChange: number;
+  type: LoyaltyTransactionType;
+  description: string | null;
   createdAt: Date;
 }
 
 export interface Review {
   id: string;
   userId: string;
-  productId: string;
-  orderItemId: string;
+  productId: string | null;
+  orderId: string | null;
+  serviceId: string | null;
   rating: number;
   comment: string | null;
-  photoUrls: string[];
-  isVerifiedPurchase: boolean;
+  photoUrls: string[] | null;
+  adminReply: string | null;
+  isVisible: boolean;
   createdAt: Date;
-  updatedAt: Date;
+}
+
+export interface Wishlist {
+  id: string;
+  userId: string;
+  productId: string;
+  createdAt: Date;
 }

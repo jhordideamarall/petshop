@@ -1,4 +1,4 @@
-const LOW_STOCK_THRESHOLD = 5;
+import { LOW_STOCK_THRESHOLD } from '@petshop/config/constants';
 
 export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock';
 

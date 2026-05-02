@@ -1,15 +1,13 @@
-const CURRENCY_LOCALE = 'id-ID';
-const CURRENCY_CODE = 'IDR';
-const DATE_LOCALE = 'id-ID';
+import { CURRENCY, DATE_LOCALE } from '@petshop/config/constants';
 
 /**
  * Format number as Indonesian Rupiah.
  * formatCurrency(15000) → "Rp 15.000"
  */
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat(CURRENCY_LOCALE, {
+  return new Intl.NumberFormat(CURRENCY.locale, {
     style: 'currency',
-    currency: CURRENCY_CODE,
+    currency: CURRENCY.code,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);

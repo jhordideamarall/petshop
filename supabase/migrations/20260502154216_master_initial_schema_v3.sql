@@ -349,6 +349,19 @@ CREATE TABLE notification_settings (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE banners (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('hero', 'promo', 'category')),
+    image_url TEXT NOT NULL,
+    link TEXT,
+    priority INT DEFAULT 0,
+    start_date TIMESTAMPTZ,
+    end_date TIMESTAMPTZ,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE store_locations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
@@ -432,7 +445,17 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO public.profiles (id, name, email, avatar_url, role)
-    VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', ''), NEW.email, NEW.raw_user_meta_data->>'avatar_url', COALESCE((NEW.raw_app_meta_data->>'role')::user_role, 'customer'));
+    VALUES (
+        NEW.id,
+        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', ''),
+        NEW.email,
+        NEW.raw_user_meta_data->>'avatar_url',
+        CASE
+            WHEN NEW.raw_app_meta_data->>'role' IN ('admin', 'owner', 'staff')
+            THEN (NEW.raw_app_meta_data->>'role')::user_role
+            ELSE 'customer'::user_role
+        END
+    );
     INSERT INTO public.carts (user_id) VALUES (NEW.id);
     INSERT INTO public.loyalty (user_id) VALUES (NEW.id);
     INSERT INTO public.notification_settings (user_id) VALUES (NEW.id);
@@ -549,8 +572,16 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 ('pets', 'pets', true), ('reviews', 'reviews', true), ('categories', 'categories', true), ('services', 'services', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Drop existing storage policies first (they survive DROP SCHEMA public CASCADE)
+DROP POLICY IF EXISTS "storage_public_read" ON storage.objects;
+DROP POLICY IF EXISTS "storage_auth_upload_avatars" ON storage.objects;
+DROP POLICY IF EXISTS "storage_admin_upload" ON storage.objects;
+DROP POLICY IF EXISTS "storage_own_update" ON storage.objects;
+DROP POLICY IF EXISTS "storage_own_delete" ON storage.objects;
+
 CREATE POLICY "storage_public_read" ON storage.objects FOR SELECT USING (true);
 CREATE POLICY "storage_auth_upload_avatars" ON storage.objects FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND bucket_id IN ('avatars', 'pets', 'reviews'));
 CREATE POLICY "storage_admin_upload" ON storage.objects FOR INSERT WITH CHECK (is_admin_or_owner() AND bucket_id IN ('products', 'banners', 'categories', 'services'));
 CREATE POLICY "storage_own_update" ON storage.objects FOR UPDATE USING (auth.uid()::text = (storage.foldername(name))[1]);
 CREATE POLICY "storage_own_delete" ON storage.objects FOR DELETE USING (auth.uid()::text = (storage.foldername(name))[1]);
+

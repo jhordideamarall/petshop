@@ -18,10 +18,8 @@ export interface ValidationResult {
  * Get available slots (booked < capacity).
  * Full DB query in Phase 6 — this validates a slot object in memory.
  */
-export function isSlotAvailable(
-  slot: Pick<BookingSlot, 'capacity' | 'booked' | 'isBlocked'>,
-): boolean {
-  return !slot.isBlocked && slot.booked < slot.capacity;
+export function isSlotAvailable(slot: Pick<BookingSlot, 'capacity' | 'booked'>): boolean {
+  return slot.booked < slot.capacity;
 }
 
 /**

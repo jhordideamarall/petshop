@@ -1,13 +1,17 @@
-import type { UserRole } from '../enums.js';
+// Domain types synced with PRD §15 schema
+// Last synced: 2026-05-02
+
+import type { UserRole, LoyaltyTier } from '../enums.js';
 
 export interface User {
   id: string;
-  email: string;
   name: string;
+  email: string | null;
   phone: string | null;
-  avatarUrl: string | null;
   role: UserRole;
-  loyaltyPoints: number;
+  avatarUrl: string | null;
+  tier: LoyaltyTier;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,29 +20,27 @@ export interface Address {
   id: string;
   userId: string;
   label: string;
-  recipientName: string;
-  phone: string;
-  street: string;
-  district: string;
+  recipientName: string | null;
+  phone: string | null;
+  fullAddress: string;
   city: string;
-  province: string;
-  postalCode: string;
+  district: string | null;
+  postalCode: string | null;
   latitude: number | null;
   longitude: number | null;
   isDefault: boolean;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface Pet {
   id: string;
-  userId: string;
+  ownerId: string;
   name: string;
   type: string;
   breed: string | null;
   weightKg: number | null;
   birthDate: Date | null;
-  photoUrl: string | null;
+  avatarUrl: string | null;
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
