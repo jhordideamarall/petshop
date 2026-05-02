@@ -111,8 +111,9 @@ export function Header() {
 
   return (
     <div
-      className="absolute top-0 left-0 right-0 z-[100] flex-shrink-0 border-b border-white/20 px-5 pt-5 pb-0"
+      className="absolute top-0 left-0 right-0 z-[100] flex-shrink-0 border-b border-white/20 px-5 pb-0"
       style={{
+        paddingTop: 'calc(12px + env(safe-area-inset-top))',
         background: 'rgba(253,252,251,0.82)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
@@ -139,50 +140,55 @@ export function Header() {
           </div>
         </Link>
         <div className="flex gap-2">
-          <button style={iconBtnStyle} aria-label="Notifikasi">
+          <m.button whileTap={{ scale: 0.94 }} style={iconBtnStyle} aria-label="Notifikasi">
             <Bell />
             <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
-          </button>
+          </m.button>
           <Link
             href="/cart"
-            style={iconBtnStyle}
             className="no-underline"
             aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
           >
-            <m.div
-              key={`icon-${animTick}`}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 600, damping: 15 }}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <CartIcon />
-            </m.div>
-            {hydrated && cartCount > 0 && (
+            <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
               <m.div
-                key={`badge-${animTick}`}
-                initial={{ scale: 0.6 }}
+                key={`icon-${animTick}`}
+                initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 700, damping: 12 }}
-                className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+                transition={{ type: 'spring', stiffness: 600, damping: 15 }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                {cartCount}
+                <CartIcon />
               </m.div>
-            )}
+              {hydrated && cartCount > 0 && (
+                <m.div
+                  key={`badge-${animTick}`}
+                  initial={{ scale: 0.6 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 700, damping: 12 }}
+                  className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+                >
+                  {cartCount}
+                </m.div>
+              )}
+            </m.div>
           </Link>
         </div>
       </div>
 
       {/* Search bar */}
-      <Link
-        href="/search"
-        className="mb-5 flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 py-3 no-underline transition-colors hover:bg-stone/80"
-      >
-        <span className="flex items-center text-[#E07B39]">
-          <SearchIcon />
-        </span>
-        <span className="font-sans text-sm text-[#A09890]">Cari produk untuk peliharaanmu...</span>
-      </Link>
+      <m.div whileTap={{ scale: 0.98 }}>
+        <Link
+          href="/search"
+          className="mb-5 flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 py-3 no-underline transition-colors hover:bg-stone/80"
+        >
+          <span className="flex items-center text-[#E07B39]">
+            <SearchIcon />
+          </span>
+          <span className="font-sans text-sm text-[#A09890]">
+            Cari produk untuk peliharaanmu...
+          </span>
+        </Link>
+      </m.div>
     </div>
   );
 }

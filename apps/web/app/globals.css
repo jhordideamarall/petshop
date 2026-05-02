@@ -119,9 +119,28 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
+    background: var(--color-app-bg);
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  input,
+  textarea,
+  button,
+  select,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Prevent accidental text selection on UI elements */
+  button,
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
   }
   html {
     @apply font-sans;
