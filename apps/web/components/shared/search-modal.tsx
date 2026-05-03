@@ -2,6 +2,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getProducts } from '@/lib/dummy-products';
 
 interface SearchModalProps {
@@ -58,13 +59,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const results = useMemo(() => {
     const products = getProducts();
+    const q = query.trim().toLowerCase();
 
-    if (!query.trim()) {
+    if (!q) {
       return products.filter((p) => p.promoPrice != null);
     }
-    const q = query.toLowerCase();
-    return products.filter((p) => p.name.toLowerCase().includes(q));
+
+    return products.filter((p) =>
+      [p.name, p.category, p.type]
+        .filter(Boolean)
+        .some((value) => value!.toLowerCase().includes(q)),
+    );
   }, [query]);
+
+  const trimmedQuery = query.trim();
 
   return (
     <AnimatePresence>
@@ -95,40 +103,60 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             transition={{ type: 'spring', stiffness: 360, damping: 28 }}
             className="fixed z-[110] left-1/2 -translate-x-1/2"
             style={{
-              top: 'calc(85px + env(safe-area-inset-top))',
-              width: 'calc(min(100vw, 430px) - 32px)',
-              maxWidth: 398,
-              background: 'rgba(253,252,251,0.97)',
-              borderRadius: 20,
-              boxShadow: '0 24px 60px rgba(0,0,0,0.18), 0 8px 20px rgba(0,0,0,0.10)',
+              top: 'calc(78px + env(safe-area-inset-top))',
+              width: 'calc(min(100vw, 430px) - 24px)',
+              maxWidth: 406,
+              background: 'rgba(253,252,251,0.98)',
+              borderRadius: 24,
+              border: '1px solid rgba(255,255,255,0.72)',
+              boxShadow: '0 28px 70px rgba(32,22,14,0.2), 0 8px 22px rgba(32,22,14,0.10)',
               overflow: 'hidden',
             }}
           >
             {/* Search input row */}
             <div
-              className="flex items-center gap-3 px-4"
+              className="flex items-center gap-3 px-3"
               style={{
-                paddingTop: 14,
-                paddingBottom: 14,
+                paddingTop: 12,
+                paddingBottom: 12,
                 borderBottom: '1px solid rgba(216,212,206,0.5)',
               }}
             >
-              <SearchInputIcon />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari produk untuk peliharaanmu..."
-                className="flex-1 bg-transparent font-sans text-sm text-ink outline-none placeholder:text-[#A09890]"
-                style={{ fontSize: 14 }}
-              />
+              <div
+                className="flex min-w-0 flex-1 items-center gap-3 rounded-[18px] px-3"
+                style={{
+                  height: 48,
+                  background: '#F5F3F0',
+                  border: '1px solid rgba(216,212,206,0.75)',
+                }}
+              >
+                <SearchInputIcon />
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Cari makanan, vitamin, aksesoris..."
+                  className="min-w-0 flex-1 bg-transparent font-sans text-ink outline-none placeholder:text-[#A09890]"
+                  style={{ fontSize: 15, lineHeight: '20px' }}
+                />
+                {trimmedQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    className="rounded-full px-2 font-heading text-[11px] font-bold text-[#A09890]"
+                    style={{ height: 28, background: 'rgba(255,255,255,0.72)' }}
+                  >
+                    Hapus
+                  </button>
+                )}
+              </div>
               <m.button
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
                 className="flex items-center justify-center rounded-full"
                 style={{
-                  width: 28,
-                  height: 28,
+                  width: 44,
+                  height: 44,
                   background: 'rgba(216,212,206,0.45)',
                   color: '#7A746E',
                   flexShrink: 0,
@@ -140,33 +168,65 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </div>
 
             {/* Section label */}
-            <div className="px-4 pt-3 pb-2">
-              <span className="font-heading text-[11px] font-bold tracking-widest uppercase text-[#A09890]">
-                {query.trim() ? 'Hasil Pencarian' : 'Diskon Spesial'}
-              </span>
+            <div className="flex items-center justify-between px-4 pt-3 pb-2">
+              <div>
+                <span className="font-heading text-[11px] font-bold tracking-widest uppercase text-[#A09890]">
+                  {trimmedQuery ? 'Hasil Pencarian' : 'Diskon Spesial'}
+                </span>
+                <p className="mt-1 font-sans text-[12px] font-medium text-[#7A746E]">
+                  {trimmedQuery
+                    ? `${results.length} produk cocok`
+                    : 'Produk promo yang sering dibeli'}
+                </p>
+              </div>
+              {!trimmedQuery && (
+                <span
+                  className="rounded-full px-2.5 py-1 font-heading text-[11px] font-bold"
+                  style={{ background: '#FFF3EA', color: '#E07B39' }}
+                >
+                  Promo
+                </span>
+              )}
             </div>
 
             {/* Product list */}
-            <div className="overflow-y-auto" style={{ maxHeight: 340, paddingBottom: 8 }}>
+            <div className="overflow-y-auto px-2" style={{ maxHeight: 360, paddingBottom: 10 }}>
               {results.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-[#A09890]">
-                  <svg
-                    width="36"
-                    height="36"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
+                <div className="flex flex-col items-center justify-center px-8 py-12 text-center text-[#A09890]">
+                  <div
+                    className="flex items-center justify-center rounded-full"
+                    style={{ width: 56, height: 56, background: '#F5F3F0' }}
                   >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <p className="mt-3 font-sans text-sm">Produk tidak ditemukan</p>
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                  </div>
+                  <p className="mt-4 font-heading text-[15px] font-extrabold text-ink">
+                    Produk tidak ditemukan
+                  </p>
+                  <p className="mt-1 font-sans text-sm leading-5">
+                    Coba kata lain seperti "kucing", "vitamin", atau "grooming".
+                  </p>
                 </div>
               ) : (
                 results.map((product, i) => {
                   const displayPrice = product.promoPrice ?? product.price;
                   const hasDiscount = product.promoPrice != null;
+                  const initials = product.name
+                    .split(' ')
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((word) => word[0])
+                    .join('')
+                    .toUpperCase();
                   const discountPct = hasDiscount
                     ? Math.round(((product.price - product.promoPrice!) / product.price) * 100)
                     : 0;
@@ -177,58 +237,91 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.035, type: 'spring', stiffness: 300, damping: 25 }}
-                      className="flex items-center gap-3 px-4 py-3 cursor-pointer"
-                      style={{
-                        borderBottom:
-                          i < results.length - 1 ? '1px solid rgba(216,212,206,0.3)' : 'none',
-                      }}
                       whileTap={{ backgroundColor: 'rgba(224,123,57,0.06)' }}
-                      onClick={onClose}
+                      className="rounded-[18px]"
                     >
-                      {/* Thumbnail */}
-                      <div
-                        className="relative flex-shrink-0 overflow-hidden rounded-xl"
-                        style={{ width: 52, height: 52, background: '#F5F3F0' }}
+                      <Link
+                        href={`/products/${product.slug}`}
+                        onClick={onClose}
+                        className="flex min-h-[78px] cursor-pointer items-center gap-3 rounded-[18px] px-2.5 py-2.5 no-underline"
+                        style={{
+                          border:
+                            i < results.length - 1
+                              ? '1px solid rgba(216,212,206,0.34)'
+                              : '1px solid rgba(216,212,206,0.18)',
+                          background: i % 2 === 0 ? 'rgba(255,255,255,0.64)' : 'transparent',
+                        }}
                       >
-                        <Image
-                          src={product.imageUrl ?? ''}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                          sizes="52px"
-                          unoptimized
-                        />
-                        {hasDiscount && (
-                          <div
-                            className="absolute top-1 left-1 rounded-md px-1 font-heading text-[9px] font-bold text-white"
-                            style={{ background: '#E07B39', lineHeight: '14px' }}
-                          >
-                            -{discountPct}%
-                          </div>
-                        )}
-                      </div>
+                        {/* Thumbnail */}
+                        <div
+                          className="relative flex-shrink-0 overflow-hidden rounded-[14px]"
+                          style={{ width: 58, height: 58, background: '#F5F3F0' }}
+                        >
+                          {product.imageUrl ? (
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover"
+                              sizes="58px"
+                              unoptimized
+                            />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center font-heading text-[11px] font-extrabold text-[#A09890]">
+                              {initials || 'PV'}
+                            </span>
+                          )}
+                          {hasDiscount && (
+                            <div
+                              className="absolute top-1 left-1 rounded-md px-1 font-heading text-[9px] font-bold text-white"
+                              style={{ background: '#E07B39', lineHeight: '14px' }}
+                            >
+                              -{discountPct}%
+                            </div>
+                          )}
+                        </div>
 
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-sans text-sm font-medium text-ink truncate leading-tight">
-                          {product.name}
-                        </p>
-                        <p className="mt-0.5 font-sans text-[11px] text-[#A09890]">
-                          {product.category}
-                        </p>
-                      </div>
-
-                      {/* Price */}
-                      <div className="flex-shrink-0 text-right">
-                        <p className="font-heading text-sm font-bold" style={{ color: '#E07B39' }}>
-                          {formatPrice(displayPrice)}
-                        </p>
-                        {hasDiscount && (
-                          <p className="font-sans text-[11px] text-[#A09890] line-through">
-                            {formatPrice(product.price)}
+                        {/* Info */}
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-2 font-heading text-[14px] font-extrabold leading-[17px] text-ink">
+                            {product.name}
                           </p>
-                        )}
-                      </div>
+                          <div className="mt-1 flex items-center gap-2">
+                            {product.category && (
+                              <span className="font-sans text-[11px] font-semibold text-[#A09890]">
+                                {product.category}
+                              </span>
+                            )}
+                            <span className="h-1 w-1 rounded-full bg-[#D8D4CE]" />
+                            <span className="font-sans text-[11px] font-semibold text-[#A09890]">
+                              {product.soldCount?.toLocaleString('id-ID') ?? 0} terjual
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="flex-shrink-0 text-right">
+                          <p className="font-heading text-[14px] font-extrabold text-primary">
+                            {formatPrice(displayPrice)}
+                          </p>
+                          {hasDiscount && (
+                            <p className="font-sans text-[11px] text-[#A09890] line-through">
+                              {formatPrice(product.price)}
+                            </p>
+                          )}
+                          <div
+                            className="ml-auto mt-1 flex items-center justify-center rounded-full font-heading text-[11px] font-bold"
+                            style={{
+                              width: 26,
+                              height: 26,
+                              background: '#FFF3EA',
+                              color: '#E07B39',
+                            }}
+                          >
+                            &gt;
+                          </div>
+                        </div>
+                      </Link>
                     </m.div>
                   );
                 })
