@@ -155,3 +155,234 @@ Import traces:
 [ 1475892ms] [LOG] [Fast Refresh] done in 216ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [ 1507136ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [ 1507267ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5569928ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5571706ms] [LOG] [Fast Refresh] done in 702ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5572323ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5572326ms] [LOG] [Fast Refresh] done in 109ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5574663ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5574831ms] [LOG] [Fast Refresh] done in 271ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5575924ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5576040ms] [LOG] [Fast Refresh] done in 218ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5577613ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5589510ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5590786ms] [LOG] [Fast Refresh] done in 1354ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5593765ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5594514ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5594790ms] [LOG] [Fast Refresh] done in 377ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5599413ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5638597ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5638640ms] [LOG] [Fast Refresh] done in 145ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5638761ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5638817ms] [LOG] [Fast Refresh] done in 158ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5702076ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5702225ms] [LOG] [Fast Refresh] done in 250ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5787912ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5789951ms] [LOG] [Fast Refresh] done in 1234ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5791024ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5791074ms] [LOG] [Fast Refresh] done in 152ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5793976ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5861605ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5861649ms] [LOG] [Fast Refresh] done in 145ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5883353ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5887431ms] [LOG] [Fast Refresh] done in 1180ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5887432ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5888001ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5888040ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5888993ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5889019ms] [LOG] [Fast Refresh] done in 128ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5891938ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5891942ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5892111ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5892177ms] [LOG] [Fast Refresh] done in 168ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5893178ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5893842ms] [LOG] [Fast Refresh] done in 765ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5894853ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 5917131ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5917217ms] [LOG] [Fast Refresh] done in 188ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5924108ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5924148ms] [LOG] [Fast Refresh] done in 140ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5977844ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5977854ms] [LOG] [Fast Refresh] done in 113ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5991776ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5991954ms] [ERROR] %o
+
+%s ReferenceError: useScroll is not defined
+    at Header (http://localhost:3000/_next/static/chunks/apps_web_23e5a9c8._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fcomponents%252Flayout%252Fheader.tsx+%255Bapp-client%255D+%2528ecmascript%2529:386:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:13072:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:4091:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:5523:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:6111:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:886:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8298:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8190:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8173:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:7932:56)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8890:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8809:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8048:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:294:13)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:886:13 The above error occurred in the <Header> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:1247
+[ 5991960ms] [ERROR] ReferenceError: useScroll is not defined
+    at Header (http://localhost:3000/_next/static/chunks/apps_web_23e5a9c8._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fcomponents%252Flayout%252Fheader.tsx+%255Bapp-client%255D+%2528ecmascript%2529:386:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:13072:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:4091:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:5523:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:6111:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:886:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8298:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8190:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8173:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:7932:56)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8890:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8809:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8048:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:294:13)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:886:13 @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 5991961ms] [ERROR] ReferenceError: useScroll is not defined
+    at Header (http://localhost:3000/_next/static/chunks/apps_web_23e5a9c8._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fcomponents%252Flayout%252Fheader.tsx+%255Bapp-client%255D+%2528ecmascript%2529:386:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:13072:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:4091:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:5523:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:6111:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:886:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8298:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8190:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8173:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:7932:56)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8890:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8809:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8048:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:294:13)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:886:13 @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 5991972ms] [LOG] [Fast Refresh] done in 242ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5991986ms] [ERROR] %o
+
+%s ReferenceError: useScroll is not defined
+    at Header (http://localhost:3000/_next/static/chunks/apps_web_23e5a9c8._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fcomponents%252Flayout%252Fheader.tsx+%255Bapp-client%255D+%2528ecmascript%2529:386:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:13072:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:4091:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:5523:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:6111:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:886:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8298:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8190:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8173:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:7932:56)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8890:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8809:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8048:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:294:13)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:886:13 The above error occurred in the <Header> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:1247
+[ 5991988ms] [ERROR] ReferenceError: useScroll is not defined
+    at Header (http://localhost:3000/_next/static/chunks/apps_web_23e5a9c8._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fcomponents%252Flayout%252Fheader.tsx+%255Bapp-client%255D+%2528ecmascript%2529:386:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:13072:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:4091:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:5523:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:6111:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:886:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8298:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8190:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8173:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:7932:56)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8890:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8809:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:8048:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_react-dom_df9b25ef._.js:294:13)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_ed284df6._.js:886:13 @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 5992457ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 5992657ms] [LOG] [Fast Refresh] done in 302ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 5995613ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 6020538ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6022094ms] [LOG] [Fast Refresh] done in 536ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6029666ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 6032304ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6032313ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6046825ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6046841ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6076195ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6076534ms] [LOG] [Fast Refresh] done in 407ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6097299ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6097303ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6130455ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6132503ms] [LOG] [Fast Refresh] done in 803ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6133016ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6133073ms] [LOG] [Fast Refresh] done in 157ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6133226ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6133355ms] [LOG] [Fast Refresh] done in 231ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6133669ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6134051ms] [LOG] [Fast Refresh] done in 483ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6135761ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6135790ms] [LOG] [Fast Refresh] done in 129ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6137296ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6137316ms] [LOG] [Fast Refresh] done in 121ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6140219ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 6147011ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6147041ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6147527ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6147868ms] [LOG] [Fast Refresh] done in 443ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6153395ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6153706ms] [LOG] [Fast Refresh] done in 412ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6154294ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6154309ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6194395ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6194551ms] [LOG] [Fast Refresh] done in 257ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6202582ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6202661ms] [LOG] [Fast Refresh] done in 156ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6202775ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6202832ms] [LOG] [Fast Refresh] done in 158ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6207150ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6207160ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6240440ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6240507ms] [LOG] [Fast Refresh] done in 154ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6240676ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6240749ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6251460ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6251532ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6297332ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6297486ms] [LOG] [Fast Refresh] done in 241ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6310663ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6310686ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6368135ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6368225ms] [LOG] [Fast Refresh] done in 159ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6368831ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6369048ms] [LOG] [Fast Refresh] done in 317ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6377378ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6377545ms] [LOG] [Fast Refresh] done in 268ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6393601ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6393655ms] [LOG] [Fast Refresh] done in 154ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6454451ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6454501ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6473662ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6474014ms] [LOG] [Fast Refresh] done in 453ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6503189ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6503321ms] [LOG] [Fast Refresh] done in 223ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6508562ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6508576ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6521465ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6521530ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6534348ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6534405ms] [LOG] [Fast Refresh] done in 157ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6541118ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6541136ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 6557538ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 6557580ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
