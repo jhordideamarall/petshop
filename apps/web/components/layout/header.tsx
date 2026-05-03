@@ -214,18 +214,30 @@ export function Header() {
               >
                 <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
                   <m.div
+                    key={cartCount}
                     initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 600, damping: 15 }}
+                    animate={{ scale: [1.2, 1] }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 500,
+                      damping: 15,
+                      mass: 0.5,
+                    }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
                     <CartIcon />
                   </m.div>
                   {hydrated && cartCount > 0 && (
                     <m.div
-                      initial={{ scale: 0.6 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: 'spring', stiffness: 700, damping: 12 }}
+                      key={`badge-${cartCount}`}
+                      initial={{ scale: 0.5 }}
+                      animate={{ scale: [1.4, 1] }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 500,
+                        damping: 15,
+                        mass: 0.5,
+                      }}
                       className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
                     >
                       {cartCount}
