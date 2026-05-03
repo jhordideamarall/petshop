@@ -134,7 +134,7 @@ export default function AccountPage() {
       </div>
 
       {/* Logout — fixed near bottom nav */}
-      <div className="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5">
+      <div className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5">
         <m.button
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
