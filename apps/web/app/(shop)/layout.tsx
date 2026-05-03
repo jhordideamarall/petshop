@@ -13,13 +13,19 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
         maxWidth: 430,
       }}
     >
+      {/* Header & Banner Background (Grey) */}
+      <div
+        className="absolute top-0 left-1/2 w-full -translate-x-1/2 bg-[#F5F3F0]"
+        style={{ maxWidth: 430, height: '40vh' }}
+      />
+
       {/* Floating Header Overlay */}
       <Header />
 
       <main
-        className="flex min-h-screen flex-col bg-[#F5F3F0]"
+        className="relative z-10 flex min-h-screen flex-col bg-transparent"
         style={{
-          paddingTop: 'calc(140px + env(safe-area-inset-top))',
+          paddingTop: 'calc(100px + env(safe-area-inset-top))',
           paddingBottom: 'calc(100px + env(safe-area-inset-bottom))',
         }}
       >

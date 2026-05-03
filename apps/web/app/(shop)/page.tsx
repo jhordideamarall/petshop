@@ -343,248 +343,144 @@ export default function HomePage() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        background: '#F5F3F0',
         minHeight: '100%',
-        paddingBottom: 40,
+        position: 'relative',
       }}
     >
-      {/* Hero Carousel */}
+      {/* Background fill for Header area to prevent color jump */}
       <div
         style={{
-          position: 'relative',
-          marginTop: 12,
-          height: 240,
-          width: '100%',
-          overflow: 'hidden',
-          padding: '0 16px',
+          position: 'absolute',
+          top: -200,
+          left: 0,
+          right: 0,
+          height: 200,
+          background: '#F5F3F0',
+          zIndex: 0,
         }}
-      >
+      />
+
+      {/* Top Section (Grey Background) - Banner & Same Day */}
+      <div style={{ background: '#F5F3F0', paddingBottom: 48 }}>
+        {/* Hero Carousel */}
         <div
           style={{
             position: 'relative',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            perspective: '1200px',
+            marginTop: 40, // Turunin lagi bannernya biar dapet posisi tengah di area abu-abu
+            height: 240,
+            width: '100%',
+            overflow: 'hidden',
+            padding: '0 16px',
           }}
         >
-          {BANNERS.map((banner, i) => (
-            <BannerCard
-              key={banner.id}
-              banner={banner}
-              index={i}
-              scrollXProgress={scrollXProgress}
-              count={BANNERS.length}
-            />
-          ))}
-        </div>
-        <div
-          ref={scrollRef}
-          style={{
-            position: 'absolute',
-            inset: '0 16px',
-            overflowX: 'scroll',
-            overflowY: 'hidden',
-            display: 'flex',
-            scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none',
-            zIndex: 200,
-            opacity: 0,
-          }}
-        >
-          {BANNERS.map((_, i) => (
-            <div
-              key={i}
-              style={{ minWidth: '100%', height: '100%', scrollSnapAlign: 'center', flexShrink: 0 }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Feature strip */}
-      <div
-        style={{
-          margin: '16px 16px 0',
-          background: '#FDFCFB',
-          borderRadius: 16,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
-          border: '1px solid rgba(224, 123, 57, 0.3)',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1px 1fr 1px 1fr',
-        }}
-      >
-        {FEATURES.map((feat, i) => (
-          <div key={feat.label} style={{ display: 'contents' }}>
-            <div style={{ padding: '14px 12px', textAlign: 'center' }}>
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  fontSize: 12,
-                  color: '#1A1714',
-                  marginBottom: 2,
-                }}
-              >
-                {feat.label}
-              </div>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#6B6460' }}>
-                {feat.sub}
-              </div>
-            </div>
-            {i < 2 && <div style={{ background: 'rgba(224, 123, 57, 0.3)', width: 1 }} />}
-          </div>
-        ))}
-      </div>
-
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '20px 20px 12px',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 700,
-              fontSize: 16,
-              color: '#1A1714',
-            }}
-          >
-            Kategori
-          </span>
-          <Link
-            href="/products"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 600,
-              fontSize: 13,
-              color: '#E07B39',
-              textDecoration: 'none',
-            }}
-          >
-            Lihat semua
-          </Link>
-        </div>
-        <div
-          style={
-            {
-              display: 'flex',
-              gap: 8,
-              paddingLeft: 16,
-              paddingRight: 16,
-              paddingBottom: 4,
-              overflowX: 'auto',
-              scrollbarWidth: 'none',
-              WebkitOverflowScrolling: 'touch',
-            } as CSSProperties
-          }
-        >
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat}
-              href={`/products?category=${cat.toLowerCase().replace(/\s+/g, '-')}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '8px 16px',
-                borderRadius: 9999,
-                border: '1.5px solid rgba(224, 123, 57, 0.3)',
-                background: '#FDFCFB',
-                color: '#1A1714',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 600,
-                fontSize: 13,
-                whiteSpace: 'nowrap',
-                textDecoration: 'none',
-                flexShrink: 0,
-              }}
-            >
-              {cat}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div
-        style={{
-          margin: '16px 16px 0',
-          background: '#FDFCFB',
-          borderRadius: 16,
-          border: '1px solid rgba(224, 123, 57, 0.3)',
-          padding: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            background: '#FDF0E7',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <ScissorsIcon />
-        </div>
-        <div style={{ flex: 1 }}>
           <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 700,
-              fontSize: 14,
-              color: '#1A1714',
-              marginBottom: 2,
+              position: 'relative',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              perspective: '1200px',
             }}
           >
-            Grooming & Pet Hotel
+            {BANNERS.map((banner, i) => (
+              <BannerCard
+                key={banner.id}
+                banner={banner}
+                index={i}
+                scrollXProgress={scrollXProgress}
+                count={BANNERS.length}
+              />
+            ))}
           </div>
-          <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#6B6460' }}>
-            Booking jadwal sekarang, slot terbatas
+          <div
+            ref={scrollRef}
+            style={{
+              position: 'absolute',
+              inset: '0 16px',
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              display: 'flex',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+              zIndex: 200,
+              opacity: 0,
+            }}
+          >
+            {BANNERS.map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  minWidth: '100%',
+                  height: '100%',
+                  scrollSnapAlign: 'center',
+                  flexShrink: 0,
+                }}
+              />
+            ))}
           </div>
         </div>
-        <Link
-          href="/booking"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 4,
-            padding: '8px 14px',
-            borderRadius: 9999,
-            border: '1.5px solid rgba(224, 123, 57, 0.3)',
-            background: '#FDFCFB',
-            boxShadow: '0 4px 14px rgba(224, 123, 57, 0.35)',
-            color: '#1A1714',
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 600,
-            fontSize: 13,
-            textDecoration: 'none',
-            flexShrink: 0,
-          }}
-        >
-          Booking <ChevronRight />
-        </Link>
-      </div>
 
-      <div style={{ marginBottom: 8 }}>
+        {/* Feature strip */}
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '20px 20px 12px',
-            justifyContent: 'space-between',
+            margin: '16px 16px 0',
+            background: '#FDFCFB',
+            borderRadius: 16,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
+            border: '1px solid rgba(224, 123, 57, 0.3)',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1px 1fr 1px 1fr',
           }}
         >
-          <div>
+          {FEATURES.map((feat, i) => (
+            <div key={feat.label} style={{ display: 'contents' }}>
+              <div style={{ padding: '14px 12px', textAlign: 'center' }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 700,
+                    fontSize: 12,
+                    color: '#1A1714',
+                    marginBottom: 2,
+                  }}
+                >
+                  {feat.label}
+                </div>
+                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#6B6460' }}>
+                  {feat.sub}
+                </div>
+              </div>
+              {i < 2 && <div style={{ background: 'rgba(224, 123, 57, 0.3)', width: 1 }} />}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content Area (White Background with Rounded Top) */}
+      <div
+        style={{
+          background: '#FDFCFB',
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          paddingTop: 16,
+          paddingBottom: 24, // Hapus double padding 100px biar nggak kejauhan
+          marginTop: -32,
+          position: 'relative',
+          zIndex: 2,
+          minHeight: '100vh',
+        }}
+      >
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '20px 20px 12px',
+              justifyContent: 'space-between',
+            }}
+          >
             <span
               style={{
                 fontFamily: 'var(--font-heading)',
@@ -593,83 +489,227 @@ export default function HomePage() {
                 color: '#1A1714',
               }}
             >
-              Penawaran Terbaik
+              Kategori
             </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#6B6460' }}>
-                Berakhir dalam
-              </span>
+            <Link
+              href="/products"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: 13,
+                color: '#E07B39',
+                textDecoration: 'none',
+              }}
+            >
+              Lihat semua
+            </Link>
+          </div>
+          <div
+            style={
+              {
+                display: 'flex',
+                gap: 8,
+                paddingLeft: 16,
+                paddingRight: 16,
+                paddingBottom: 4,
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                WebkitOverflowScrolling: 'touch',
+              } as CSSProperties
+            }
+          >
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat}
+                href={`/products?category=${cat.toLowerCase().replace(/\s+/g, '-')}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '8px 16px',
+                  borderRadius: 9999,
+                  border: '1.5px solid rgba(224, 123, 57, 0.3)',
+                  background: '#FDFCFB',
+                  color: '#1A1714',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: 13,
+                  whiteSpace: 'nowrap',
+                  textDecoration: 'none',
+                  flexShrink: 0,
+                }}
+              >
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div
+          style={{
+            margin: '16px 16px 0',
+            background: '#FDFCFB',
+            borderRadius: 16,
+            border: '1px solid rgba(224, 123, 57, 0.3)',
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              background: '#FDF0E7',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <ScissorsIcon />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: 14,
+                color: '#1A1714',
+                marginBottom: 2,
+              }}
+            >
+              Grooming & Pet Hotel
+            </div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#6B6460' }}>
+              Booking jadwal sekarang, slot terbatas
+            </div>
+          </div>
+          <Link
+            href="/booking"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '8px 14px',
+              borderRadius: 9999,
+              border: '1.5px solid rgba(224, 123, 57, 0.3)',
+              background: '#FDFCFB',
+              boxShadow: '0 4px 14px rgba(224, 123, 57, 0.35)',
+              color: '#1A1714',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              fontSize: 13,
+              textDecoration: 'none',
+              flexShrink: 0,
+            }}
+          >
+            Booking <ChevronRight />
+          </Link>
+        </div>
+
+        <div style={{ marginBottom: 8 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '20px 20px 12px',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 700,
-                  fontSize: 13,
-                  color: '#E07B39',
+                  fontSize: 16,
+                  color: '#1A1714',
                 }}
               >
-                02:14:38
+                Penawaran Terbaik
               </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#6B6460' }}>
+                  Berakhir dalam
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 700,
+                    fontSize: 13,
+                    color: '#E07B39',
+                  }}
+                >
+                  02:14:38
+                </span>
+              </div>
             </div>
+            <Link
+              href="/products?sale=true"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: 13,
+                color: '#E07B39',
+                textDecoration: 'none',
+              }}
+            >
+              Lihat semua
+            </Link>
           </div>
-          <Link
-            href="/products?sale=true"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 600,
-              fontSize: 13,
-              color: '#E07B39',
-              textDecoration: 'none',
-            }}
-          >
-            Lihat semua
-          </Link>
+          <BestOffersGrid />
         </div>
-        <BestOffersGrid />
-      </div>
 
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '20px 20px 12px',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span
+        <div>
+          <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 700,
-              fontSize: 16,
-              color: '#1A1714',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '20px 20px 12px',
+              justifyContent: 'space-between',
             }}
           >
-            Semua Produk
-          </span>
-          <Link
-            href="/products"
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: 16,
+                color: '#1A1714',
+              }}
+            >
+              Semua Produk
+            </span>
+            <Link
+              href="/products"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: 13,
+                color: '#E07B39',
+                textDecoration: 'none',
+              }}
+            >
+              Lainnya
+            </Link>
+          </div>
+          <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 600,
-              fontSize: 13,
-              color: '#E07B39',
-              textDecoration: 'none',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: 12,
+              padding: '0 16px',
             }}
           >
-            Lainnya
-          </Link>
-        </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 12,
-            padding: '0 16px',
-          }}
-        >
-          {ALL_PRODUCTS.map((p) => (
-            <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} />
-          ))}
+            {ALL_PRODUCTS.map((p, index) => (
+              <ProductCard
+                key={p.id}
+                product={p}
+                onAddToCart={handleAddToCart}
+                priority={index < 4}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

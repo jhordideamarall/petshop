@@ -112,14 +112,17 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 z-[100] flex w-full -translate-x-1/2 flex-shrink-0 border-t border-white/20 pb-[max(12px,env(safe-area-inset-bottom))] pt-2 shadow-lg"
+      className="fixed bottom-0 left-1/2 z-[100] flex -translate-x-1/2 flex-shrink-0 border-t border-white/20 pb-[max(12px,env(safe-area-inset-bottom))] pt-2"
       style={{
+        width: '100%',
         maxWidth: 430,
-        background: 'rgba(253,252,251,0.82)',
+        background: 'rgba(253,252,251,0.85)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
+        boxShadow: '0 -8px 30px rgba(0,0,0,0.08), 0 -2px 8px rgba(0,0,0,0.04)',
+        boxSizing: 'border-box',
       }}
       aria-label="Navigasi utama"
     >

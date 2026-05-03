@@ -145,17 +145,18 @@ export function Header() {
 
   return (
     <m.div
-      className="fixed top-0 left-1/2 z-[100] w-full -translate-x-1/2 flex-shrink-0 border-b border-white/20 px-5 pb-0"
+      className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 flex-shrink-0 px-5 pb-0"
       animate={{
         boxShadow:
           isProductPage && showFilters
             ? '0 12px 40px rgba(0,0,0,0.12)'
-            : '0 4px 16px rgba(0,0,0,0.04)',
+            : '0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)', // Shadow super tebal
       }}
       style={{
+        width: '100%',
         maxWidth: 430,
         paddingTop: 'calc(12px + env(safe-area-inset-top))',
-        background: 'rgba(253,252,251,0.82)',
+        background: 'rgba(245,243,240,0.85)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         borderBottomLeftRadius: 24,
