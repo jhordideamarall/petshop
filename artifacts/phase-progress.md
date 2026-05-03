@@ -269,8 +269,9 @@
 - **Step logic fixed**: Progress bar hanya advance dari step 0 (layanan) → step 2 (pet) berdasarkan selection, bukan default date/time value
 - **sessionStorage data passing**: `bookingDraft` ditulis di booking page, dibaca + dihapus di checkout page — menghindari URL params dan typed route issues
 - `app/booking/checkout/page.tsx` — konfirmasi booking: service card dengan accent color, jadwal chips, pet section (existing pet atau add-new form), price breakdown (grooming = total, hotel = DP 50% + sisa), admin WhatsApp note
-- `app/booking/success/page.tsx` — halaman sukses: animated check circle, booking number `BK-YYYYMMDD-XXXX`, ringkasan layanan/tanggal/jam, CTA kembali ke beranda
+- `app/booking/success/page.tsx` — halaman sukses: animated check circle, booking number `BK-YYYYMMDD-XXXX`, ringkasan layanan/tanggal/jam, CTA kembali ke beranda. Konten dari atas, button `mt-auto` menempel ke bawah.
 - Konfirmasi button disabled jika service atau pet belum dipilih
+- **Bug fix**: `useRef` guard di booking/checkout dan booking/success — mencegah React 18 strict mode double-execution yang menyebabkan success page redirect kembali ke `/booking`
 
 ### Yang perlu dikerjakan (Phase 7 full):
 
@@ -294,13 +295,16 @@
 
 ### Sudah dikerjakan (UI — Front-end First):
 
-- `app/(account)/account/page.tsx` — profil hub: avatar placeholder, nama/email, menu tiles (Pesanan, Hewan, Alamat, Loyalty, Wishlist), logout button
-- `app/(account)/orders/page.tsx` — riwayat pesanan: status badge, order card dengan items + total, empty state
-- `app/(account)/pets/page.tsx` — profil hewan: kartu per hewan (nama, breed, umur), add-new CTA, empty state
-- `app/(account)/addresses/page.tsx` — alamat tersimpan: kartu alamat dengan badge "Utama", add-new CTA, empty state
-- `app/(account)/loyalty/page.tsx` — loyalty poin: hero card dengan total poin + tier badge, history transaksi, progress bar ke tier berikutnya
-- `app/(account)/wishlist/page.tsx` — wishlist: grid produk tersimpan, quick-add to cart, empty state
-- Layout `app/(account)/layout.tsx` — shared layout dengan BottomNav + safe area padding
+- `app/(account)/layout.tsx` — shared layout dengan BottomNav + safe area padding
+- `app/(account)/account/page.tsx` — dark hero banner (nama + poin loyalty 1,250 + tier Gold + progress bar ke Platinum), menu list bersih tanpa icon box berwarna, tombol Keluar fixed di atas bottom nav
+- `app/(account)/account/orders/page.tsx` — riwayat pesanan dummy dengan status badge (Dikirim/Selesai/Diproses)
+- `app/(account)/account/pets/page.tsx` — kartu Milo & Luna + dashed add-new button + empty state
+- `app/(account)/account/addresses/page.tsx` — alamat tersimpan dengan badge "Utama", add-new CTA
+- `app/(account)/account/loyalty/page.tsx` — hero card gelap + tier progress + history transaksi poin
+- `app/(account)/account/wishlist/page.tsx` — grid produk + quick-add to cart + empty state
+- **Route structure fix**: sub-pages di `(account)/account/[sub]/` agar URL jadi `/account/orders` dll (route group `(account)` tidak memberi URL prefix)
+- **Bug fix cart flash**: `submitting` flag di checkout mencegah flash "Belum ada item" saat `clearCart()` dipanggil sebelum navigasi selesai
+- **Link fix**: checkout success "Lihat Pesanan" → `/account/orders` (sebelumnya `/orders` — 404)
 
 ### Yang perlu dikerjakan:
 
@@ -311,7 +315,7 @@
    - Loyalty: dari tabel `loyalty_points`
    - Wishlist: dari tabel `wishlists` + `products`
 
-2. **Pet profile CRUD** (`app/(account)/pets/`):
+2. **Pet profile CRUD** (`app/(account)/account/pets/`):
    - Form tambah/edit hewan (nama, jenis, foto, catatan medis)
 
 3. **Redeem poin saat checkout**:
