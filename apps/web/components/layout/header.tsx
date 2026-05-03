@@ -139,16 +139,16 @@ export function Header() {
   // iOS-native shrink-on-scroll behavior (Buttery Smooth Spring)
   const { scrollY } = useScroll();
   const smoothY = useSpring(scrollY, {
-    stiffness: 80,
-    damping: 24,
+    stiffness: 250,
+    damping: 25,
     restDelta: 0.001,
   });
 
-  const titleRowMb = useTransform(smoothY, [0, 60], [16, 8], { clamp: true });
-  const locationOpacity = useTransform(smoothY, [0, 30], [1, 0], { clamp: true });
-  const locationHeight = useTransform(smoothY, [0, 60], [16, 0], { clamp: true });
-  const searchPy = useTransform(smoothY, [0, 60], [12, 8], { clamp: true });
-  const searchMb = useTransform(smoothY, [0, 60], [20, 12], { clamp: true });
+  const titleRowMb = useTransform(smoothY, [100, 160], [16, 8], { clamp: true });
+  const locationOpacity = useTransform(smoothY, [100, 130], [1, 0], { clamp: true });
+  const locationHeight = useTransform(smoothY, [100, 160], [16, 0], { clamp: true });
+  const searchPy = useTransform(smoothY, [100, 160], [12, 8], { clamp: true });
+  const searchMb = useTransform(smoothY, [100, 160], [20, 12], { clamp: true });
 
   return (
     <m.div
@@ -241,8 +241,8 @@ export function Header() {
               <m.div
                 layout
                 transition={{
-                  layout: { type: 'spring', stiffness: 60, damping: 26 },
-                  default: { duration: 0.3 },
+                  layout: { type: 'spring', stiffness: 120, damping: 20 },
+                  default: { duration: 0.2 },
                 }}
                 className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 transition-colors hover:bg-stone/80"
                 style={{
