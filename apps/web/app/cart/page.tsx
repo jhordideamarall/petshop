@@ -1,77 +1,192 @@
 'use client';
+
+import Image from 'next/image';
 import Link from 'next/link';
-import { TopBar } from '@/components/layout/top-bar';
+import { ChevronLeft, Minus, Plus, Tag, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useCartStore, type CartItem } from '@/stores/cart-store';
 
-const TrashIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
-  </svg>
-);
+const fmt = (n: number) => n.toLocaleString('id-ID');
 
-const MOCK_CART = [
-  { id: 1, name: 'Royal Canin Indoor 2kg', price: 285000, qty: 1, color: '#F8BBD0', label: 'RC' },
-  { id: 2, name: 'Pasir Kucing Wangi 5L', price: 65000, qty: 2, color: '#C8E6C9', label: 'PK' },
-];
+function ProductThumb({ item }: { item: CartItem }) {
+  const label = item.name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase();
+
+  return (
+    <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-stone font-heading text-[10px] font-extrabold text-ink-4">
+      {item.imageUrl ? (
+        <Image src={item.imageUrl} alt={item.name} fill sizes="64px" className="object-cover" />
+      ) : (
+        <span>{label || 'PV'}</span>
+      )}
+    </div>
+  );
+}
 
 export default function CartPage() {
+  const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
+  const items = useCartStore((state) => state.items);
+  const setItemQuantity = useCartStore((state) => state.setItemQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const subtotal = useMemo(
+    () => items.reduce((total, item) => total + item.price * item.quantity, 0),
+    [items],
+  );
+  const count = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
+  const hasItems = hydrated && items.length > 0;
+
   return (
-    <div className="flex min-h-screen flex-col bg-stone">
-      <TopBar title="Keranjang" />
-
-      <div className="flex-1 p-4">
-        <div className="flex flex-col gap-3">
-          {MOCK_CART.map((item) => (
-            <div key={item.id} className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-xl font-heading text-xs font-bold"
-                style={{ background: item.color + '40', color: item.color }}
-              >
-                {item.label}
-              </div>
-              <div className="flex flex-1 flex-col justify-between py-0.5">
-                <div>
-                  <h3 className="font-heading text-sm font-bold text-ink line-clamp-1">
-                    {item.name}
-                  </h3>
-                  <p className="t-price-sm mt-1">Rp {item.price.toLocaleString('id-ID')}</p>
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <div className="qty-stepper">
-                    <button className="qty-btn">−</button>
-                    <span className="qty-val">{item.qty}</span>
-                    <button className="qty-btn">+</button>
-                  </div>
-                  <button className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-4 hover:bg-danger-bg hover:text-danger transition-colors">
-                    <TrashIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Empty state placeholder for empty cart */}
-        {MOCK_CART.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="t-label text-ink-4">Keranjangmu masih kosong</p>
-          </div>
-        )}
-      </div>
-
-      {/* Summary sticky bottom */}
-      <div className="sticky bottom-0 rounded-t-3xl border-t border-stone-2 bg-white p-5 shadow-2xl">
-        <div className="mb-4 flex items-center justify-between">
-          <span className="t-label">Total Pembayaran</span>
-          <span className="font-heading text-lg font-extrabold text-primary">Rp 415.000</span>
-        </div>
-        <Link
-          href="/checkout"
-          className="flex w-full items-center justify-center rounded-xl bg-primary py-4 font-heading text-sm font-bold text-white shadow-md active:scale-95 transition-transform"
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
+      <header className="sticky top-0 z-50 flex h-[72px] items-center justify-between border-b border-stone-2 bg-white px-5">
+        <button
+          onClick={() => router.back()}
+          className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white text-ink active:scale-95 transition-transform"
+          aria-label="Kembali"
         >
-          Checkout
-        </Link>
-        <div className="safe-bottom" />
-      </div>
+          <ChevronLeft size={24} strokeWidth={2.5} />
+        </button>
+        <h1 className="font-heading text-[18px] font-extrabold text-ink">Keranjang</h1>
+        <span className="min-w-10 text-right font-heading text-[14px] font-extrabold text-ink">
+          {count} item
+        </span>
+      </header>
+
+      <main className="flex-1 overflow-y-auto pb-36">
+        <section className="bg-white">
+          {hasItems ? (
+            items.map((item) => (
+              <div
+                key={`${item.id}-${item.variantId ?? 'base'}`}
+                className="grid grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 border-b border-stone-2 px-5 py-3.5"
+              >
+                <ProductThumb item={item} />
+                <div className="min-w-0">
+                  <h2 className="line-clamp-2 font-heading text-[14px] font-extrabold leading-[17px] text-ink">
+                    {item.name}
+                  </h2>
+                  <p className="mt-0.5 font-heading text-[16px] font-extrabold leading-5 text-primary">
+                    Rp {fmt(item.price)}
+                  </p>
+
+                  <div className="mt-1.5">
+                    <div className="qty-stepper w-fit bg-white" style={{ height: 34 }}>
+                      <button
+                        className="qty-btn text-danger"
+                        style={{ width: 32, height: 32 }}
+                        aria-label={`Hapus ${item.name}`}
+                        onClick={() => {
+                          if (item.quantity === 1) {
+                            removeItem(item.id, item.variantId);
+                          } else {
+                            setItemQuantity(item.id, item.variantId, item.quantity - 1);
+                          }
+                        }}
+                      >
+                        {item.quantity === 1 ? <Trash2 size={14} /> : <Minus size={15} />}
+                      </button>
+                      <span className="qty-val text-[14px]" style={{ width: 34 }}>
+                        {item.quantity}
+                      </span>
+                      <button
+                        className="qty-btn text-primary"
+                        style={{ width: 32, height: 32 }}
+                        aria-label={`Tambah ${item.name}`}
+                        onClick={() => setItemQuantity(item.id, item.variantId, item.quantity + 1)}
+                      >
+                        <Plus size={15} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p className="self-center whitespace-nowrap font-heading text-[13px] font-extrabold text-ink">
+                  Rp {fmt(item.price * item.quantity)}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className="flex min-h-[260px] flex-col items-center justify-center px-8 text-center">
+              <p className="font-heading text-[16px] font-extrabold text-ink">Keranjangmu kosong</p>
+              <p className="mt-2 text-sm text-ink-3">Produk yang kamu pilih akan muncul di sini.</p>
+              <Link
+                href="/products"
+                className="mt-5 rounded-[14px] bg-primary px-5 py-3 font-heading text-sm font-bold text-white"
+              >
+                Belanja Produk
+              </Link>
+            </div>
+          )}
+        </section>
+
+        {hasItems && (
+          <>
+            <section className="mt-2 bg-white px-5 py-5">
+              <div className="mb-3 flex items-center gap-2 font-heading text-[14px] font-extrabold text-ink">
+                <Tag size={18} />
+                <span>Voucher</span>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Kode voucher"
+                  className="h-12 min-w-0 flex-1 rounded-[14px] border border-stone-3 bg-white px-4 text-[15px] font-medium text-ink outline-none focus:border-primary"
+                />
+                <button
+                  className="h-12 rounded-[14px] px-5 font-heading text-[14px] font-extrabold text-primary"
+                  style={{ background: 'var(--color-orange-light)' }}
+                >
+                  Pakai
+                </button>
+              </div>
+              <p className="mt-2 text-xs font-medium text-ink-4">Coba kode: PETSHOP10</p>
+            </section>
+
+            <section className="mt-2 bg-white px-5 py-5">
+              <h2 className="mb-4 font-heading text-[14px] font-extrabold text-ink">
+                Ringkasan Pesanan
+              </h2>
+              <div className="flex justify-between text-[15px] text-ink-3">
+                <span>Subtotal</span>
+                <span className="font-heading font-extrabold text-ink">Rp {fmt(subtotal)}</span>
+              </div>
+              <div className="mt-4 flex justify-between text-[15px] text-ink-3">
+                <span>Ongkir</span>
+                <span className="font-heading font-extrabold text-ink">Gratis</span>
+              </div>
+              <div className="my-5 h-px bg-stone-2" />
+              <div className="flex justify-between">
+                <span className="font-heading text-[14px] font-extrabold text-ink">Total</span>
+                <span className="font-heading text-[19px] font-extrabold text-primary">
+                  Rp {fmt(subtotal)}
+                </span>
+              </div>
+            </section>
+          </>
+        )}
+      </main>
+
+      {hasItems && (
+        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-5 py-4">
+          <Link
+            href="/checkout"
+            className="flex h-14 w-full items-center justify-center rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-md active:scale-[0.98] transition-transform"
+          >
+            Lanjut ke Checkout
+          </Link>
+          <div className="safe-bottom" />
+        </div>
+      )}
     </div>
   );
 }

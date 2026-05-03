@@ -1,3 +1,5 @@
+'use client';
+
 interface PriceTagProps {
   price: number;
   promoPrice?: number | null;
@@ -8,21 +10,23 @@ const fmt = (n: number) => 'Rp ' + n.toLocaleString('id-ID');
 
 export function PriceTag({ price, promoPrice, size = 'md' }: PriceTagProps) {
   const displayPrice = promoPrice ?? price;
-  const sizeMap = {
-    sm: { price: 14, original: 11 },
-    md: { price: 15, original: 12 },
-    lg: { price: 18, original: 13 },
-  };
-  const s = sizeMap[size];
+
+  // Aligning with globals.css classes:
+  // sm: .t-price-sm (14px)
+  // md/lg: .t-price (18px) or custom for detail page
+  const fontSize = size === 'sm' ? 14 : size === 'md' ? 16 : 24;
+  const originalFontSize = size === 'sm' ? 11 : size === 'md' ? 12 : 15;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
       <span
         style={{
           fontFamily: 'var(--font-heading)',
           fontWeight: 800,
-          fontSize: s.price,
-          color: '#E07B39',
+          fontSize: fontSize,
+          color: 'var(--color-orange)',
+          lineHeight: 1,
+          letterSpacing: '-0.3px',
         }}
       >
         {fmt(displayPrice)}
@@ -31,9 +35,10 @@ export function PriceTag({ price, promoPrice, size = 'md' }: PriceTagProps) {
         <span
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: s.original,
-            color: '#A09890',
+            fontSize: originalFontSize,
+            color: 'var(--color-ink-4)',
             textDecoration: 'line-through',
+            fontWeight: 500,
           }}
         >
           {fmt(price)}

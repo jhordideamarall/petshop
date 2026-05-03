@@ -1,158 +1,389 @@
 'use client';
-import { useState } from 'react';
-import { TopBar } from '@/components/layout/top-bar';
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Check, ChevronLeft, MapPin, Package, WalletCards } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { useCartStore, type CartItem } from '@/stores/cart-store';
 
-const MapPin = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
+const fmt = (n: number) => n.toLocaleString('id-ID');
 
-const STEPS = ['Alamat', 'Pengiriman', 'Pembayaran'];
+const steps = ['Alamat', 'Pengiriman', 'Bayar'];
 
-export default function CheckoutPage() {
-  const [step, setStep] = useState(1);
+const shippingOptions = [
+  { id: 'jne', name: 'JNE Reguler', eta: 'Estimasi 2-4 hari', price: 15000 },
+  { id: 'jnt', name: 'JNT Express', eta: 'Estimasi 1-3 hari', price: 12000 },
+  {
+    id: 'same-day',
+    name: 'Same Day Delivery',
+    eta: 'Estimasi < 3 jam (sebelum 14:00)',
+    price: 28000,
+  },
+];
+
+const paymentOptions = [
+  { id: 'gopay', name: 'GoPay', type: 'E-Wallet' },
+  { id: 'ovo', name: 'OVO', type: 'E-Wallet' },
+  { id: 'dana', name: 'DANA', type: 'E-Wallet' },
+  { id: 'qris', name: 'QRIS', type: 'QRIS' },
+  { id: 'bca', name: 'Virtual Account BCA', type: 'Transfer Bank' },
+];
+
+function Thumb({ item, size = 52 }: { item: CartItem; size?: number }) {
+  const label = item.name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase();
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone">
-      <TopBar title="Checkout" />
+    <div
+      className="relative shrink-0 overflow-hidden rounded-[12px] bg-stone font-heading text-[10px] font-extrabold text-ink-4"
+      style={{ width: size, height: size }}
+    >
+      {item.imageUrl ? (
+        <Image
+          src={item.imageUrl}
+          alt={item.name}
+          fill
+          sizes={`${size}px`}
+          className="object-cover"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">{label || 'PV'}</div>
+      )}
+    </div>
+  );
+}
 
-      {/* Progress Stepper */}
-      <div className="border-b border-stone-2 bg-white px-6 py-4">
-        <div className="flex items-center justify-between">
-          {STEPS.map((label, i) => (
-            <div key={label} className="flex flex-1 items-center gap-2">
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold transition-colors ${
-                  step > i + 1
-                    ? 'bg-green-500 text-white'
-                    : step === i + 1
-                      ? 'bg-primary text-white'
-                      : 'bg-stone-2 text-ink-4'
-                }`}
-              >
-                {step > i + 1 ? '✓' : i + 1}
-              </div>
-              <span
-                className={`font-heading text-[11px] font-bold tracking-tight ${
-                  step === i + 1 ? 'text-primary' : 'text-ink-4'
-                }`}
-              >
-                {label}
-              </span>
-              {i < STEPS.length - 1 && <div className="h-[1.5px] flex-1 bg-stone-2 mx-1" />}
-            </div>
-          ))}
+function RadioMark({ selected }: { selected: boolean }) {
+  return (
+    <span
+      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2"
+      style={{
+        borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-3)',
+      }}
+    >
+      {selected && <span className="h-3 w-3 rounded-full bg-primary" />}
+    </span>
+  );
+}
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
+  const [step, setStep] = useState(1);
+  const [shippingId, setShippingId] = useState('jnt');
+  const [paymentId, setPaymentId] = useState('gopay');
+  const items = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const subtotal = useMemo(
+    () => items.reduce((total, item) => total + item.price * item.quantity, 0),
+    [items],
+  );
+  const count = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
+  const selectedShipping =
+    shippingOptions.find((option) => option.id === shippingId) ?? shippingOptions[0];
+  const shippingPrice = step >= 2 ? selectedShipping.price : 0;
+  const total = subtotal + shippingPrice;
+  const hasItems = hydrated && items.length > 0;
+
+  const goBack = () => {
+    if (step > 1) {
+      setStep((current) => current - 1);
+      return;
+    }
+    router.back();
+  };
+
+  const continueFlow = () => {
+    if (step < 3) {
+      setStep((current) => current + 1);
+      return;
+    }
+
+    clearCart();
+    router.push('/checkout/success');
+  };
+
+  return (
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
+      <header className="sticky top-0 z-50 border-b border-stone-2 bg-white">
+        <div className="flex h-16 items-center px-5">
+          <button
+            onClick={goBack}
+            className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-stone text-ink active:scale-95 transition-transform"
+            aria-label="Kembali"
+          >
+            <ChevronLeft size={22} strokeWidth={2.5} />
+          </button>
+          <h1 className="ml-3 font-heading text-[19px] font-extrabold text-ink">Checkout</h1>
         </div>
-      </div>
 
-      <main className="flex-1 p-4">
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <m.div
-              key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="flex flex-col gap-4"
-            >
-              <div className="rounded-2xl bg-white p-4 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MapPin />
-                    <span className="t-label">Alamat Pengiriman</span>
+        {hasItems && (
+          <div className="px-6 py-5">
+            <div className="grid grid-cols-[32px_1fr_32px_1fr_32px] items-start gap-2">
+              {steps.map((label, index) => {
+                const number = index + 1;
+                const complete = step > number;
+                const active = step === number;
+
+                return (
+                  <div key={label} className="contents">
+                    <div className="flex flex-col items-center gap-2">
+                      <div
+                        className="flex h-8 w-8 items-center justify-center rounded-full font-heading text-[13px] font-extrabold"
+                        style={{
+                          background: complete
+                            ? 'var(--color-success)'
+                            : active
+                              ? 'var(--color-orange)'
+                              : 'var(--color-stone-2)',
+                          color: complete || active ? '#FFFFFF' : 'var(--color-ink-4)',
+                        }}
+                      >
+                        {complete ? <Check size={16} strokeWidth={3} /> : number}
+                      </div>
+                      <span
+                        className="font-heading text-[11px] font-extrabold"
+                        style={{
+                          color: active
+                            ? 'var(--color-orange)'
+                            : complete
+                              ? 'var(--color-success)'
+                              : 'var(--color-ink-4)',
+                        }}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                    {index < steps.length - 1 && (
+                      <div
+                        className="mt-4 h-[2px]"
+                        style={{
+                          background:
+                            step > number ? 'var(--color-success)' : 'var(--color-stone-2)',
+                        }}
+                      />
+                    )}
                   </div>
-                  <button className="text-[13px] font-bold text-primary">Ubah</button>
-                </div>
-                <div className="rounded-xl bg-stone p-4">
-                  <div className="mb-1 flex items-center justify-between">
-                    <span className="t-label">Andi Pratama</span>
-                    <span className="chip chip-orange text-[9px]">Utama</span>
-                  </div>
-                  <p className="t-small mb-2 text-ink-3">0812-3456-7890</p>
-                  <p className="t-small text-ink-3 leading-relaxed">
-                    Jl. Kemang Raya No. 45, Kemang, Jakarta Selatan, 12730
-                  </p>
-                </div>
-              </div>
-            </m.div>
-          )}
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </header>
 
-          {step === 2 && (
-            <m.div
-              key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="flex flex-col gap-3"
+      <main className="flex-1 overflow-y-auto px-5 py-5 pb-32">
+        {!hasItems ? (
+          <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
+            <p className="font-heading text-[17px] font-extrabold text-ink">
+              Belum ada item checkout
+            </p>
+            <button
+              onClick={() => router.push('/products')}
+              className="mt-5 rounded-[14px] bg-primary px-5 py-3 font-heading text-sm font-bold text-white"
             >
-              <h2 className="t-label px-1">Pilih Metode Pengiriman</h2>
-              {['Instant (3 Jam)', 'Same-Day (6 Jam)', 'Reguler (1-2 Hari)'].map((ship) => (
-                <div key={ship} className="radio-card">
-                  <div className="flex-1">
-                    <p className="t-label">{ship}</p>
-                    <p className="t-micro mt-0.5">Estimasi tiba hari ini</p>
+              Pilih Produk
+            </button>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+              <m.div
+                key="address"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.18 }}
+                className="flex flex-col gap-3"
+              >
+                <section className="rounded-[18px] bg-white p-4">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-heading text-[14px] font-extrabold text-ink">
+                      <MapPin size={18} className="text-primary" />
+                      <span>Alamat Pengiriman</span>
+                    </div>
+                    <button className="font-heading text-[13px] font-extrabold text-primary">
+                      Ubah
+                    </button>
                   </div>
-                  <span className="t-price-sm">Rp 15.000</span>
-                  <div className="radio-dot ml-2" />
-                </div>
-              ))}
-            </m.div>
-          )}
+                  <div className="rounded-[14px] bg-stone p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="font-heading text-[14px] font-extrabold text-ink">
+                        Andi Pratama
+                      </p>
+                      <span
+                        className="rounded-full px-3 py-1 font-heading text-[10px] font-extrabold text-primary"
+                        style={{ background: 'var(--color-orange-light)' }}
+                      >
+                        Utama
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-ink-3">0812-3456-7890</p>
+                    <p className="mt-2 text-sm font-medium leading-relaxed text-ink-3">
+                      Jl. Kemang Raya No. 45, Kemang
+                      <br />
+                      Jakarta Selatan, 12730
+                    </p>
+                  </div>
+                </section>
 
-          {step === 3 && (
-            <m.div
-              key="step3"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="flex flex-col gap-3"
-            >
-              <h2 className="t-label px-1">Metode Pembayaran</h2>
-              {['QRIS', 'Gopay', 'Virtual Account BCA'].map((pay) => (
-                <div key={pay} className="radio-card">
-                  <div className="flex-1 t-label">{pay}</div>
-                  <div className="radio-dot" />
-                </div>
-              ))}
+                <section className="rounded-[18px] bg-white p-4">
+                  <div className="mb-4 flex items-center gap-2 font-heading text-[14px] font-extrabold text-ink">
+                    <Package size={18} />
+                    <span>Pesanan ({count} item)</span>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {items.map((item) => (
+                      <div
+                        key={`${item.id}-${item.variantId ?? 'base'}`}
+                        className="flex items-center gap-3"
+                      >
+                        <Thumb item={item} />
+                        <div className="min-w-0">
+                          <p className="line-clamp-1 font-heading text-[13px] font-extrabold text-ink">
+                            {item.name}
+                          </p>
+                          <p className="mt-1 text-sm font-medium text-ink-3">
+                            x{item.quantity} · Rp {fmt(item.price)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </m.div>
+            )}
 
-              <div className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
-                <h3 className="t-label mb-4">Ringkasan Pembayaran</h3>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-ink-3">Subtotal</span>
-                  <span className="font-bold text-ink">Rp 415.000</span>
+            {step === 2 && (
+              <m.div
+                key="shipping"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.18 }}
+              >
+                <h2 className="mb-4 font-heading text-[15px] font-extrabold text-ink">
+                  Pilih Metode Pengiriman
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {shippingOptions.map((option) => {
+                    const selected = option.id === shippingId;
+                    return (
+                      <button
+                        key={option.id}
+                        onClick={() => setShippingId(option.id)}
+                        className="flex min-h-[76px] items-center gap-3 rounded-[14px] border bg-white px-4 text-left"
+                        style={{
+                          borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-3)',
+                          background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
+                        }}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="font-heading text-[14px] font-extrabold text-ink">
+                            {option.name}
+                          </p>
+                          <p className="mt-1 text-sm font-medium text-ink-3">{option.eta}</p>
+                        </div>
+                        <p className="font-heading text-[15px] font-extrabold text-primary">
+                          Rp {fmt(option.price)}
+                        </p>
+                        <RadioMark selected={selected} />
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-ink-3">Ongkos Kirim</span>
-                  <span className="font-bold text-ink">Rp 15.000</span>
+              </m.div>
+            )}
+
+            {step === 3 && (
+              <m.div
+                key="payment"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.18 }}
+              >
+                <h2 className="mb-4 font-heading text-[15px] font-extrabold text-ink">
+                  Metode Pembayaran
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {paymentOptions.map((option) => {
+                    const selected = option.id === paymentId;
+                    return (
+                      <button
+                        key={option.id}
+                        onClick={() => setPaymentId(option.id)}
+                        className="flex min-h-[72px] items-center gap-3 rounded-[14px] border bg-white px-4 text-left"
+                        style={{
+                          borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-3)',
+                          background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
+                        }}
+                      >
+                        <WalletCards
+                          size={20}
+                          className={selected ? 'text-primary' : 'text-ink-4'}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-heading text-[14px] font-extrabold text-ink">
+                            {option.name}
+                          </p>
+                          <p className="mt-1 text-sm font-medium text-ink-3">{option.type}</p>
+                        </div>
+                        <RadioMark selected={selected} />
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="divider my-4" />
-                <div className="flex justify-between">
-                  <span className="t-label">Total</span>
-                  <span className="font-heading text-lg font-extrabold text-primary">
-                    Rp 430.000
-                  </span>
-                </div>
-              </div>
-            </m.div>
-          )}
-        </AnimatePresence>
+
+                <section className="mt-4 rounded-[18px] bg-white p-4">
+                  <h3 className="mb-4 font-heading text-[14px] font-extrabold text-ink">
+                    Ringkasan
+                  </h3>
+                  <div className="flex justify-between text-sm text-ink-3">
+                    <span>Subtotal</span>
+                    <span className="font-heading font-extrabold text-ink">Rp {fmt(subtotal)}</span>
+                  </div>
+                  <div className="mt-4 flex justify-between text-sm text-ink-3">
+                    <span>Ongkir</span>
+                    <span className="font-heading font-extrabold text-ink">
+                      Rp {fmt(selectedShipping.price)}
+                    </span>
+                  </div>
+                  <div className="my-4 h-px bg-stone-2" />
+                  <div className="flex justify-between">
+                    <span className="font-heading text-[14px] font-extrabold text-ink">Total</span>
+                    <span className="font-heading text-[18px] font-extrabold text-primary">
+                      Rp {fmt(total)}
+                    </span>
+                  </div>
+                </section>
+              </m.div>
+            )}
+          </AnimatePresence>
+        )}
       </main>
 
-      {/* Footer sticky */}
-      <div className="sticky bottom-0 rounded-t-3xl border-t border-stone-2 bg-white p-5 shadow-2xl">
-        <button
-          onClick={() =>
-            step < 3 ? setStep(step + 1) : (window.location.href = '/checkout/success')
-          }
-          className="flex w-full items-center justify-center rounded-xl bg-primary py-4 font-heading text-sm font-bold text-white shadow-md active:scale-95 transition-transform"
-        >
-          {step < 3 ? 'Lanjutkan' : 'Bayar Sekarang'}
-        </button>
-        <div className="safe-bottom" />
-      </div>
+      {hasItems && (
+        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-5 py-4">
+          <button
+            onClick={continueFlow}
+            className="flex h-14 w-full items-center justify-center rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-md active:scale-[0.98] transition-transform"
+          >
+            {step < 3 ? 'Lanjutkan' : `Bayar Rp ${fmt(total)}`}
+          </button>
+          <div className="safe-bottom" />
+        </div>
+      )}
     </div>
   );
 }

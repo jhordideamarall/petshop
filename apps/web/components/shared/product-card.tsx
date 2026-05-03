@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef, type CSSProperties, type MouseEvent } from 'react';
 import NextImage from 'next/image';
-import { m, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { PriceTag } from './price-tag';
 import { RatingStars } from './rating-stars';
 
@@ -61,6 +61,7 @@ const CheckIcon = () => (
 
 export function ProductCard({ product, onAddToCart, href, priority = false }: ProductCardProps) {
   const [justAdded, setJustAdded] = useState(false);
+  const [feedbackKey, setFeedbackKey] = useState(0);
   const discountPct = product.promoPrice
     ? Math.round((1 - product.promoPrice / product.price) * 100)
     : null;
@@ -76,9 +77,10 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
     onAddToCart?.(product);
 
     // Visual feedback logic
+    setFeedbackKey((key) => key + 1);
     setJustAdded(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setJustAdded(false), 800);
+    timeoutRef.current = setTimeout(() => setJustAdded(false), 520);
   };
 
   return (
@@ -181,10 +183,17 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
         {onAddToCart && (
           <m.button
             onClick={handleAddToCart}
-            whileTap={{ scale: 0.85 }}
-            animate={{ scale: justAdded ? 1.12 : 1 }}
+            whileTap={{ scale: 0.9 }}
+            animate={{
+              scale: justAdded ? [1, 1.16, 0.98, 1] : 1,
+              backgroundColor: justAdded ? '#2D7D52' : '#E07B39',
+              boxShadow: justAdded
+                ? '0 7px 18px rgba(45,125,82,0.34)'
+                : '0 4px 12px rgba(224,123,57,0.34)',
+            }}
             transition={{
-              scale: { type: 'spring', stiffness: 420, damping: 14 },
+              duration: 0.22,
+              ease: [0.2, 0.8, 0.2, 1],
             }}
             style={{
               position: 'absolute',
@@ -193,43 +202,46 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
               width: 32,
               height: 32,
               borderRadius: 10,
-              backgroundColor: justAdded ? '#2D7D52' : '#E07B39',
+              backgroundColor: '#E07B39',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: justAdded
-                ? '0 2px 8px rgba(45,125,82,0.4)'
-                : '0 2px 8px rgba(224,123,57,0.4)',
-              transition: 'background-color 0.18s ease, box-shadow 0.18s ease',
+              boxShadow: '0 4px 12px rgba(224,123,57,0.34)',
+              overflow: 'visible',
             }}
           >
-            <AnimatePresence mode="wait">
-              {justAdded ? (
+            <AnimatePresence initial={false}>
+              {justAdded && (
                 <m.span
-                  key="check"
-                  initial={{ scale: 0, rotate: -90 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  exit={{ scale: 0, rotate: 90 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                  style={{ display: 'flex' }}
-                >
-                  <CheckIcon />
-                </m.span>
-              ) : (
-                <m.span
-                  key="plus"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                  style={{ display: 'flex' }}
-                >
-                  <PlusIcon />
-                </m.span>
+                  key={`ring-${feedbackKey}`}
+                  initial={{ scale: 0.7, opacity: 0.55 }}
+                  animate={{ scale: 1.85, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.32, ease: 'easeOut' }}
+                  style={{
+                    position: 'absolute',
+                    inset: -2,
+                    borderRadius: 12,
+                    border: '2px solid rgba(45,125,82,0.42)',
+                    pointerEvents: 'none',
+                  }}
+                />
               )}
             </AnimatePresence>
+            <m.span
+              key={`${justAdded ? 'check' : 'plus'}-${feedbackKey}`}
+              initial={false}
+              animate={{
+                scale: justAdded ? [0.72, 1.08, 1] : 1,
+                rotate: justAdded ? [-18, 0] : 0,
+              }}
+              transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
+              style={{ position: 'relative', zIndex: 1, display: 'flex' }}
+            >
+              {justAdded ? <CheckIcon /> : <PlusIcon />}
+            </m.span>
           </m.button>
         )}
       </div>
@@ -241,23 +253,26 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: 4,
+          gap: 2,
         }}
       >
-        {product.rating !== undefined && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <RatingStars rating={product.rating} size={11} />
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 11,
-                color: '#A09890',
-              }}
-            >
-              {product.rating} · {(product.soldCount ?? 0).toLocaleString('id-ID')} terjual
-            </span>
+        {/* Category label */}
+        {product.category && (
+          <div
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 10,
+              fontWeight: 600,
+              color: '#A09890',
+              textTransform: 'uppercase',
+              letterSpacing: '0.4px',
+              marginBottom: 2,
+            }}
+          >
+            {product.category}
           </div>
         )}
+
         <div
           style={
             {
@@ -265,18 +280,38 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
               fontWeight: 600,
               fontSize: 13,
               color: '#1A1714',
-              lineHeight: 1.4,
+              lineHeight: 1.3,
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
+              height: 34,
+              marginBottom: 4,
             } as CSSProperties
           }
         >
           {product.name}
         </div>
-        <div style={{ marginTop: 'auto', paddingTop: 4 }}>
-          <PriceTag price={product.price} promoPrice={product.promoPrice} />
+
+        {/* Rating & Stats */}
+        {product.rating !== undefined && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
+            <RatingStars rating={product.rating} size={10} />
+            <span
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 10,
+                color: '#A09890',
+                fontWeight: 500,
+              }}
+            >
+              {product.rating} · {(product.soldCount ?? 0).toLocaleString('id-ID')} terjual
+            </span>
+          </div>
+        )}
+
+        <div style={{ marginTop: 'auto' }}>
+          <PriceTag price={product.price} promoPrice={product.promoPrice} size="sm" />
         </div>
       </div>
     </a>

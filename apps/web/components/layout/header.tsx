@@ -140,7 +140,7 @@ export function Header() {
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();
-  const smoothY = useSpring(scrollY, { stiffness: 60, damping: 22, restDelta: 0.001, mass: 1.2 });
+  const smoothY = useSpring(scrollY, { stiffness: 200, damping: 22, restDelta: 0.001, mass: 1.2 });
 
   const titleRowMb = useTransform(smoothY, [0, 140], [16, 8], { clamp: true });
   const locationOpacity = useTransform(smoothY, [0, 100], [1, 0], { clamp: true });
@@ -215,14 +215,9 @@ export function Header() {
                 <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
                   <m.div
                     key={cartCount}
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: [1.2, 1] }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 500,
-                      damping: 15,
-                      mass: 0.5,
-                    }}
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: [1.08, 1] }}
+                    transition={{ duration: 0.16, ease: 'easeOut' }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
                     <CartIcon />
@@ -232,13 +227,7 @@ export function Header() {
                       key={`badge-${cartCount}`}
                       initial={{ scale: 0.5 }}
                       animate={{ scale: [1.4, 1] }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 500,
-                        damping: 15,
-                        mass: 0.5,
-                      }}
-                      className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+                      className="badge-bounce absolute top-1 right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border border-white bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
                     >
                       {cartCount}
                     </m.div>

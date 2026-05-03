@@ -1,25 +1,25 @@
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+import { notFound } from 'next/navigation';
+import { DUMMY_PRODUCTS, DETAILED_PRODUCTS, toDetailedProduct } from '@/lib/dummy-products';
+import { ProductDetailClient } from './_client';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: '#F5F3F0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <p
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: 14,
-          color: '#6B6460',
-        }}
-      >
-        Produk: {slug} — Coming in Phase 3
-      </p>
-    </div>
-  );
+  const detailed = DETAILED_PRODUCTS.find((p) => p.slug === slug);
+  const basic = DUMMY_PRODUCTS.find((p) => p.slug === slug);
+  const product = detailed ?? (basic ? toDetailedProduct(basic) : undefined);
+
+  if (!product) {
+    notFound();
+  }
+
+  return <ProductDetailClient product={product} />;
+}
+
+export function generateStaticParams() {
+  return DUMMY_PRODUCTS.map((p) => ({ slug: p.slug }));
 }
