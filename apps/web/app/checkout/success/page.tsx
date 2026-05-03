@@ -63,7 +63,7 @@ export default function CheckoutSuccessPage() {
 
       <div className="flex w-full flex-col gap-3">
         <Link
-          href="/orders"
+          href="/account/orders"
           className="flex w-full items-center justify-center rounded-xl bg-primary py-4 font-heading text-sm font-bold text-white shadow-md active:scale-95 transition-transform"
         >
           Lihat Pesanan
