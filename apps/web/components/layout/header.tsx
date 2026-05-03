@@ -139,16 +139,17 @@ export function Header() {
   // iOS-native shrink-on-scroll behavior (Buttery Smooth Spring)
   const { scrollY } = useScroll();
   const smoothY = useSpring(scrollY, {
-    stiffness: 250,
-    damping: 25,
+    stiffness: 150,
+    damping: 30,
     restDelta: 0.001,
+    mass: 0.8,
   });
 
-  const titleRowMb = useTransform(smoothY, [100, 160], [16, 8], { clamp: true });
-  const locationOpacity = useTransform(smoothY, [100, 130], [1, 0], { clamp: true });
-  const locationHeight = useTransform(smoothY, [100, 160], [16, 0], { clamp: true });
-  const searchPy = useTransform(smoothY, [100, 160], [12, 8], { clamp: true });
-  const searchMb = useTransform(smoothY, [100, 160], [20, 12], { clamp: true });
+  const titleRowMb = useTransform(smoothY, [180, 240], [16, 8], { clamp: true });
+  const locationOpacity = useTransform(smoothY, [180, 210], [1, 0], { clamp: true });
+  const locationHeight = useTransform(smoothY, [180, 240], [16, 0], { clamp: true });
+  const searchPy = useTransform(smoothY, [180, 240], [12, 8], { clamp: true });
+  const searchMb = useTransform(smoothY, [180, 240], [20, 12], { clamp: true });
 
   return (
     <m.div
