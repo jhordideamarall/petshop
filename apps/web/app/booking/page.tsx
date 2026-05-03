@@ -1,19 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AnimatePresence, m } from 'framer-motion';
+import { AnimatePresence, m, useScroll, useSpring, useTransform } from 'framer-motion';
 import {
-  Bath,
-  Bed,
   CalendarDays,
   Check,
   ChevronRight,
   Clock3,
   MapPin,
   PawPrint,
-  Scissors,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
@@ -28,8 +24,6 @@ interface BookingService {
   unit: string;
   duration: string;
   accent: string;
-  bg: string;
-  icon: typeof Scissors;
   badge?: string;
 }
 
@@ -42,8 +36,6 @@ const services: BookingService[] = [
     unit: '60 menit',
     duration: '1 jam',
     accent: '#E07B39',
-    bg: '#FFF3EA',
-    icon: Scissors,
   },
   {
     id: 'grooming-full',
@@ -53,8 +45,6 @@ const services: BookingService[] = [
     unit: '90-120 menit',
     duration: '2 jam',
     accent: '#2D7D52',
-    bg: '#EAF5EE',
-    icon: Sparkles,
     badge: 'Best Value',
   },
   {
@@ -65,8 +55,6 @@ const services: BookingService[] = [
     unit: 'per hari',
     duration: '24 jam',
     accent: '#6C5CE7',
-    bg: '#EFEDFF',
-    icon: Bed,
     badge: 'DP 50%',
   },
 ];
@@ -113,24 +101,36 @@ function StepHeader({ current }: { current: number }) {
   const steps = ['Layanan', 'Jadwal', 'Pet', 'Konfirmasi'];
 
   return (
-    <div className="mt-4 grid grid-cols-4 gap-2 px-5">
+    <div className="mt-4 grid grid-cols-4 gap-2">
       {steps.map((step, index) => {
         const active = index + 1 <= current;
 
         return (
           <div key={step} className="min-w-0">
             <div
-              className="h-1.5 rounded-full"
+              className="relative h-1.5 overflow-hidden rounded-full bg-stone-2"
               style={{
-                background: active ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                transform: 'translateZ(0)',
               }}
-            />
-            <p
+            >
+              <m.div
+                initial={false}
+                animate={{ width: active ? '100%' : '0%' }}
+                transition={{ type: 'spring', stiffness: 210, damping: 28, mass: 0.65 }}
+                className="h-full rounded-full bg-primary"
+              />
+            </div>
+            <m.p
+              initial={false}
+              animate={{
+                color: active ? 'var(--color-orange)' : 'var(--color-ink-4)',
+                opacity: active ? 1 : 0.74,
+              }}
+              transition={{ duration: 0.18 }}
               className="mt-2 truncate font-heading text-[10px] font-bold"
-              style={{ color: active ? 'var(--color-orange)' : 'var(--color-ink-4)' }}
             >
               {step}
-            </p>
+            </m.p>
           </div>
         );
       })}
@@ -139,6 +139,19 @@ function StepHeader({ current }: { current: number }) {
 }
 
 export default function BookingPage() {
+  const { scrollY } = useScroll();
+  const smoothY = useSpring(scrollY, { stiffness: 180, damping: 24, restDelta: 0.001, mass: 0.9 });
+  const headerPaddingBottom = useTransform(smoothY, [0, 130], [16, 10]);
+  const titleSize = useTransform(smoothY, [0, 130], [26, 19]);
+  const titleLineHeight = useTransform(smoothY, [0, 130], [1.12, 1.05]);
+  const subtitleOpacity = useTransform(smoothY, [0, 80], [1, 0]);
+  const subtitleHeight = useTransform(smoothY, [0, 100], [21, 0]);
+  const headerShadow = useTransform(
+    smoothY,
+    [0, 120],
+    ['0 0 0 rgba(26,23,20,0)', '0 10px 28px rgba(26,23,20,0.08)'],
+  );
+
   const [selectedServiceId, setSelectedServiceId] = useState<ServiceId>('grooming-full');
   const [selectedDateId, setSelectedDateId] = useState('tomorrow');
   const [selectedTimeId, setSelectedTimeId] = useState('10:30');
@@ -165,28 +178,37 @@ export default function BookingPage() {
     setConfirmed(true);
   };
 
+  const updateTime = (value: string) => {
+    const slot = timeSlots.find((item) => item.id === value);
+    if (!slot?.available) return;
+
+    setSelectedTimeId(value);
+    setConfirmed(false);
+  };
+
   return (
     <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[330px]">
-      <header className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/95 px-5 pb-4 pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-heading text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-              Booking Layanan
-            </p>
-            <h1 className="mt-1 font-heading text-[26px] font-extrabold leading-tight text-ink">
-              Grooming & Hotel
-            </h1>
-            <p className="mt-1 text-sm font-medium text-ink-3">
-              Pilih layanan, jadwal, dan pet dalam satu flow.
-            </p>
-          </div>
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-primary text-white shadow-[0_8px_22px_rgba(224,123,57,0.24)]">
-            <Bath size={23} strokeWidth={2.4} />
-          </div>
+      <m.header
+        className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/90 px-5 pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl"
+        style={{ paddingBottom: headerPaddingBottom, boxShadow: headerShadow }}
+      >
+        <div>
+          <m.h1
+            className="font-heading font-extrabold text-ink"
+            style={{ fontSize: titleSize, lineHeight: titleLineHeight }}
+          >
+            Grooming & Hotel
+          </m.h1>
+          <m.p
+            className="mt-1 overflow-hidden text-sm font-medium text-ink-3"
+            style={{ opacity: subtitleOpacity, height: subtitleHeight }}
+          >
+            Pilih layanan, jadwal, dan pet dalam satu flow.
+          </m.p>
         </div>
 
         <StepHeader current={activeStep} />
-      </header>
+      </m.header>
 
       <main className="px-5 py-5">
         <section>
@@ -200,7 +222,6 @@ export default function BookingPage() {
 
           <div className="flex flex-col gap-3">
             {services.map((service) => {
-              const Icon = service.icon;
               const selected = service.id === selectedServiceId;
 
               return (
@@ -212,7 +233,7 @@ export default function BookingPage() {
                     setSelectedServiceId(service.id);
                     setConfirmed(false);
                   }}
-                  className="flex min-h-[104px] w-full items-center gap-3 rounded-[22px] border bg-white p-3.5 text-left shadow-sm transition-colors"
+                  className="flex min-h-[104px] w-full items-center gap-3 rounded-[22px] border bg-white px-4 py-4 text-left shadow-sm transition-colors"
                   style={{
                     borderColor: selected ? service.accent : 'var(--color-stone-2)',
                     boxShadow: selected
@@ -220,13 +241,6 @@ export default function BookingPage() {
                       : '0 2px 8px rgba(26,23,20,0.04)',
                   }}
                 >
-                  <div
-                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px]"
-                    style={{ background: service.bg, color: service.accent }}
-                  >
-                    <Icon size={24} strokeWidth={2.2} />
-                  </div>
-
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="font-heading text-[15px] font-extrabold text-ink">
@@ -260,77 +274,67 @@ export default function BookingPage() {
           <div className="mb-3 flex items-center justify-between">
             <div>
               <h2 className="font-heading text-[17px] font-extrabold text-ink">2. Pilih jadwal</h2>
-              <p className="mt-0.5 text-sm text-ink-3">
-                Slot yang habis otomatis nonaktif nanti dari database.
-              </p>
+              <p className="mt-0.5 text-sm text-ink-3">Pilih hari dan jam yang paling nyaman.</p>
             </div>
-            <Clock3 size={20} className="text-primary" />
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {dateOptions.map((date) => {
-              const selected = date.id === selectedDateId;
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block rounded-[22px] border border-stone-2 bg-white px-4 py-3 shadow-sm">
+              <span className="font-heading text-[12px] font-bold uppercase tracking-[0.12em] text-ink-4">
+                Tanggal
+              </span>
+              <select
+                value={selectedDateId}
+                onChange={(event) => {
+                  setSelectedDateId(event.target.value);
+                  setConfirmed(false);
+                }}
+                className="mt-2 h-14 w-full appearance-none bg-transparent font-heading text-[20px] font-extrabold text-primary outline-none"
+                aria-label="Pilih tanggal booking"
+              >
+                {dateOptions.map((date) => (
+                  <option key={date.id} value={date.id}>
+                    {date.label} - {date.date}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[12px] font-semibold text-ink-4">{selectedDate.hint} tersedia</p>
+            </label>
 
-              return (
-                <button
-                  key={date.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedDateId(date.id);
-                    setConfirmed(false);
-                  }}
-                  className="min-w-[92px] rounded-[18px] border px-3 py-3 text-left"
-                  style={{
-                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                    background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
-                  }}
-                >
-                  <p className="font-heading text-[13px] font-extrabold text-ink">{date.label}</p>
-                  <p className="mt-0.5 font-heading text-[16px] font-extrabold text-primary">
-                    {date.date}
-                  </p>
-                  <p className="mt-1 text-[11px] font-semibold text-ink-4">{date.hint}</p>
-                </button>
-              );
-            })}
+            <label className="block rounded-[22px] border border-stone-2 bg-white px-4 py-3 shadow-sm">
+              <span className="font-heading text-[12px] font-bold uppercase tracking-[0.12em] text-ink-4">
+                Jam
+              </span>
+              <select
+                value={selectedTimeId}
+                onChange={(event) => updateTime(event.target.value)}
+                className="mt-2 h-14 w-full appearance-none bg-transparent font-heading text-[20px] font-extrabold text-primary outline-none"
+                aria-label="Pilih jam booking"
+              >
+                {timeSlots.map((slot) => (
+                  <option key={slot.id} value={slot.id} disabled={!slot.available}>
+                    {slot.label}
+                    {slot.available ? '' : ' - penuh'}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[12px] font-semibold text-ink-4">
+                {selectedService.duration} durasi
+              </p>
+            </label>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {timeSlots.map((slot) => {
-              const selected = slot.id === selectedTimeId;
-
-              return (
-                <button
-                  key={slot.id}
-                  type="button"
-                  disabled={!slot.available}
-                  onClick={() => {
-                    setSelectedTimeId(slot.id);
-                    setConfirmed(false);
-                  }}
-                  className={`slot-pill ${slot.available ? '' : 'disabled'}`}
-                  style={{
-                    borderColor: selected ? 'var(--color-orange)' : undefined,
-                    background: selected ? 'var(--color-orange)' : undefined,
-                    color: selected ? '#FFFFFF' : undefined,
-                  }}
-                >
-                  {slot.label}
-                </button>
-              );
-            })}
+          <div className="mt-3 rounded-[20px] bg-stone px-4 py-3">
+            <p className="text-[13px] font-semibold leading-5 text-ink-3">
+              Jam penuh akan terkunci otomatis. Untuk hotel, admin akan konfirmasi jam check-in.
+            </p>
           </div>
         </section>
 
         <section className="mt-7">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h2 className="font-heading text-[17px] font-extrabold text-ink">3. Pilih pet</h2>
-              <p className="mt-0.5 text-sm text-ink-3">
-                Pet profile akan dipakai untuk rekomendasi dan booking.
-              </p>
-            </div>
-            <PawPrint size={21} className="text-primary" />
+          <div className="mb-3">
+            <h2 className="font-heading text-[17px] font-extrabold text-ink">3. Pilih pet</h2>
+            <p className="mt-0.5 text-sm text-ink-3">Pilih hewan yang akan datang ke layanan.</p>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -352,9 +356,6 @@ export default function BookingPage() {
                     background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
                   }}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-stone text-primary">
-                    <PawPrint size={22} />
-                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-heading text-[15px] font-extrabold text-ink">{pet.name}</p>
                     <p className="mt-0.5 text-sm text-ink-3">{pet.meta}</p>
@@ -402,8 +403,7 @@ export default function BookingPage() {
                     Booking draft siap
                   </h2>
                   <p className="mt-1 text-sm leading-5 text-ink-3">
-                    Nanti step ini akan membuat booking order, mengunci slot, dan mengirim
-                    notifikasi WhatsApp.
+                    Admin akan cek slot dan menghubungi kamu untuk konfirmasi akhir.
                   </p>
                 </div>
               </div>
