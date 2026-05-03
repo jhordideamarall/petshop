@@ -130,20 +130,22 @@ export default function AccountPage() {
           ))}
         </div>
 
-        {/* Logout */}
+        <p className="mt-5 text-center text-[11px] text-ink-4">Pawvels v1.0</p>
+      </div>
+
+      {/* Logout — fixed near bottom nav */}
+      <div className="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5">
         <m.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.38 }}
           type="button"
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-[18px] border border-stone-2 bg-white py-3.5 font-heading text-[14px] font-bold text-ink-3 active:scale-[0.98]"
+          className="flex w-full items-center justify-center gap-2 rounded-[18px] border border-stone-2 bg-[#FDFCFB]/90 py-3.5 font-heading text-[14px] font-bold text-ink-3 backdrop-blur-md active:scale-[0.98]"
           style={{ transition: 'transform 0.1s' }}
         >
           <LogOut size={15} />
           Keluar
         </m.button>
-
-        <p className="mt-5 pb-2 text-center text-[11px] text-ink-4">Pawvels v1.0</p>
       </div>
     </div>
   );
