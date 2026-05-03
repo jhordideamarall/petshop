@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/shared/product-grid';
 import { useCartStore } from '@/stores/cart-store';
 import type { ProductCardData } from '@/components/shared/product-card';
-import { DUMMY_PRODUCTS } from '@/lib/dummy-products';
+import { getProducts } from '@/lib/dummy-products';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -15,7 +15,7 @@ export default function ProductsPage() {
   const addItem = useCartStore((state) => state.addItem);
 
   const filtered = useMemo(() => {
-    let list = DUMMY_PRODUCTS;
+    let list = getProducts();
 
     if (activeCat) {
       list = list.filter((p) => p.category?.toLowerCase() === activeCat.toLowerCase());

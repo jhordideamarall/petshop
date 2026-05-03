@@ -2,7 +2,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { DUMMY_PRODUCTS } from '@/lib/dummy-products';
+import { getProducts } from '@/lib/dummy-products';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -57,11 +57,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   }, [isOpen]);
 
   const results = useMemo(() => {
+    const products = getProducts();
+
     if (!query.trim()) {
-      return DUMMY_PRODUCTS.filter((p) => p.promoPrice != null);
+      return products.filter((p) => p.promoPrice != null);
     }
     const q = query.toLowerCase();
-    return DUMMY_PRODUCTS.filter((p) => p.name.toLowerCase().includes(q));
+    return products.filter((p) => p.name.toLowerCase().includes(q));
   }, [query]);
 
   return (

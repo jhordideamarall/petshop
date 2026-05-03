@@ -253,3 +253,34 @@ export const DETAILED_PRODUCTS: DetailedProduct[] = [
     ],
   },
 ];
+
+const FEATURED_PRODUCT_SLUGS = [
+  'makanan-kucing-royal-canin',
+  'makanan-anjing-pedigree',
+  'vitamin-kucing-premium',
+  'kalung-anjing-kulit',
+] as const;
+
+export function getProducts(): ProductCardData[] {
+  return DUMMY_PRODUCTS;
+}
+
+export function getFeaturedProducts(): ProductCardData[] {
+  const productsBySlug = new Map(DUMMY_PRODUCTS.map((product) => [product.slug, product]));
+
+  return FEATURED_PRODUCT_SLUGS.map((slug) => productsBySlug.get(slug)).filter(
+    (product): product is ProductCardData => Boolean(product),
+  );
+}
+
+export function getProductBySlug(slug: string): DetailedProduct | undefined {
+  const detailed = DETAILED_PRODUCTS.find((product) => product.slug === slug);
+  if (detailed) return detailed;
+
+  const basic = DUMMY_PRODUCTS.find((product) => product.slug === slug);
+  return basic ? toDetailedProduct(basic) : undefined;
+}
+
+export function getProductStaticParams() {
+  return DUMMY_PRODUCTS.map((product) => ({ slug: product.slug }));
+}
