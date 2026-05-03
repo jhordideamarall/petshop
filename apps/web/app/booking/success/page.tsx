@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { CalendarDays, Check, Clock3, Home } from 'lucide-react';
@@ -21,8 +21,11 @@ function formatDate(dateId: string) {
 export default function BookingSuccessPage() {
   const router = useRouter();
   const [data, setData] = useState<SuccessData | null>(null);
+  const processed = useRef(false);
 
   useEffect(() => {
+    if (processed.current) return;
+    processed.current = true;
     const raw = sessionStorage.getItem('bookingSuccess');
     if (!raw) {
       router.replace('/booking');

@@ -78,6 +78,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [shippingId, setShippingId] = useState('jnt');
   const [paymentId, setPaymentId] = useState('gopay');
+  const [submitting, setSubmitting] = useState(false);
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
 
@@ -94,7 +95,7 @@ export default function CheckoutPage() {
     shippingOptions.find((option) => option.id === shippingId) ?? shippingOptions[0];
   const shippingPrice = step >= 2 ? selectedShipping.price : 0;
   const total = subtotal + shippingPrice;
-  const hasItems = hydrated && items.length > 0;
+  const hasItems = hydrated && (items.length > 0 || submitting);
 
   const goBack = () => {
     if (step > 1) {
@@ -110,6 +111,7 @@ export default function CheckoutPage() {
       return;
     }
 
+    setSubmitting(true);
     clearCart();
     router.push('/checkout/success');
   };

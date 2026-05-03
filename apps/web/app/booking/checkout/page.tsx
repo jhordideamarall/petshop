@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { ArrowLeft, CalendarDays, Check, Clock3, PawPrint, ShieldCheck } from 'lucide-react';
@@ -65,8 +65,11 @@ export default function BookingCheckoutPage() {
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState<PetType>('dog');
   const [petWeight, setPetWeight] = useState('');
+  const processed = useRef(false);
 
   useEffect(() => {
+    if (processed.current) return;
+    processed.current = true;
     const raw = sessionStorage.getItem('bookingDraft');
     if (!raw) {
       router.replace('/booking');
