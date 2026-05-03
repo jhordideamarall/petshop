@@ -8,17 +8,17 @@
 ## Status Ringkas
 
 | Fase Implementasi | Nama                            | Status           |
-| ----------------- | ------------------------------- | ---------------- |
+| ----------------- | ------------------------------- | ---------------- | ------------- |
 | Phase 0           | Infra & Tooling                 | ✅ Selesai       |
 | Phase 1           | Database Foundation             | ✅ Selesai       |
 | Phase 2           | Design System & App Shell       | ✅ Selesai       |
-| Phase 3           | Authentication                  | 🔲 Belum dimulai |
-| Phase 4           | Core E-Commerce (Browse & Cart) | 🔲 Belum dimulai |
-| Phase 5           | Checkout & Payment              | 🔲 Belum dimulai |
-| Phase 6           | Order Management & Admin        | 🔲 Belum dimulai |
-| Phase 7           | Booking System                  | 🔲 Belum dimulai |
-| Phase 8           | Pet Profile & Loyalty           | 🔲 Belum dimulai |
-| Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai |
+| Phase 3           | Authentication                  | 🔲 Belum dimulai | [next work 3] |
+| Phase 4           | Core E-Commerce (Browse & Cart) | ✅ Selesai       |
+| Phase 5           | Checkout & Payment              | ✅ Selesai       |
+| Phase 6           | Order Management & Admin        | 🔲 Belum dimulai | [next work4]  |
+| Phase 7           | Booking System                  | 🔲 Belum dimulai | [next work]   |
+| Phase 8           | Pet Profile & Loyalty           | 🔲 Belum dimulai | [next wrok2]  |
+| Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai | final         |
 
 > **📝 NOTE: STRATEGI EKSEKUSI "FRONT-END FIRST"**
 > Sesuai kesepakatan terbaru, kita akan **MENGABAIKAN urutan fase konvensional** yang langsung mengikat UI dengan Backend.
@@ -257,18 +257,29 @@
 **Estimasi**: 2 minggu  
 **Tujuan**: Customer bisa booking grooming/hotel, admin bisa manage slot.
 
-### Yang perlu dikerjakan:
+### Sudah dikerjakan (UI — Front-end First):
 
-1. **Booking pages** (mengisi stubs):
-   - `app/booking/page.tsx` — pilih layanan (grooming/hotel)
-   - `app/booking/grooming/page.tsx` — date picker, slot selection, pet selection
-   - `app/booking/hotel/page.tsx` — check-in/out, pet selection
+- `app/booking/page.tsx` — UI booking lengkap: pilih layanan, jadwal, pet, konfirmasi
+- **Design**: Sticky header shrink on scroll, step progress bar 4 tahap, animated floating summary card
+- **Deselectable**: Service dan pet bisa di-toggle (klik sekali pilih, klik lagi batal) — floating card muncul hanya saat service dipilih
+- **Dynamic dates**: `generateDates()` otomatis dari hari ini, 14 hari ke depan, label dinamis (Hari ini / Besok / nama hari)
+- **Dynamic time slots**: `generateTimeSlots()` dari 09:00–20:00 interval 90 menit (8 slot), semua tersedia by default
+- **`BOOKING_CONFIG`**: Single config object untuk `dateRangeDays`, `openHour`, `closeHour`, `slotIntervalMinutes` — siap diganti fetch dari admin di Phase 6/7
+- **UX polish**: `ChevronDown` icon pada date & time card agar user tahu elemen bisa diklik (sebelumnya tidak ada cue)
+- Konfirmasi button disabled jika service atau pet belum dipilih
 
-2. **Slot availability**:
-   - Query `service_slots` dengan lock pada concurrent booking (PostgreSQL row-level lock sudah disiapkan)
+### Yang perlu dikerjakan (Phase 7 full):
+
+1. **Slot availability dari Supabase**:
+   - Query `service_slots` dengan lock pada concurrent booking
+   - Replace dummy `available: true` dengan data real dari `booking_slots` table
+
+2. **Sambungkan `BOOKING_CONFIG` ke admin panel** (Phase 6):
+   - Admin bisa set `openHour`, `closeHour`, `slotIntervalMinutes` dari dashboard
 
 3. **Booking confirmation & notif**:
    - WhatsApp notification via Twilio / Fonnte
+   - Save booking ke tabel `bookings`
 
 ---
 

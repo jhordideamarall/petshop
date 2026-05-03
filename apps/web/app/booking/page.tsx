@@ -1,16 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, m, useScroll, useSpring, useTransform } from 'framer-motion';
-import {
-  CalendarDays,
-  Check,
-  ChevronRight,
-  Clock3,
-  MapPin,
-  PawPrint,
-  ShieldCheck,
-} from 'lucide-react';
+import { CalendarDays, Check, ChevronRight, Clock3, MapPin, PawPrint } from 'lucide-react';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
 type ServiceId = 'grooming-basic' | 'grooming-full' | 'pet-hotel';
@@ -25,6 +18,52 @@ interface BookingService {
   duration: string;
   accent: string;
   badge?: string;
+}
+
+// Admin-configurable — nanti di-fetch dari backend Phase 7
+const BOOKING_CONFIG = {
+  dateRangeDays: 14,
+  openHour: 9,
+  closeHour: 20,
+  slotIntervalMinutes: 90,
+} as const;
+
+const DAY_SHORT: Record<number, string> = {
+  0: 'Min',
+  1: 'Sen',
+  2: 'Sel',
+  3: 'Rab',
+  4: 'Kam',
+  5: 'Jum',
+  6: 'Sab',
+};
+
+function generateDates(rangeDays: number) {
+  return Array.from({ length: rangeDays }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    // Max 4 chars → semua chip lebar konsisten
+    const shortLabel = i === 0 ? 'Hari' : i === 1 ? 'Bsk' : (DAY_SHORT[d.getDay()] ?? '');
+    const dayNum = d.toLocaleDateString('id-ID', { day: 'numeric' });
+    const monthShort = d.toLocaleDateString('id-ID', { month: 'short' });
+    const id = d.toISOString().split('T')[0];
+    return { id, shortLabel, dayNum, monthShort };
+  });
+}
+
+function generateTimeSlots(openHour: number, closeHour: number, intervalMinutes: number) {
+  const slots: { id: string; label: string; available: boolean }[] = [];
+  let current = openHour * 60;
+  while (current < closeHour * 60) {
+    const h = Math.floor(current / 60)
+      .toString()
+      .padStart(2, '0');
+    const mn = (current % 60).toString().padStart(2, '0');
+    const id = `${h}:${mn}`;
+    slots.push({ id, label: id, available: true });
+    current += intervalMinutes;
+  }
+  return slots;
 }
 
 const services: BookingService[] = [
@@ -59,26 +98,17 @@ const services: BookingService[] = [
   },
 ];
 
-const dateOptions = [
-  { id: 'today', label: 'Hari ini', date: '3 Mei', hint: '4 slot' },
-  { id: 'tomorrow', label: 'Besok', date: '4 Mei', hint: '7 slot' },
-  { id: 'next', label: 'Selasa', date: '5 Mei', hint: '5 slot' },
-  { id: 'weekend', label: 'Sabtu', date: '9 Mei', hint: 'Ramai' },
-];
-
-const timeSlots = [
-  { id: '09:00', label: '09:00', available: true },
-  { id: '10:30', label: '10:30', available: true },
-  { id: '12:00', label: '12:00', available: false },
-  { id: '13:30', label: '13:30', available: true },
-  { id: '15:00', label: '15:00', available: true },
-  { id: '16:30', label: '16:30', available: false },
-];
+const dateOptions = generateDates(BOOKING_CONFIG.dateRangeDays);
+const timeSlots = generateTimeSlots(
+  BOOKING_CONFIG.openHour,
+  BOOKING_CONFIG.closeHour,
+  BOOKING_CONFIG.slotIntervalMinutes,
+);
 
 const pets = [
-  { id: 'milo' as const, name: 'Milo', meta: 'Golden Retriever, 3 tahun', type: 'Dog' },
-  { id: 'luna' as const, name: 'Luna', meta: 'Persian Cat, 2 tahun', type: 'Cat' },
-  { id: 'add-new' as const, name: 'Tambah Pet', meta: 'Lengkapi nanti saat checkout', type: 'New' },
+  { id: 'milo' as const, name: 'Milo', meta: 'Golden Retriever, 3 tahun' },
+  { id: 'luna' as const, name: 'Luna', meta: 'Persian Cat, 2 tahun' },
+  { id: 'add-new' as const, name: 'Tambah Pet', meta: 'Lengkapi nanti saat checkout' },
 ];
 
 const formatPrice = (value: number) => `Rp ${value.toLocaleString('id-ID')}`;
@@ -99,19 +129,15 @@ function RadioMark({ selected }: { selected: boolean }) {
 
 function StepHeader({ current }: { current: number }) {
   const steps = ['Layanan', 'Jadwal', 'Pet', 'Konfirmasi'];
-
   return (
     <div className="mt-4 grid grid-cols-4 gap-2">
       {steps.map((step, index) => {
         const active = index + 1 <= current;
-
         return (
           <div key={step} className="min-w-0">
             <div
               className="relative h-1.5 overflow-hidden rounded-full bg-stone-2"
-              style={{
-                transform: 'translateZ(0)',
-              }}
+              style={{ transform: 'translateZ(0)' }}
             >
               <m.div
                 initial={false}
@@ -139,6 +165,7 @@ function StepHeader({ current }: { current: number }) {
 }
 
 export default function BookingPage() {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const smoothY = useSpring(scrollY, { stiffness: 180, damping: 24, restDelta: 0.001, mass: 0.9 });
   const headerPaddingBottom = useTransform(smoothY, [0, 130], [16, 10]);
@@ -152,38 +179,47 @@ export default function BookingPage() {
     ['0 0 0 rgba(26,23,20,0)', '0 10px 28px rgba(26,23,20,0.08)'],
   );
 
-  const [selectedServiceId, setSelectedServiceId] = useState<ServiceId>('grooming-full');
-  const [selectedDateId, setSelectedDateId] = useState('tomorrow');
+  const [selectedServiceId, setSelectedServiceId] = useState<ServiceId | null>(null);
+  const [selectedDateId, setSelectedDateId] = useState(dateOptions[1].id);
   const [selectedTimeId, setSelectedTimeId] = useState('10:30');
-  const [selectedPetId, setSelectedPetId] = useState<PetId>('milo');
+  const [selectedPetId, setSelectedPetId] = useState<PetId | null>(null);
   const [notes, setNotes] = useState('');
-  const [confirmed, setConfirmed] = useState(false);
 
-  const selectedService =
-    services.find((service) => service.id === selectedServiceId) ?? services[1];
-  const selectedDate = dateOptions.find((date) => date.id === selectedDateId) ?? dateOptions[1];
-  const selectedPet = pets.find((pet) => pet.id === selectedPetId) ?? pets[0];
+  const selectedService = services.find((s) => s.id === selectedServiceId) ?? services[0];
+  const selectedDate = dateOptions.find((d) => d.id === selectedDateId) ?? dateOptions[1];
+  const selectedPet = pets.find((p) => p.id === selectedPetId) ?? pets[0];
   const isHotel = selectedService.id === 'pet-hotel';
   const dpAmount = isHotel ? Math.round(selectedService.price * 0.5) : 0;
   const totalDue = isHotel ? dpAmount : selectedService.price;
+  const canConfirm = selectedServiceId !== null && selectedPetId !== null;
 
+  // Step hanya advance dari pilihan eksplisit user — date/time selalu punya default
   const activeStep = useMemo(() => {
-    if (confirmed) return 4;
-    if (selectedPetId) return 3;
-    if (selectedDateId && selectedTimeId) return 2;
-    return 1;
-  }, [confirmed, selectedDateId, selectedPetId, selectedTimeId]);
+    if (selectedPetId !== null) return 3;
+    if (selectedServiceId !== null) return 2;
+    return 0;
+  }, [selectedPetId, selectedServiceId]);
 
-  const confirmBooking = () => {
-    setConfirmed(true);
+  const goToCheckout = () => {
+    if (!canConfirm) return;
+    // Simpan di sessionStorage untuk checkout page baca — hindari URL query string panjang
+    sessionStorage.setItem(
+      'bookingDraft',
+      JSON.stringify({
+        serviceId: selectedServiceId,
+        dateId: selectedDateId,
+        timeId: selectedTimeId,
+        petId: selectedPetId,
+        notes: notes.trim(),
+      }),
+    );
+    router.push('/booking/checkout');
   };
 
   const updateTime = (value: string) => {
     const slot = timeSlots.find((item) => item.id === value);
     if (!slot?.available) return;
-
     setSelectedTimeId(value);
-    setConfirmed(false);
   };
 
   return (
@@ -206,11 +242,11 @@ export default function BookingPage() {
             Pilih layanan, jadwal, dan pet dalam satu flow.
           </m.p>
         </div>
-
         <StepHeader current={activeStep} />
       </m.header>
 
       <main className="px-5 py-5">
+        {/* 1. Layanan */}
         <section>
           <div className="mb-3 flex items-center justify-between">
             <div>
@@ -223,16 +259,14 @@ export default function BookingPage() {
           <div className="flex flex-col gap-3">
             {services.map((service) => {
               const selected = service.id === selectedServiceId;
-
               return (
                 <m.button
                   key={service.id}
                   type="button"
                   whileTap={{ scale: 0.985 }}
-                  onClick={() => {
-                    setSelectedServiceId(service.id);
-                    setConfirmed(false);
-                  }}
+                  onClick={() =>
+                    setSelectedServiceId((prev) => (prev === service.id ? null : service.id))
+                  }
                   className="flex min-h-[104px] w-full items-center gap-3 rounded-[22px] border bg-white px-4 py-4 text-left shadow-sm transition-colors"
                   style={{
                     borderColor: selected ? service.accent : 'var(--color-stone-2)',
@@ -262,7 +296,6 @@ export default function BookingPage() {
                       <span className="text-xs font-semibold text-ink-4">{service.unit}</span>
                     </div>
                   </div>
-
                   <RadioMark selected={selected} />
                 </m.button>
               );
@@ -270,67 +303,94 @@ export default function BookingPage() {
           </div>
         </section>
 
+        {/* 2. Jadwal */}
         <section className="mt-7">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h2 className="font-heading text-[17px] font-extrabold text-ink">2. Pilih jadwal</h2>
-              <p className="mt-0.5 text-sm text-ink-3">Pilih hari dan jam yang paling nyaman.</p>
-            </div>
+          <div className="mb-4">
+            <h2 className="font-heading text-[17px] font-extrabold text-ink">2. Pilih jadwal</h2>
+            <p className="mt-0.5 text-sm text-ink-3">Pilih hari dan jam yang paling nyaman.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <label className="block rounded-[22px] border border-stone-2 bg-white px-4 py-3 shadow-sm">
-              <span className="font-heading text-[12px] font-bold uppercase tracking-[0.12em] text-ink-4">
-                Tanggal
-              </span>
-              <select
-                value={selectedDateId}
-                onChange={(event) => {
-                  setSelectedDateId(event.target.value);
-                  setConfirmed(false);
-                }}
-                className="mt-2 h-14 w-full appearance-none bg-transparent font-heading text-[20px] font-extrabold text-primary outline-none"
-                aria-label="Pilih tanggal booking"
-              >
-                {dateOptions.map((date) => (
-                  <option key={date.id} value={date.id}>
-                    {date.label} - {date.date}
-                  </option>
-                ))}
-              </select>
-              <p className="text-[12px] font-semibold text-ink-4">{selectedDate.hint} tersedia</p>
-            </label>
+          {/* Date scroll — no label, konsisten w-[58px] */}
+          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {dateOptions.map((date) => {
+              const selected = date.id === selectedDateId;
+              return (
+                <m.button
+                  key={date.id}
+                  type="button"
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setSelectedDateId(date.id)}
+                  className="flex w-[58px] shrink-0 flex-col items-center rounded-[18px] border py-3 text-center"
+                  style={{
+                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                    background: selected ? 'var(--color-orange)' : '#FFFFFF',
+                    boxShadow: selected
+                      ? '0 6px 18px rgba(224,123,57,0.30)'
+                      : '0 1px 4px rgba(26,23,20,0.04)',
+                  }}
+                >
+                  <span
+                    className="font-heading text-[10px] font-bold leading-none"
+                    style={{ color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)' }}
+                  >
+                    {date.shortLabel}
+                  </span>
+                  <span
+                    className="mt-1.5 font-heading text-[20px] font-extrabold leading-none"
+                    style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
+                  >
+                    {date.dayNum}
+                  </span>
+                  <span
+                    className="mt-1 font-heading text-[10px] font-semibold leading-none"
+                    style={{ color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)' }}
+                  >
+                    {date.monthShort}
+                  </span>
+                </m.button>
+              );
+            })}
+          </div>
 
-            <label className="block rounded-[22px] border border-stone-2 bg-white px-4 py-3 shadow-sm">
-              <span className="font-heading text-[12px] font-bold uppercase tracking-[0.12em] text-ink-4">
-                Jam
-              </span>
-              <select
-                value={selectedTimeId}
-                onChange={(event) => updateTime(event.target.value)}
-                className="mt-2 h-14 w-full appearance-none bg-transparent font-heading text-[20px] font-extrabold text-primary outline-none"
-                aria-label="Pilih jam booking"
-              >
-                {timeSlots.map((slot) => (
-                  <option key={slot.id} value={slot.id} disabled={!slot.available}>
+          {/* Time scroll — no label */}
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {timeSlots.map((slot) => {
+              const selected = slot.id === selectedTimeId;
+              return (
+                <m.button
+                  key={slot.id}
+                  type="button"
+                  disabled={!slot.available}
+                  whileTap={slot.available ? { scale: 0.9 } : {}}
+                  onClick={() => updateTime(slot.id)}
+                  className="shrink-0 rounded-[16px] border px-4 py-3 text-center"
+                  style={{
+                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                    background: selected ? 'var(--color-orange)' : '#FFFFFF',
+                    opacity: slot.available ? 1 : 0.35,
+                    boxShadow: selected
+                      ? '0 6px 18px rgba(224,123,57,0.30)'
+                      : '0 1px 4px rgba(26,23,20,0.04)',
+                  }}
+                >
+                  <span
+                    className="font-heading text-[16px] font-extrabold leading-none"
+                    style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
+                  >
                     {slot.label}
-                    {slot.available ? '' : ' - penuh'}
-                  </option>
-                ))}
-              </select>
-              <p className="text-[12px] font-semibold text-ink-4">
-                {selectedService.duration} durasi
-              </p>
-            </label>
-          </div>
-
-          <div className="mt-3 rounded-[20px] bg-stone px-4 py-3">
-            <p className="text-[13px] font-semibold leading-5 text-ink-3">
-              Jam penuh akan terkunci otomatis. Untuk hotel, admin akan konfirmasi jam check-in.
-            </p>
+                  </span>
+                  {!slot.available && (
+                    <span className="mt-1 block font-heading text-[9px] font-bold text-ink-4">
+                      penuh
+                    </span>
+                  )}
+                </m.button>
+              );
+            })}
           </div>
         </section>
 
+        {/* 3. Pet */}
         <section className="mt-7">
           <div className="mb-3">
             <h2 className="font-heading text-[17px] font-extrabold text-ink">3. Pilih pet</h2>
@@ -340,16 +400,12 @@ export default function BookingPage() {
           <div className="flex flex-col gap-3">
             {pets.map((pet) => {
               const selected = pet.id === selectedPetId;
-
               return (
                 <m.button
                   key={pet.id}
                   type="button"
                   whileTap={{ scale: 0.985 }}
-                  onClick={() => {
-                    setSelectedPetId(pet.id);
-                    setConfirmed(false);
-                  }}
+                  onClick={() => setSelectedPetId((prev) => (prev === pet.id ? null : pet.id))}
                   className="flex min-h-[76px] items-center gap-3 rounded-[20px] border bg-white px-4 text-left"
                   style={{
                     borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
@@ -367,6 +423,7 @@ export default function BookingPage() {
           </div>
         </section>
 
+        {/* 4. Catatan */}
         <section className="mt-7">
           <label
             htmlFor="booking-notes"
@@ -377,83 +434,70 @@ export default function BookingPage() {
           <textarea
             id="booking-notes"
             value={notes}
-            onChange={(event) => {
-              setNotes(event.target.value);
-              setConfirmed(false);
-            }}
+            onChange={(e) => setNotes(e.target.value)}
             placeholder="Contoh: kulit sensitif, takut hair dryer, minta update foto..."
             className="mt-3 min-h-[104px] w-full resize-none rounded-[20px] border border-stone-2 bg-white px-4 py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-4 focus:border-primary"
           />
         </section>
+      </main>
 
-        <AnimatePresence>
-          {confirmed && (
-            <m.section
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="mt-6 rounded-[24px] border border-[#BEE5CB] bg-[#F2FBF5] p-4"
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[16px] bg-success text-white">
-                  <ShieldCheck size={22} />
+      {/* Floating summary — muncul saat service dipilih */}
+      <AnimatePresence>
+        {selectedServiceId !== null && (
+          <m.aside
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ type: 'spring', stiffness: 240, damping: 26 }}
+            className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5"
+          >
+            <div className="rounded-[24px] border border-stone-2 bg-white p-4 shadow-[0_16px_42px_rgba(26,23,20,0.12)]">
+              <div className="mb-3 flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="font-heading text-[15px] font-extrabold text-ink">
+                    {selectedService.name}
+                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-ink-4">
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarDays size={13} />
+                      {selectedDate.dayNum} {selectedDate.monthShort}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Clock3 size={13} /> {selectedTimeId}
+                    </span>
+                    {selectedPetId && (
+                      <span className="inline-flex items-center gap-1">
+                        <PawPrint size={13} /> {selectedPet.name}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-heading text-[16px] font-extrabold text-ink">
-                    Booking draft siap
-                  </h2>
-                  <p className="mt-1 text-sm leading-5 text-ink-3">
-                    Admin akan cek slot dan menghubungi kamu untuk konfirmasi akhir.
+                <div className="shrink-0 text-right">
+                  {isHotel && <p className="text-[11px] font-bold text-ink-4">DP 50%</p>}
+                  <p className="font-heading text-[18px] font-extrabold text-primary">
+                    {formatPrice(totalDue)}
                   </p>
                 </div>
               </div>
-            </m.section>
-          )}
-        </AnimatePresence>
-      </main>
 
-      <aside className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5">
-        <div className="rounded-[24px] border border-stone-2 bg-white p-4 shadow-[0_16px_42px_rgba(26,23,20,0.12)]">
-          <div className="mb-3 flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="font-heading text-[15px] font-extrabold text-ink">
-                {selectedService.name}
-              </p>
-              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-ink-4">
-                <span className="inline-flex items-center gap-1">
-                  <CalendarDays size={13} /> {selectedDate.date}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Clock3 size={13} /> {selectedTimeId}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <PawPrint size={13} /> {selectedPet.name}
-                </span>
+              <div className="mb-3 flex items-center gap-2 rounded-[16px] bg-stone px-3 py-2 text-xs font-semibold text-ink-3">
+                <MapPin size={15} className="text-primary" />
+                <span>Cabang Jakarta Selatan · konfirmasi admin maks. 10 menit</span>
               </div>
-            </div>
-            <div className="shrink-0 text-right">
-              {isHotel && <p className="text-[11px] font-bold text-ink-4">DP 50%</p>}
-              <p className="font-heading text-[18px] font-extrabold text-primary">
-                {formatPrice(totalDue)}
-              </p>
-            </div>
-          </div>
 
-          <div className="mb-3 flex items-center gap-2 rounded-[16px] bg-stone px-3 py-2 text-xs font-semibold text-ink-3">
-            <MapPin size={15} className="text-primary" />
-            <span>Cabang Jakarta Selatan - konfirmasi admin maksimal 10 menit.</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={confirmBooking}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] active:scale-[0.98]"
-          >
-            {confirmed ? 'Booking Terkonfirmasi' : 'Konfirmasi Booking'}
-            <ChevronRight size={18} strokeWidth={2.5} />
-          </button>
-        </div>
-      </aside>
+              <button
+                type="button"
+                onClick={goToCheckout}
+                disabled={!canConfirm}
+                className="flex h-14 w-full items-center justify-center gap-2 rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] active:scale-[0.98] disabled:opacity-50"
+              >
+                {canConfirm ? 'Lanjut ke Konfirmasi' : 'Pilih Pet dulu'}
+                <ChevronRight size={18} strokeWidth={2.5} />
+              </button>
+            </div>
+          </m.aside>
+        )}
+      </AnimatePresence>
 
       <BottomNav />
     </div>
