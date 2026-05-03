@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { m, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { CategoryChip } from '@/components/shared/category-chip';
@@ -143,6 +143,14 @@ export function Header() {
     }
   }, [cartCount, hydrated]);
 
+  // iOS-native shrink-on-scroll behavior
+  const { scrollY } = useScroll();
+  const titleRowMb = useTransform(scrollY, [0, 60], [16, 8], { clamp: true });
+  const locationOpacity = useTransform(scrollY, [0, 30], [1, 0], { clamp: true });
+  const locationHeight = useTransform(scrollY, [0, 60], [16, 0], { clamp: true });
+  const searchPy = useTransform(scrollY, [0, 60], [12, 8], { clamp: true });
+  const searchMb = useTransform(scrollY, [0, 60], [20, 12], { clamp: true });
+
   return (
     <m.div
       className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 flex-shrink-0 px-5 pb-0"
@@ -163,7 +171,7 @@ export function Header() {
         borderBottomRightRadius: 24,
       }}
     >
-      <div className="mb-4 flex items-center justify-between">
+      <m.div className="flex items-center justify-between" style={{ marginBottom: titleRowMb }}>
         <Link href="/" className="flex flex-col no-underline">
           <div className="mb-1 flex items-center gap-1.5">
             <PawIcon />
@@ -171,14 +179,17 @@ export function Header() {
               Pawvels
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <m.div
+            className="flex items-center gap-1 overflow-hidden"
+            style={{ opacity: locationOpacity, height: locationHeight }}
+          >
             <span className="flex items-center text-[#A09890]">
               <MapPin />
             </span>
             <span className="font-sans text-[11px] tracking-wide text-[#A09890]">
               Jakarta Selatan
             </span>
-          </div>
+          </m.div>
         </Link>
         <div className="flex gap-2">
           <m.button whileTap={{ scale: 0.94 }} style={iconBtnStyle} aria-label="Notifikasi">
@@ -214,25 +225,27 @@ export function Header() {
             </m.div>
           </Link>
         </div>
-      </div>
+      </m.div>
 
       {/* Search bar & Filter */}
-      <div className="mb-5 flex items-center">
+      <m.div className="flex items-center" style={{ marginBottom: searchMb }}>
         <m.div
           className="flex-1"
           animate={{ marginRight: isProductPage ? 8 : 0 }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
         >
-          <Link
-            href="/search"
-            className="flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 py-3 no-underline transition-colors hover:bg-stone/80"
-          >
-            <span className="flex items-center text-[#E07B39]">
-              <SearchIcon />
-            </span>
-            <span className="font-sans text-sm text-[#A09890]">
-              Cari produk untuk peliharaanmu...
-            </span>
+          <Link href="/search" className="block no-underline cursor-pointer">
+            <m.div
+              className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 transition-colors hover:bg-stone/80"
+              style={{ paddingTop: searchPy, paddingBottom: searchPy }}
+            >
+              <span className="flex items-center text-[#E07B39]">
+                <SearchIcon />
+              </span>
+              <span className="font-sans text-sm text-[#A09890]">
+                Cari produk untuk peliharaanmu...
+              </span>
+            </m.div>
           </Link>
         </m.div>
 
@@ -274,7 +287,7 @@ export function Header() {
             </m.div>
           </m.button>
         </m.div>
-      </div>
+      </m.div>
 
       <AnimatePresence>
         {isProductPage && showFilters && (

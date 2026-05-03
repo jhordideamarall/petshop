@@ -4325,3 +4325,72 @@ Read more: https://nextjs.org/docs/api-reference/next/image#priority @ http://lo
 [ 7657719ms] [LOG] [Fast Refresh] done in 400ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [ 7658949ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [ 7658986ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7827004ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7827212ms] [LOG] [Fast Refresh] done in 315ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7856015ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7856104ms] [LOG] [Fast Refresh] done in 191ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7863404ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7872688ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7872772ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7874025ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7874129ms] [ERROR] ./apps/web/components/layout/header.tsx:228:13
+Parsing ecmascript source code failed
+  226 |           </Link>
+  227 |         </div>
+> 228 |       </div>
+      |             ^
+> 229 |
+      | ^
+> 230 |       {/* Search bar & Filter */}
+      | ^^^^^^^
+  231 |       <div className="mb-5 flex items-center">
+  232 |         <m.div
+  233 |           className="flex-1"
+
+Expected '</', got 'jsx text (
+
+      )'
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/components/layout/header.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/components/layout/header.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 7874154ms] [LOG] {file: Object} @ http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[ 7895070ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7895146ms] [ERROR] ./apps/web/components/layout/header.tsx:290:13
+Parsing ecmascript source code failed
+  288 |           </m.button>
+  289 |         </m.div>
+> 290 |       </div>
+      |             ^
+> 291 |
+      | ^
+> 292 |       <AnimatePresence>
+      | ^^^^^^^
+  293 |         {isProductPage && showFilters && (
+  294 |           <m.div
+  295 |             initial={{ height: 0, opacity: 0 }}
+
+Expected '</', got 'jsx text (
+
+      )'
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/components/layout/header.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/components/layout/header.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 7895149ms] [LOG] {file: Object} @ http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[ 7903665ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7903776ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809

@@ -1,0 +1,13 @@
+[     288ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[     403ms] [LOG] [Fast Refresh] done in 217ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[    1453ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[    1647ms] [LOG] [Fast Refresh] done in 351ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[    4774ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[   67565ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[   67588ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[   68550ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[   68738ms] [LOG] [Fast Refresh] done in 289ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[   92818ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[   93273ms] [LOG] [Fast Refresh] done in 557ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  104884ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  105055ms] [LOG] [Fast Refresh] done in 274ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
