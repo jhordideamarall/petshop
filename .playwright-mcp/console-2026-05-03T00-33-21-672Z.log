@@ -11,3 +11,147 @@
 [   93273ms] [LOG] [Fast Refresh] done in 557ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [  104884ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [  105055ms] [LOG] [Fast Refresh] done in 274ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  605059ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  605318ms] [LOG] [Fast Refresh] done in 343ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  620264ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  620347ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  696813ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  697344ms] [ERROR] ./apps/web/app/(shop)/layout.tsx:35:28
+Parsing ecmascript source code failed
+  33 |             {children}
+  34 |             {/* Footer Removed per UI Mandate */}
+> 35 |           </PageTransition>
+     |                            ^
+> 36 |         </AnimatePresence>
+     | ^^^^^^^^^
+  37 |       </main>
+  38 |
+  39 |       {/* Floating BottomNav Overlay */}
+
+Expected '</', got 'jsx text (
+        )'
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[  697356ms] [LOG] {file: Object} @ http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[  724712ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  728213ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  728522ms] [LOG] [Fast Refresh] done in 412ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  731100ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  750283ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  750307ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  765284ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  765288ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  819779ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  819991ms] [LOG] [Fast Refresh] done in 301ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  823020ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  921425ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  921569ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  936216ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  936232ms] [LOG] [Fast Refresh] done in 84ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  950834ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  952011ms] [LOG] [Fast Refresh] done in 1238ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  955335ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  985092ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  986511ms] [LOG] [Fast Refresh] done in 550ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  988570ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  988621ms] [LOG] [Fast Refresh] done in 152ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  988786ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  988911ms] [LOG] [Fast Refresh] done in 227ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  989754ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  995459ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  995504ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  996177ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[  996546ms] [LOG] [Fast Refresh] done in 470ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[  998379ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1002184ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1002602ms] [ERROR] ./apps/web/app/(shop)/layout.tsx:7:10
+Ecmascript file had an error
+   5 | import { BottomNav } from '@/components/layout/bottom-nav';
+   6 | import { Header } from '@/components/layout/header';
+>  7 | import { BottomNav } from '@/components/layout/bottom-nav';
+     |          ^^^^^^^^^
+   8 |
+   9 | export default function ShopLayout({ children }: { children: ReactNode }) {
+  10 |   const pathname = usePathname();
+
+the name `BottomNav` is defined multiple times
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 1002602ms] [ERROR] ./apps/web/app/(shop)/layout.tsx:6:10
+Ecmascript file had an error
+  4 | import { Header } from '@/components/layout/header';
+  5 | import { BottomNav } from '@/components/layout/bottom-nav';
+> 6 | import { Header } from '@/components/layout/header';
+    |          ^^^^^^
+  7 | import { BottomNav } from '@/components/layout/bottom-nav';
+  8 |
+  9 | export default function ShopLayout({ children }: { children: ReactNode }) {
+
+the name `Header` is defined multiple times
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 1002616ms] [LOG] {file: Object} @ http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[ 1005683ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1018121ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1018511ms] [LOG] [Fast Refresh] done in 470ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1018692ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1019647ms] [LOG] [Fast Refresh] done in 1056ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1025041ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1087288ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1087530ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1090552ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1128297ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1128373ms] [LOG] [Fast Refresh] done in 177ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1152382ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1152492ms] [LOG] [Fast Refresh] done in 194ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1188636ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1188692ms] [LOG] [Fast Refresh] done in 110ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1190879ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1190905ms] [LOG] [Fast Refresh] done in 127ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1191656ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1193826ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1193855ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1196839ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1204215ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1204239ms] [LOG] [Fast Refresh] done in 109ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1206877ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1206955ms] [LOG] [Fast Refresh] done in 178ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1207239ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1220011ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1220198ms] [LOG] [Fast Refresh] done in 288ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1220994ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1221131ms] [LOG] [Fast Refresh] done in 238ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1230644ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1230712ms] [LOG] [Fast Refresh] done in 169ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1374182ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1375963ms] [LOG] [Fast Refresh] done in 1687ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1381869ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1383230ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1383265ms] [LOG] [Fast Refresh] done in 137ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1383838ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1383907ms] [LOG] [Fast Refresh] done in 169ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1475777ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1475892ms] [LOG] [Fast Refresh] done in 216ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 1507136ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 1507267ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809

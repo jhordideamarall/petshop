@@ -2,8 +2,6 @@
 import type { ReactNode } from 'react';
 import { Header } from '@/components/layout/header';
 import { BottomNav } from '@/components/layout/bottom-nav';
-import { PageTransition } from '@/components/layout/page-transition';
-import { AnimatePresence } from 'framer-motion';
 
 export default function ShopLayout({ children }: { children: ReactNode }) {
   return (
@@ -29,12 +27,8 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
           paddingBottom: 'calc(100px + env(safe-area-inset-bottom))',
         }}
       >
-        <AnimatePresence mode="wait">
-          <PageTransition key="content">
-            {children}
-            {/* Footer Removed per UI Mandate */}
-          </PageTransition>
-        </AnimatePresence>
+        {children}
+        {/* Footer Removed per UI Mandate */}
       </main>
 
       {/* Floating BottomNav Overlay */}

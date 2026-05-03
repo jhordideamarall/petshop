@@ -9,7 +9,7 @@ const HomeIcon = ({ active }: { active: boolean }) => (
     width="22"
     height="22"
     viewBox="0 0 24 24"
-    fill={active ? '#E07B39' : 'none'}
+    fill="none"
     stroke={active ? '#E07B39' : '#A09890'}
     strokeWidth="1.8"
     strokeLinecap="round"

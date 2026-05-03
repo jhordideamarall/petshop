@@ -22,7 +22,7 @@ export function ProductGrid({ products, onAddToCart, cols = 2 }: ProductGridProp
           key={product.id}
           product={product}
           onAddToCart={onAddToCart}
-          priority={index < 4}
+          priority={index < 2}
         />
       ))}
     </div>
