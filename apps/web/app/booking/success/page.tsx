@@ -38,7 +38,7 @@ export default function BookingSuccessPage() {
   if (!data) return null;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col items-center justify-center bg-[#FDFCFB] px-5 pb-[env(safe-area-inset-bottom)]">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col items-center bg-[#FDFCFB] px-5 pt-[max(48px,env(safe-area-inset-top))] pb-[max(32px,env(safe-area-inset-bottom))]">
       <m.div
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -110,7 +110,7 @@ export default function BookingSuccessPage() {
         transition={{ delay: 0.45 }}
         type="button"
         onClick={() => router.push('/')}
-        className="mt-8 flex h-14 w-full items-center justify-center gap-2 rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] active:scale-[0.98]"
+        className="mt-auto flex h-14 w-full items-center justify-center gap-2 rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] active:scale-[0.98]"
       >
         <Home size={18} />
         Kembali ke Beranda
