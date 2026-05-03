@@ -7,18 +7,18 @@
 
 ## Status Ringkas
 
-| Fase Implementasi | Nama                            | Status           |
-| ----------------- | ------------------------------- | ---------------- | ------------- |
-| Phase 0           | Infra & Tooling                 | ✅ Selesai       |
-| Phase 1           | Database Foundation             | ✅ Selesai       |
-| Phase 2           | Design System & App Shell       | ✅ Selesai       |
-| Phase 3           | Authentication                  | 🔲 Belum dimulai | [next work 3] |
-| Phase 4           | Core E-Commerce (Browse & Cart) | ✅ Selesai       |
-| Phase 5           | Checkout & Payment              | ✅ Selesai       |
-| Phase 6           | Order Management & Admin        | 🔲 Belum dimulai | [next work4]  |
-| Phase 7           | Booking System                  | 🔲 Belum dimulai | [next work]   |
-| Phase 8           | Pet Profile & Loyalty           | 🔲 Belum dimulai | [next wrok2]  |
-| Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai | final         |
+| Fase Implementasi | Nama                            | Status            |
+| ----------------- | ------------------------------- | ----------------- | ------------- |
+| Phase 0           | Infra & Tooling                 | ✅ Selesai        |
+| Phase 1           | Database Foundation             | ✅ Selesai        |
+| Phase 2           | Design System & App Shell       | ✅ Selesai        |
+| Phase 3           | Authentication                  | 🔲 Belum dimulai  | [next work 3] |
+| Phase 4           | Core E-Commerce (Browse & Cart) | ✅ Selesai        |
+| Phase 5           | Checkout & Payment              | ✅ Selesai        |
+| Phase 6           | Order Management & Admin        | 🔲 Belum dimulai  | [next work4]  |
+| Phase 7           | Booking System                  | 🔲 Belum dimulai  | [next work]   |
+| Phase 8           | Pet Profile & Loyalty           | 🔧 UI In Progress |               |
+| Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai  | final         |
 
 > **📝 NOTE: STRATEGI EKSEKUSI "FRONT-END FIRST"**
 > Sesuai kesepakatan terbaru, kita akan **MENGABAIKAN urutan fase konvensional** yang langsung mengikat UI dengan Backend.
@@ -265,7 +265,11 @@
 - **Dynamic dates**: `generateDates()` otomatis dari hari ini, 14 hari ke depan, label dinamis (Hari ini / Besok / nama hari)
 - **Dynamic time slots**: `generateTimeSlots()` dari 09:00–20:00 interval 90 menit (8 slot), semua tersedia by default
 - **`BOOKING_CONFIG`**: Single config object untuk `dateRangeDays`, `openHour`, `closeHour`, `slotIntervalMinutes` — siap diganti fetch dari admin di Phase 6/7
-- **UX polish**: `ChevronDown` icon pada date & time card agar user tahu elemen bisa diklik (sebelumnya tidak ada cue)
+- **Chip pickers**: Date & time bukan dropdown native — horizontal scroll chip dengan fixed width `w-[58px]` untuk konsistensi ukuran, shortLabel max 4 char ("Hari", "Bsk", abbrev hari 3 char)
+- **Step logic fixed**: Progress bar hanya advance dari step 0 (layanan) → step 2 (pet) berdasarkan selection, bukan default date/time value
+- **sessionStorage data passing**: `bookingDraft` ditulis di booking page, dibaca + dihapus di checkout page — menghindari URL params dan typed route issues
+- `app/booking/checkout/page.tsx` — konfirmasi booking: service card dengan accent color, jadwal chips, pet section (existing pet atau add-new form), price breakdown (grooming = total, hotel = DP 50% + sisa), admin WhatsApp note
+- `app/booking/success/page.tsx` — halaman sukses: animated check circle, booking number `BK-YYYYMMDD-XXXX`, ringkasan layanan/tanggal/jam, CTA kembali ke beranda
 - Konfirmasi button disabled jika service atau pet belum dipilih
 
 ### Yang perlu dikerjakan (Phase 7 full):
@@ -288,17 +292,30 @@
 **Estimasi**: 2 minggu  
 **Tujuan**: Fitur retention — user punya alasan kembali.
 
+### Sudah dikerjakan (UI — Front-end First):
+
+- `app/(account)/account/page.tsx` — profil hub: avatar placeholder, nama/email, menu tiles (Pesanan, Hewan, Alamat, Loyalty, Wishlist), logout button
+- `app/(account)/orders/page.tsx` — riwayat pesanan: status badge, order card dengan items + total, empty state
+- `app/(account)/pets/page.tsx` — profil hewan: kartu per hewan (nama, breed, umur), add-new CTA, empty state
+- `app/(account)/addresses/page.tsx` — alamat tersimpan: kartu alamat dengan badge "Utama", add-new CTA, empty state
+- `app/(account)/loyalty/page.tsx` — loyalty poin: hero card dengan total poin + tier badge, history transaksi, progress bar ke tier berikutnya
+- `app/(account)/wishlist/page.tsx` — wishlist: grid produk tersimpan, quick-add to cart, empty state
+- Layout `app/(account)/layout.tsx` — shared layout dengan BottomNav + safe area padding
+
 ### Yang perlu dikerjakan:
 
-1. **Pet profile** (`app/(account)/pets/`):
-   - CRUD hewan piaraan (nama, jenis, foto, catatan medis)
+1. **Koneksi data real** (Phase 3/8):
+   - Auth: nama & email dari Supabase session
+   - Orders: dari tabel `orders` + `order_items`
+   - Pets: dari tabel `pets` (CRUD)
+   - Loyalty: dari tabel `loyalty_points`
+   - Wishlist: dari tabel `wishlists` + `products`
 
-2. **Loyalty points**:
-   - Tampilkan poin di account page
-   - Redeem poin saat checkout
+2. **Pet profile CRUD** (`app/(account)/pets/`):
+   - Form tambah/edit hewan (nama, jenis, foto, catatan medis)
 
-3. **Wishlist** (`app/(account)/wishlist/`):
-   - Save produk, quick-add to cart
+3. **Redeem poin saat checkout**:
+   - Sambungkan loyalty store ke checkout flow
 
 4. **Review & rating**:
    - Post-purchase review form di order detail
