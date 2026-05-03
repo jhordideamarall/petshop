@@ -424,3 +424,125 @@ Import traces:
 [ 7083874ms] [LOG] [Fast Refresh] done in 161ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
 [ 7129026ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
 [ 7129063ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7149540ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7149782ms] [LOG] [Fast Refresh] done in 345ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7188509ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7188747ms] [LOG] [Fast Refresh] done in 324ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7191819ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 7216020ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7216867ms] [LOG] [Fast Refresh] done in 948ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7249134ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7249329ms] [LOG] [Fast Refresh] done in 257ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7264054ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7264069ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7264194ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7264306ms] [LOG] [Fast Refresh] done in 214ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7265140ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7265166ms] [LOG] [Fast Refresh] done in 128ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7294913ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7294987ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7302914ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7303006ms] [LOG] [Fast Refresh] done in 188ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7337067ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7337289ms] [LOG] [Fast Refresh] done in 321ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7337308ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7337437ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7338713ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7338928ms] [LOG] [Fast Refresh] done in 315ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7339066ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7339234ms] [LOG] [Fast Refresh] done in 268ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7340955ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7340959ms] [LOG] [Fast Refresh] done in 105ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7364416ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7364525ms] [LOG] [Fast Refresh] done in 204ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7379942ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7380071ms] [LOG] [Fast Refresh] done in 229ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7380978ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7380993ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7410484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7410619ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7413730ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7413833ms] [LOG] [Fast Refresh] done in 205ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7456280ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7456304ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7494412ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7494955ms] [ERROR] ./apps/web/components/layout/header.tsx:372:1
+Parsing ecmascript source code failed
+  370 |     </m.div>
+  371 |   );
+> 372 | }
+      | ^
+  373 |
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import traces:
+  Client Component Browser:
+    ./apps/web/components/layout/header.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Client Component Browser]
+    ./apps/web/app/(shop)/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/web/components/layout/header.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Client Component SSR]
+    ./apps/web/app/(shop)/layout.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/afa34_next_dist_ac59402a._.js:2359
+[ 7494982ms] [LOG] {file: Object} @ http://localhost:3000/_next/static/chunks/afa34_next_dist_compiled_next-devtools_index_bee77074.js:16058
+[ 7498113ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 7560752ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7561809ms] [LOG] [Fast Refresh] done in 1106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7567809ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 7570517ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7570721ms] [LOG] [Fast Refresh] done in 262ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7576097ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7576158ms] [LOG] [Fast Refresh] done in 162ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7781456ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7781657ms] [LOG] [Fast Refresh] done in 304ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7802573ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7802797ms] [LOG] [Fast Refresh] done in 327ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7882522ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7882674ms] [LOG] [Fast Refresh] done in 254ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 7977477ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 7977803ms] [LOG] [Fast Refresh] done in 368ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8005354ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8005360ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8014270ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8014303ms] [LOG] [Fast Refresh] done in 135ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8493502ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8493548ms] [LOG] [Fast Refresh] done in 147ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8559523ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8559700ms] [LOG] [Fast Refresh] done in 281ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8590982ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8591117ms] [LOG] [Fast Refresh] done in 237ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8594263ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 8625682ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8625704ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8649083ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8651828ms] [LOG] [Fast Refresh] done in 898ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8652658ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8652821ms] [LOG] [Fast Refresh] done in 264ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8658915ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 8679023ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8679097ms] [LOG] [Fast Refresh] done in 156ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8696339ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8696395ms] [LOG] [Fast Refresh] done in 156ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8913279ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8913685ms] [LOG] [Fast Refresh] done in 486ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8916786ms] [WARNING] The resource http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1583337130417-3346a1be7dee%3Fw%3D800%26q%3D80&w=640&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 8919867ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8919911ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 8965729ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 8965860ms] [LOG] [Fast Refresh] done in 197ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9002227ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9002875ms] [LOG] [Fast Refresh] done in 747ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9005609ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9006152ms] [LOG] [Fast Refresh] done in 632ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9011026ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9011142ms] [LOG] [Fast Refresh] done in 213ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9018394ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9018555ms] [LOG] [Fast Refresh] done in 246ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9029586ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9030085ms] [LOG] [Fast Refresh] done in 601ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9032073ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9032130ms] [LOG] [Fast Refresh] done in 159ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[ 9111682ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[ 9111773ms] [LOG] [Fast Refresh] done in 193ms @ http://localhost:3000/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809

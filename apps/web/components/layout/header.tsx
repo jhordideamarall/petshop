@@ -5,6 +5,7 @@ import { m, AnimatePresence, useScroll, useSpring, useTransform, LayoutGroup } f
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { CategoryChip } from '@/components/shared/category-chip';
+import { SearchModal } from '@/components/shared/search-modal';
 
 const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Mainan'];
 
@@ -118,7 +119,6 @@ const iconBtnStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   color: '#3D3830',
-  transition: 'background 0.15s, transform 0.1s',
 } as const;
 
 export function Header() {
@@ -130,126 +130,129 @@ export function Header() {
   const isProductPage = pathname === '/products';
   const [showFilters, setShowFilters] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const items = useCartStore((state) => state.items);
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
     setHydrated(true);
   }, []);
-  // iOS-native shrink-on-scroll behavior (Buttery Smooth Spring)
-  const { scrollY } = useScroll();
-  const smoothY = useSpring(scrollY, {
-    stiffness: 150,
-    damping: 30,
-    restDelta: 0.001,
-    mass: 0.8,
-  });
 
-  const titleRowMb = useTransform(smoothY, [180, 240], [16, 8], { clamp: true });
-  const locationOpacity = useTransform(smoothY, [180, 210], [1, 0], { clamp: true });
-  const locationHeight = useTransform(smoothY, [180, 240], [16, 0], { clamp: true });
-  const searchPy = useTransform(smoothY, [180, 240], [12, 8], { clamp: true });
-  const searchMb = useTransform(smoothY, [180, 240], [20, 12], { clamp: true });
+  // iOS-native shrink — slow spring, full range
+  const { scrollY } = useScroll();
+  const smoothY = useSpring(scrollY, { stiffness: 60, damping: 22, restDelta: 0.001, mass: 1.2 });
+
+  const titleRowMb = useTransform(smoothY, [0, 140], [16, 8], { clamp: true });
+  const locationOpacity = useTransform(smoothY, [0, 100], [1, 0], { clamp: true });
+  const locationHeight = useTransform(smoothY, [0, 140], [16, 0], { clamp: true });
+  const searchPy = useTransform(smoothY, [0, 140], [12, 8], { clamp: true });
+  const searchMb = useTransform(smoothY, [0, 140], [20, 12], { clamp: true });
 
   return (
-    <m.div
-      className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 flex-shrink-0 px-5 pb-0"
-      animate={{
-        boxShadow:
-          isProductPage && showFilters
-            ? '0 12px 40px rgba(0,0,0,0.12)'
-            : '0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)', // Shadow super tebal
-      }}
-      style={{
-        width: '100%',
-        maxWidth: 430,
-        paddingTop: 'calc(12px + env(safe-area-inset-top))',
-        background: 'rgba(245,243,240,0.85)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
-      }}
-    >
-      <LayoutGroup>
-        <m.div className="flex items-center justify-between" style={{ marginBottom: titleRowMb }}>
-          <Link href="/" className="flex flex-col no-underline">
-            <m.div layout className="mb-1 flex items-center gap-1.5">
-              <PawIcon />
-              <span className="font-heading text-lg font-extrabold tracking-tight text-ink">
-                Pawvels
-              </span>
-            </m.div>
-            <m.div
-              layout
-              className="flex items-center gap-1 overflow-hidden"
-              style={{
-                opacity: locationOpacity,
-                height: locationHeight,
-              }}
-            >
-              <span className="flex items-center text-[#A09890]">
-                <MapPin />
-              </span>
-              <span className="font-sans text-[11px] tracking-wide text-[#A09890]">
-                Jakarta Selatan
-              </span>
-            </m.div>
-          </Link>
-          <m.div layout className="flex gap-2">
-            <m.button whileTap={{ scale: 0.94 }} style={iconBtnStyle} aria-label="Notifikasi">
-              <Bell />
-              <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
-            </m.button>
-            <Link
-              href="/cart"
-              className="no-underline"
-              aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
-            >
-              <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
-                <m.div
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 600, damping: 15 }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  <CartIcon />
-                </m.div>
-                {hydrated && cartCount > 0 && (
-                  <m.div
-                    initial={{ scale: 0.6 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 700, damping: 12 }}
-                    className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
-                  >
-                    {cartCount}
-                  </m.div>
-                )}
-              </m.div>
-            </Link>
-          </m.div>
-        </m.div>
+    <>
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
-        {/* Search bar & Filter */}
-        <m.div layout className="flex items-center" style={{ marginBottom: searchMb }}>
+      {/*
+        Outer wrapper has NO px-5 so the chip row can span full width.
+        Each section that needs horizontal padding applies its own px-5.
+      */}
+      <m.div
+        className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 flex-shrink-0 pb-0"
+        animate={{
+          boxShadow:
+            isProductPage && showFilters
+              ? '0 12px 40px rgba(0,0,0,0.12)'
+              : '0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
+        }}
+        style={{
+          width: '100%',
+          maxWidth: 430,
+          paddingTop: 'calc(12px + env(safe-area-inset-top))',
+          background: 'rgba(245,243,240,0.85)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
+        }}
+      >
+        <LayoutGroup>
+          {/* ── Title row ── */}
           <m.div
-            layout
-            className="flex-1 min-w-0"
-            animate={{ marginRight: isProductPage ? 8 : 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="flex items-center justify-between px-5"
+            style={{ marginBottom: titleRowMb }}
           >
-            <Link href="/search" className="block no-underline cursor-pointer">
+            <Link href="/" className="flex flex-col no-underline">
+              <m.div layout className="mb-1 flex items-center gap-1.5">
+                <PawIcon />
+                <span className="font-heading text-lg font-extrabold tracking-tight text-ink">
+                  Pawvels
+                </span>
+              </m.div>
               <m.div
                 layout
-                transition={{
-                  layout: { type: 'spring', stiffness: 120, damping: 20 },
-                  default: { duration: 0.2 },
+                className="flex items-center gap-1"
+                style={{ opacity: locationOpacity, height: locationHeight, overflow: 'hidden' }}
+              >
+                <span className="flex items-center text-[#A09890]">
+                  <MapPin />
+                </span>
+                <span className="font-sans text-[11px] tracking-wide text-[#A09890]">
+                  Jakarta Selatan
+                </span>
+              </m.div>
+            </Link>
+
+            <m.div layout className="flex gap-2">
+              <m.button whileTap={{ scale: 0.94 }} style={iconBtnStyle} aria-label="Notifikasi">
+                <Bell />
+                <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
+              </m.button>
+              <Link
+                href="/cart"
+                className="no-underline"
+                aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
+              >
+                <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
+                  <m.div
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 600, damping: 15 }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <CartIcon />
+                  </m.div>
+                  {hydrated && cartCount > 0 && (
+                    <m.div
+                      initial={{ scale: 0.6 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 700, damping: 12 }}
+                      className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+                    >
+                      {cartCount}
+                    </m.div>
+                  )}
+                </m.div>
+              </Link>
+            </m.div>
+          </m.div>
+
+          {/* ── Search + Filter row ── NO layout prop = no spring bounce on focus */}
+          <m.div className="flex items-center px-5" style={{ marginBottom: searchMb }}>
+            <m.div
+              className="flex-1 min-w-0"
+              animate={{ marginRight: isProductPage ? 8 : 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            >
+              <m.div
+                onClick={() => setSearchOpen(true)}
+                animate={{
+                  boxShadow: searchOpen
+                    ? '0 0 0 2px #E07B39, 0 0 18px rgba(224,123,57,0.5), 0 0 36px rgba(224,123,57,0.22)'
+                    : '0 0 0 0px rgba(224,123,57,0)',
                 }}
-                className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 transition-colors hover:bg-stone/80"
-                style={{
-                  paddingTop: searchPy,
-                  paddingBottom: searchPy,
-                }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 cursor-pointer hover:bg-stone/80"
+                style={{ paddingTop: searchPy, paddingBottom: searchPy }}
               >
                 <span className="flex items-center text-[#E07B39]">
                   <SearchIcon />
@@ -258,115 +261,123 @@ export function Header() {
                   Cari produk untuk peliharaanmu...
                 </span>
               </m.div>
-            </Link>
+            </m.div>
+
+            <AnimatePresence mode="popLayout">
+              {isProductPage && (
+                <m.div
+                  initial={{ width: 0, opacity: 0, scale: 0.8 }}
+                  animate={{ width: 46, opacity: 1, scale: 1 }}
+                  exit={{ width: 0, opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  className="relative flex-shrink-0"
+                >
+                  <m.button
+                    whileTap={{ scale: 0.9 }}
+                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#E07B39]/30 transition-colors shadow-lg shadow-[#E07B39]/20 ${
+                      showFilters ? 'bg-white text-[#E07B39]' : 'bg-[#E07B39] text-white'
+                    }`}
+                    onClick={() => setShowFilters(!showFilters)}
+                    aria-label="Filter"
+                  >
+                    <m.div
+                      animate={{ rotate: showFilters ? 180 : 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                    >
+                      <FilterIcon />
+                    </m.div>
+                  </m.button>
+                </m.div>
+              )}
+            </AnimatePresence>
           </m.div>
 
-          <AnimatePresence mode="popLayout">
-            {isProductPage && (
+          {/*
+            ── Category chips ──
+            No px-5 here — scroll container goes edge-to-edge.
+            pl-5 gives first chip visual breathing room; overflow-x:auto clips right naturally.
+            overflow:hidden on height wrapper is fine because it covers full header width now.
+          */}
+          <AnimatePresence>
+            {isProductPage && showFilters && (
               <m.div
-                layout
-                initial={{ width: 0, opacity: 0, scale: 0.8 }}
-                animate={{ width: 46, opacity: 1, scale: 1 }}
-                exit={{ width: 0, opacity: 0, scale: 0.8 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                className="relative flex-shrink-0"
-              >
-                <m.button
-                  layout
-                  whileTap={{ scale: 0.9 }}
-                  className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#E07B39]/30 transition-colors shadow-lg shadow-[#E07B39]/20 ${
-                    showFilters ? 'bg-white text-[#E07B39]' : 'bg-[#E07B39] text-white'
-                  }`}
-                  onClick={() => setShowFilters(!showFilters)}
-                  aria-label="Filter"
-                >
-                  <m.div
-                    animate={{ rotate: showFilters ? 180 : 0 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-                  >
-                    <FilterIcon />
-                  </m.div>
-                </m.button>
-              </m.div>
-            )}
-          </AnimatePresence>
-        </m.div>
-
-        <AnimatePresence>
-          {isProductPage && showFilters && (
-            <m.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{
-                height: 'auto',
-                opacity: 1,
-                transition: {
-                  height: { type: 'spring', stiffness: 400, damping: 28 },
-                  opacity: { duration: 0.2 },
-                },
-              }}
-              exit={{
-                height: 0,
-                opacity: 0,
-                transition: {
-                  height: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-                  opacity: { duration: 0.2 },
-                },
-              }}
-              className="overflow-hidden"
-            >
-              <m.div
-                variants={{
-                  show: {
-                    transition: {
-                      staggerChildren: 0.05,
-                      delayChildren: 0.1,
-                    },
+                initial={{ height: 0, opacity: 0 }}
+                animate={{
+                  height: 'auto',
+                  opacity: 1,
+                  transition: {
+                    height: { type: 'spring', stiffness: 380, damping: 30 },
+                    opacity: { duration: 0.18 },
                   },
                 }}
-                initial="hidden"
-                animate="show"
-                className="flex gap-2.5 overflow-x-auto pb-4 no-scrollbar"
+                exit={{
+                  height: 0,
+                  opacity: 0,
+                  transition: {
+                    height: { duration: 0.26, ease: [0.4, 0, 0.2, 1] },
+                    opacity: { duration: 0.18 },
+                  },
+                }}
+                style={{ overflow: 'hidden' }}
               >
                 <m.div
                   variants={{
-                    hidden: { y: 10, opacity: 0 },
-                    show: {
-                      y: 0,
-                      opacity: 1,
-                      transition: { type: 'spring', stiffness: 300, damping: 25 },
-                    },
+                    hidden: {},
+                    show: { transition: { staggerChildren: 0.04, delayChildren: 0.06 } },
+                    exit: { transition: { staggerChildren: 0.025, staggerDirection: -1 } },
                   }}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  className="flex gap-2.5 overflow-x-auto pb-4 no-scrollbar pl-5 pr-5"
                 >
-                  <CategoryChip
-                    label="Semua"
-                    active={!activeCat}
-                    onClick={() => router.push('/products')}
-                  />
-                </m.div>
-                {CATEGORIES.map((cat) => (
                   <m.div
-                    key={cat}
                     variants={{
-                      hidden: { y: 10, opacity: 0 },
+                      hidden: { y: 10, opacity: 0, scale: 0.88 },
                       show: {
                         y: 0,
                         opacity: 1,
-                        transition: { type: 'spring', stiffness: 300, damping: 25 },
+                        scale: 1,
+                        transition: { type: 'spring', stiffness: 300, damping: 22 },
                       },
+                      exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
                     }}
+                    style={{ flexShrink: 0 }}
                   >
                     <CategoryChip
-                      label={cat}
-                      active={activeCat === cat.toLowerCase()}
-                      onClick={() => router.push(`/products?category=${cat.toLowerCase()}`)}
+                      label="Semua"
+                      active={!activeCat}
+                      onClick={() => router.push('/products')}
                     />
                   </m.div>
-                ))}
+                  {CATEGORIES.map((cat) => (
+                    <m.div
+                      key={cat}
+                      variants={{
+                        hidden: { y: 10, opacity: 0, scale: 0.88 },
+                        show: {
+                          y: 0,
+                          opacity: 1,
+                          scale: 1,
+                          transition: { type: 'spring', stiffness: 300, damping: 22 },
+                        },
+                        exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
+                      }}
+                      style={{ flexShrink: 0 }}
+                    >
+                      <CategoryChip
+                        label={cat}
+                        active={activeCat === cat.toLowerCase()}
+                        onClick={() => router.push(`/products?category=${cat.toLowerCase()}`)}
+                      />
+                    </m.div>
+                  ))}
+                </m.div>
               </m.div>
-            </m.div>
-          )}
-        </AnimatePresence>
-      </LayoutGroup>
-    </m.div>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
+      </m.div>
+    </>
   );
 }
