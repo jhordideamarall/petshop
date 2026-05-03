@@ -178,7 +178,7 @@ export function Header() {
         <LayoutGroup>
           {/* ── Title row ── */}
           <m.div
-            className="flex items-center justify-between px-5"
+            className="flex items-center justify-between px-[clamp(16px,5vw,20px)]"
             style={{ marginBottom: titleRowMb }}
           >
             <Link href="/" className="flex flex-col no-underline">
@@ -238,7 +238,10 @@ export function Header() {
           </m.div>
 
           {/* ── Search + Filter row ── NO layout prop = no spring bounce on focus */}
-          <m.div className="flex items-center px-5" style={{ marginBottom: searchMb }}>
+          <m.div
+            className="flex items-center px-[clamp(16px,5vw,20px)]"
+            style={{ marginBottom: searchMb }}
+          >
             <m.div
               className="flex-1 min-w-0"
               animate={{ marginRight: isProductPage ? 8 : 0 }}

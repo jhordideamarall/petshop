@@ -112,7 +112,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 z-[100] flex -translate-x-1/2 flex-shrink-0 border-t border-white/20 pb-[max(12px,env(safe-area-inset-bottom))] pt-2"
+      className="fixed bottom-0 left-1/2 z-[100] flex -translate-x-1/2 flex-shrink-0 border-t border-white/20 pb-[max(20px,env(safe-area-inset-bottom))] pt-2"
       style={{
         width: '100%',
         maxWidth: 430,

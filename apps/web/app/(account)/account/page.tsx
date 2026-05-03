@@ -42,7 +42,7 @@ export default function AccountPage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="relative overflow-hidden px-5 pb-6 pt-[max(24px,env(safe-area-inset-top))]"
+        className="relative overflow-hidden px-[clamp(16px,5vw,20px)] pb-6 pt-[max(24px,env(safe-area-inset-top))]"
         style={{
           background: 'linear-gradient(140deg, #1A1714 0%, #3D2F1E 60%, #2A1F0F 100%)',
           borderBottomLeftRadius: 28,
@@ -107,7 +107,7 @@ export default function AccountPage() {
       </m.div>
 
       {/* Menu list */}
-      <div className="px-5 pt-5">
+      <div className="px-[clamp(16px,5vw,20px)] pt-5">
         <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
           {MENU.map(({ href, icon, label }, i) => (
             <m.div
@@ -134,7 +134,7 @@ export default function AccountPage() {
       </div>
 
       {/* Logout — fixed near bottom nav */}
-      <div className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-5">
+      <div className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-[clamp(16px,5vw,20px)]">
         <m.button
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}

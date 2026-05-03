@@ -119,7 +119,7 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
       <header className="sticky top-0 z-50 border-b border-stone-2 bg-white">
-        <div className="flex h-16 items-center px-5">
+        <div className="flex h-16 items-center px-[clamp(16px,5vw,20px)]">
           <button
             onClick={goBack}
             className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-stone text-ink active:scale-95 transition-transform"
@@ -131,7 +131,7 @@ export default function CheckoutPage() {
         </div>
 
         {hasItems && (
-          <div className="px-6 py-5">
+          <div className="px-[clamp(18px,6vw,24px)] py-5">
             <div className="grid grid-cols-[32px_1fr_32px_1fr_32px] items-start gap-2">
               {steps.map((label, index) => {
                 const number = index + 1;
@@ -184,7 +184,7 @@ export default function CheckoutPage() {
         )}
       </header>
 
-      <main className="flex-1 overflow-y-auto px-5 py-5 pb-32">
+      <main className="flex-1 overflow-y-auto px-[clamp(16px,5vw,20px)] py-5 pb-32">
         {!hasItems ? (
           <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
             <p className="font-heading text-[17px] font-extrabold text-ink">
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
             </p>
             <button
               onClick={() => router.push('/products')}
-              className="mt-5 rounded-[14px] bg-primary px-5 py-3 font-heading text-sm font-bold text-white"
+              className="mt-5 rounded-[14px] bg-primary px-[clamp(16px,5vw,20px)] py-3 font-heading text-sm font-bold text-white"
             >
               Pilih Produk
             </button>
@@ -376,7 +376,7 @@ export default function CheckoutPage() {
       </main>
 
       {hasItems && (
-        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-5 py-4">
+        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-[clamp(16px,5vw,20px)] py-4">
           <button
             onClick={continueFlow}
             className="flex h-14 w-full items-center justify-center rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-md active:scale-[0.98] transition-transform"

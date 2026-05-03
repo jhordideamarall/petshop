@@ -49,7 +49,7 @@ export default function CartPage() {
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
-      <header className="sticky top-0 z-50 flex h-[72px] items-center justify-between border-b border-stone-2 bg-white px-5">
+      <header className="sticky top-0 z-50 flex h-[72px] items-center justify-between border-b border-stone-2 bg-white px-[clamp(16px,5vw,20px)]">
         <button
           onClick={() => router.back()}
           className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white text-ink active:scale-95 transition-transform"
@@ -69,7 +69,7 @@ export default function CartPage() {
             items.map((item) => (
               <div
                 key={`${item.id}-${item.variantId ?? 'base'}`}
-                className="grid grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 border-b border-stone-2 px-5 py-3.5"
+                className="grid grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 border-b border-stone-2 px-[clamp(16px,5vw,20px)] py-3.5"
               >
                 <ProductThumb item={item} />
                 <div className="min-w-0">
@@ -121,7 +121,7 @@ export default function CartPage() {
               <p className="mt-2 text-sm text-ink-3">Produk yang kamu pilih akan muncul di sini.</p>
               <Link
                 href="/products"
-                className="mt-5 rounded-[14px] bg-primary px-5 py-3 font-heading text-sm font-bold text-white"
+                className="mt-5 rounded-[14px] bg-primary px-[clamp(16px,5vw,20px)] py-3 font-heading text-sm font-bold text-white"
               >
                 Belanja Produk
               </Link>
@@ -131,7 +131,7 @@ export default function CartPage() {
 
         {hasItems && (
           <>
-            <section className="mt-2 bg-white px-5 py-5">
+            <section className="mt-2 bg-white px-[clamp(16px,5vw,20px)] py-5">
               <div className="mb-3 flex items-center gap-2 font-heading text-[14px] font-extrabold text-ink">
                 <Tag size={18} />
                 <span>Voucher</span>
@@ -143,7 +143,7 @@ export default function CartPage() {
                   className="h-12 min-w-0 flex-1 rounded-[14px] border border-stone-3 bg-white px-4 text-[15px] font-medium text-ink outline-none focus:border-primary"
                 />
                 <button
-                  className="h-12 rounded-[14px] px-5 font-heading text-[14px] font-extrabold text-primary"
+                  className="h-12 rounded-[14px] px-[clamp(16px,5vw,20px)] font-heading text-[14px] font-extrabold text-primary"
                   style={{ background: 'var(--color-orange-light)' }}
                 >
                   Pakai
@@ -152,7 +152,7 @@ export default function CartPage() {
               <p className="mt-2 text-xs font-medium text-ink-4">Coba kode: PETSHOP10</p>
             </section>
 
-            <section className="mt-2 bg-white px-5 py-5">
+            <section className="mt-2 bg-white px-[clamp(16px,5vw,20px)] py-5">
               <h2 className="mb-4 font-heading text-[14px] font-extrabold text-ink">
                 Ringkasan Pesanan
               </h2>
@@ -177,7 +177,7 @@ export default function CartPage() {
       </main>
 
       {hasItems && (
-        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-5 py-4">
+        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-white px-[clamp(16px,5vw,20px)] py-4">
           <Link
             href="/checkout"
             className="flex h-14 w-full items-center justify-center rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-md active:scale-[0.98] transition-transform"

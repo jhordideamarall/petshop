@@ -14,6 +14,12 @@ This file contains foundational mandates for the Pawvels project. These instruct
 
 - **ALWAYS** read `prd.md` and `ARCHITECTURE.md` at the start of a session to understand the project's goal.
 - **ALWAYS** check the `artifacts/` folder (especially `phase-progress.md` and recent session reports) to understand historical context, audit reports, and past architectural decisions.
+- **MANDATORY EXECUTION ARTIFACT (AUDIT TRAIL)**: After completing ANY task that modifies the codebase, you **MUST** create or update a detailed report in the `artifacts/` folder. This is not optional. The report must include:
+  - **Context**: Summary of the task and its objective.
+  - **File Manifest**: List of every file created or modified.
+  - **Surgical Breakdown**: For each file, specify the exact change and the technical/UX rationale (Why it was done).
+  - **Validation**: Confirmation of `pnpm type-check` or test results.
+- **UI AUDIT LOGGING**: Specifically for mobile optimizations, maintain `artifacts/ui-optimization-log.md` with viewport-specific details.
 - Do not blindly assume the project state without reading these files first.
 
 ### 3. Preserving UI Mandates

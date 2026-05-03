@@ -588,8 +588,7 @@ Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_n
     at Set.forEach (<anonymous>)
     at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
     at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
-[10903118ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[10903600ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
+[10333513ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
     at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
     at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
     at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
@@ -603,73 +602,27 @@ Check the render method of `ForwardRef(motion.div)`.  @ http://localhost:3002/_n
     at Set.forEach (<anonymous>)
     at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
     at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
-[10904050ms] [LOG] [Fast Refresh] done in 579ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[10904163ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[10904352ms] [LOG] [Fast Refresh] done in 290ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[10905198ms] Error: Only two keyframes currently supported with spring and inertia animations. Trying to animate 1,1.5,1. For more information and steps for solving, visit https://motion.dev/troubleshooting/spring-two-frames
-    at invariant (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1131:19)
-    at JSAnimation.initAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5497:248)
-    at new JSAnimation (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:5825:14)
-    at AsyncMotionValueAnimation.onKeyframesResolved (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6214:25)
-    at DOMKeyframesResolver.onComplete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:6319:116)
-    at DOMKeyframesResolver.complete (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1072:14)
-    at http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:44
-    at Set.forEach (<anonymous>)
-    at measureAllKeyframes (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:1009:15)
-    at triggerCallback (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:788:9)
-    at Set.forEach (<anonymous>)
-    at Object.process (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:825:23)
-    at processBatch (http://localhost:3002/_next/static/chunks/node_modules__pnpm_1a689fe1._.js:887:26)
-[10938617ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[10938651ms] [LOG] [Fast Refresh] done in 55ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[10982212ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[10982691ms] [LOG] [Fast Refresh] done in 319ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[10982845ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[10983010ms] [LOG] [Fast Refresh] done in 267ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11030270ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11030293ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11065048ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11065087ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11261306ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11261469ms] [LOG] [Fast Refresh] done in 227ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11404729ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11404782ms] [LOG] [Fast Refresh] done in 50ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11412602ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11412651ms] [LOG] [Fast Refresh] done in 150ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11460329ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11460359ms] [LOG] [Fast Refresh] done in 44ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11468662ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11468721ms] [LOG] [Fast Refresh] done in 160ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11478519ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/favicon.ico:0
-[11498260ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11498332ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11563227ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11563285ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11676666ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11676700ms] [LOG] [Fast Refresh] done in 101ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11706765ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11706831ms] [LOG] [Fast Refresh] done in 166ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11707321ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11707348ms] [LOG] [Fast Refresh] done in 52ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11745815ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11745861ms] [LOG] [Fast Refresh] done in 60ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[11904021ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[11904112ms] [LOG] [Fast Refresh] done in 162ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[12089144ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[12089193ms] [LOG] [Fast Refresh] done in 149ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[12093706ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[12093733ms] [LOG] [Fast Refresh] done in 127ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[12099618ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[12099649ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[13104068ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13172530ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13173697ms] [LOG] [Fast Refresh] done in 1066ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[13173851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13174052ms] [LOG] [Fast Refresh] done in 302ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[13174784ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13174814ms] [LOG] [Fast Refresh] done in 130ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[13188073ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13188171ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
-[13188279ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
-[13188354ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/?_rsc=168z3:0
-[13188363ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10342991ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10343018ms] [LOG] [Fast Refresh] done in 71ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10359647ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10359674ms] [LOG] [Fast Refresh] done in 56ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10440105ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10440174ms] [LOG] [Fast Refresh] done in 169ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10453565ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10453639ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10470639ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10470829ms] [LOG] [Fast Refresh] done in 256ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10583689ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10583866ms] [LOG] [Fast Refresh] done in 226ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10591815ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10591844ms] [LOG] [Fast Refresh] done in 37ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10630508ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10631890ms] [LOG] [Fast Refresh] done in 1472ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10632621ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10632813ms] [LOG] [Fast Refresh] done in 293ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10634162ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10634184ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10818176ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10818471ms] [LOG] [Fast Refresh] done in 338ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809
+[10878944ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5949
+[10879107ms] [LOG] [Fast Refresh] done in 265ms @ http://localhost:3002/_next/static/chunks/afa34_next_dist_client_9206905b._.js:5809

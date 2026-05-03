@@ -29,10 +29,15 @@ Work efficiently, safely, and without breaking existing behavior.
 ## Workflow
 
 - **MANDATORY CONTEXT GATHERING**: ALWAYS read `prd.md`, `ARCHITECTURE.md`, and the `artifacts/` folder (especially `phase-progress.md` and kickoff docs) at the start of every session. Do not blindly assume the project state without reading these files first!
+- **UI/UX LOGGING PROTOCOL**: For any mobile-native optimizations (viewport, spacing, Android/iOS fixes), you **MUST** document the changes in `artifacts/ui-optimization-log.md` with file paths and rationale.
+- - **MANDATORY EXECUTION ARTIFACT**: Setiap tugas yang selesai WAJIB diikuti dengan update detail di folder `artifacts/` yang
+    mendokumentasikan: **Apa** yang diubah, **Di mana** (path file), dan **Mengapa** (Rasionale Teknis). Dilarang keras melakukan modifikasi
+    kode tanpa catatan audit.
 - For large tasks → propose a plan first
 - For small tasks → act directly but keep changes minimal
 - Avoid modifying many files at once
 - jangan buat file worktree, fokus pada main repo atau branc utama saja
+- setiap melakukan dan menyelesaikan pekerjaan selalu update atau buat file di folder `/artifact` tulis secara detail, di file apa, apa yang kamu ubah, alasannya kenapa. tracking ini adalah
 
 ---
 

@@ -12,7 +12,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="relative mx-auto min-h-screen w-full overflow-x-hidden bg-[#FDFCFB]"
+      className="relative mx-auto min-h-[100dvh] w-full overflow-x-hidden bg-[#FDFCFB]"
       style={{
         maxWidth: 430,
       }}
@@ -29,7 +29,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
       {!isProductDetail && <Header />}
 
       <main
-        className="relative z-10 flex min-h-screen flex-col bg-transparent"
+        className="relative z-10 flex min-h-[100dvh] flex-col bg-transparent"
         style={{
           paddingTop: isProductDetail
             ? 'env(safe-area-inset-top)'

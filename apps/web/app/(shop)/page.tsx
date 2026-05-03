@@ -204,7 +204,7 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
       style={{
         position: 'absolute',
         width: '100%',
-        height: 210,
+        height: 'clamp(180px, 48vw, 210px)',
         borderRadius: 24,
         background: banner.bg,
         padding: '28px 24px',
@@ -367,10 +367,10 @@ export default function HomePage() {
           style={{
             position: 'relative',
             marginTop: 40, // Turunin lagi bannernya biar dapet posisi tengah di area abu-abu
-            height: 240,
+            height: 'clamp(210px, 55vw, 240px)',
             width: '100%',
             overflow: 'hidden',
-            padding: '0 16px',
+            padding: '0 clamp(16px, 5vw, 20px)',
           }}
         >
           <div
@@ -425,7 +425,7 @@ export default function HomePage() {
         {/* Feature strip */}
         <div
           style={{
-            margin: '16px 16px 0',
+            margin: '16px clamp(16px, 5vw, 20px) 0',
             background: '#FDFCFB',
             borderRadius: 16,
             boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
@@ -477,7 +477,7 @@ export default function HomePage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '20px 20px 12px',
+              padding: '20px clamp(16px, 5vw, 20px) 12px',
               justifyContent: 'space-between',
             }}
           >
@@ -546,7 +546,7 @@ export default function HomePage() {
 
         <div
           style={{
-            margin: '16px 16px 0',
+            margin: '16px clamp(16px, 5vw, 20px) 0',
             background: '#FDFCFB',
             borderRadius: 16,
             border: '1px solid rgba(224, 123, 57, 0.3)',
@@ -614,7 +614,7 @@ export default function HomePage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '20px 20px 12px',
+              padding: '20px clamp(16px, 5vw, 20px) 12px',
               justifyContent: 'space-between',
             }}
           >
@@ -666,7 +666,7 @@ export default function HomePage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '20px 20px 12px',
+              padding: '20px clamp(16px, 5vw, 20px) 12px',
               justifyContent: 'space-between',
             }}
           >
@@ -698,7 +698,7 @@ export default function HomePage() {
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
               gap: 12,
-              padding: '0 16px',
+              padding: '0 clamp(16px, 5vw, 20px)',
             }}
           >
             {ALL_PRODUCTS.map((p, index) => (
