@@ -74,3 +74,25 @@ This file contains foundational mandates for the Pawvels project. These instruct
 - Frontend: Next.js 15 (App Router).
 - Styling: Tailwind CSS v4 + Framer Motion.
 - State: Zustand with local persistence for Cart.
+
+## 🚀 CI/CD & Build Safety Mandates (NEW)
+
+### 1. Build-Safe Environment Variables
+
+- **RULE**: Never use non-null assertions (`!`) on `process.env` during library initialization (e.g., Supabase client).
+- **RATIONALE**: Next.js performs static optimization during build where env vars are often missing, causing crashes.
+- **ACTION**: Use defensive checks and return dummy/proxy objects if keys are missing to allow the build to complete.
+
+### 2. Typed Routes & Navigation
+
+- **RULE**: Use `as Route` for dynamic paths in `router.push()` or `Link`. Avoid `as any`.
+- **RATIONALE**: The project enforces `typedRoutes: true`. Proper casting ensures type safety without breaking linting.
+
+### 3. Linter & Type Integrity
+
+- **RULE**: Use `import type` for dependencies used strictly as types (e.g., `import type { Transition } from 'framer-motion'`).
+- **RULE**: Minimize `any`. If a dummy object requires it for build safety, use `as unknown as any` with a specific `eslint-disable-next-line` comment to prevent auto-format shifts.
+
+### 4. Mandatory Local Build Check
+
+- **ACTION**: For structural or database-related changes, run `pnpm build` locally before pushing to confirm that static generation (prerendering) passes.

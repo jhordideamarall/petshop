@@ -35,6 +35,12 @@ const MENU: MenuItem[] = [
 export default function AccountPage() {
   const { user, signOut, isLoading } = useAuth();
 
+  const { data: loyalty } = useQuery({
+    queryKey: ['loyalty', user?.id],
+    queryFn: getUserLoyalty,
+    enabled: !!user,
+  });
+
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -97,12 +103,6 @@ export default function AccountPage() {
   // Real user data from profiles/metadata
   const displayName = user.user_metadata?.full_name || 'Pawvels User';
   const displayPhone = user.phone || 'No Phone';
-
-  const { data: loyalty } = useQuery({
-    queryKey: ['loyalty', user?.id],
-    queryFn: getUserLoyalty,
-    enabled: !!user,
-  });
 
   const CURRENT_POINTS = loyalty?.total_points || 0;
   const lifetime = loyalty?.lifetime_points || 0;
