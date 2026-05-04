@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Session, User } from '@supabase/supabase-js';
+import type { Session, User, AuthChangeEvent } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 
 interface AuthContextType {
@@ -33,12 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
     };
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+      },
+    );
 
     setData();
 

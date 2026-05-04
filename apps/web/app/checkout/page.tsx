@@ -110,7 +110,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (addresses.length > 0 && !selectedAddressId) {
-      const def = addresses.find((a: any) => a.is_default) || addresses[0]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const def = addresses.find((a: Address) => a.is_default) || addresses[0];
       setSelectedAddressId(def.id);
     }
   }, [addresses, selectedAddressId]);
