@@ -92,8 +92,7 @@ function LoginContent() {
       if (error) throw error;
 
       toast.success('Berhasil masuk!');
-      // @ts-expect-error - Link href is checked at runtime
-      router.push(next);
+      router.push(next as Route);
       router.refresh();
     } catch (err) {
       const error = err as AuthError;

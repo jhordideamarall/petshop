@@ -1,6 +1,6 @@
 'use client';
 
-import { m, Transition } from 'framer-motion';
+import { m, type Transition } from 'framer-motion';
 
 export function JumpingDots() {
   const dotVariants = {
