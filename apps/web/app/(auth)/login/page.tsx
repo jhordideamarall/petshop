@@ -5,17 +5,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { m, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Phone, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import type { AuthError } from '@supabase/supabase-js';
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-  
+
   const next = searchParams.get('next') || '/';
   const initialPhone = searchParams.get('phone') || '';
-  
+
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState(initialPhone);
   const [otp, setOtp] = useState('');
@@ -31,8 +33,12 @@ function LoginContent() {
 
     setIsLoading(true);
     try {
-      const formattedPhone = phone.startsWith('0') ? `+62${phone.slice(1)}` : phone.startsWith('+') ? phone : `+62${phone}`;
-      
+      const formattedPhone = phone.startsWith('0')
+        ? `+62${phone.slice(1)}`
+        : phone.startsWith('+')
+          ? phone
+          : `+62${phone}`;
+
       const { error } = await supabase.auth.signInWithOtp({
         phone: formattedPhone,
       });
@@ -41,7 +47,8 @@ function LoginContent() {
 
       toast.success('Kode OTP telah dikirim');
       setStep('otp');
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Gagal mengirim OTP');
     } finally {
       setIsLoading(false);
@@ -57,8 +64,12 @@ function LoginContent() {
 
     setIsLoading(true);
     try {
-      const formattedPhone = phone.startsWith('0') ? `+62${phone.slice(1)}` : phone.startsWith('+') ? phone : `+62${phone}`;
-      
+      const formattedPhone = phone.startsWith('0')
+        ? `+62${phone.slice(1)}`
+        : phone.startsWith('+')
+          ? phone
+          : `+62${phone}`;
+
       const { error } = await supabase.auth.verifyOtp({
         phone: formattedPhone,
         token: otp,
@@ -68,9 +79,11 @@ function LoginContent() {
       if (error) throw error;
 
       toast.success('Berhasil masuk!');
-      router.push(next as any);
+      // @ts-expect-error - Link href is checked at runtime
+      router.push(next);
       router.refresh();
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Kode OTP salah atau kedaluwarsa');
     } finally {
       setIsLoading(false);
@@ -87,7 +100,8 @@ function LoginContent() {
         },
       });
       if (error) throw error;
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Gagal login via Google');
       setIsGoogleLoading(false);
     }
@@ -98,7 +112,7 @@ function LoginContent() {
       {/* Header */}
       <header className="flex h-16 items-center px-[clamp(16px,5vw,20px)] pt-[env(safe-area-inset-top)]">
         <button
-          onClick={() => step === 'otp' ? setStep('phone') : router.back()}
+          onClick={() => (step === 'otp' ? setStep('phone') : router.back())}
           className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-black/5 active:scale-95 transition-transform"
         >
           <ChevronLeft size={22} className="text-ink" />
@@ -116,8 +130,8 @@ function LoginContent() {
               {step === 'phone' ? 'Selamat Datang!' : 'Verifikasi Kode'}
             </h1>
             <p className="mt-2 text-sm font-medium text-ink-3">
-              {step === 'phone' 
-                ? 'Masuk atau daftar untuk mulai belanja kebutuhan anabulmu.' 
+              {step === 'phone'
+                ? 'Masuk atau daftar untuk mulai belanja kebutuhan anabulmu.'
                 : `Masukkan 6 digit kode yang dikirim ke ${phone}`}
             </p>
           </m.div>
@@ -225,6 +239,7 @@ function LoginContent() {
                     onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
                     className="h-14 w-full rounded-2xl border border-stone-3 bg-white pl-12 pr-4 font-heading text-[18px] font-bold tracking-[8px] text-ink outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 placeholder:tracking-normal placeholder:text-sm placeholder:font-medium"
                     autoFocus
+                    autoComplete="one-time-code"
                   />
                 </div>
               </div>
@@ -253,11 +268,11 @@ function LoginContent() {
 
         <p className="mt-auto text-center text-xs leading-relaxed text-ink-4">
           Dengan masuk, kamu menyetujui{' '}
-          <Link href={"/terms" as any} className="underline underline-offset-2">
+          <Link href={'/terms' as Route} className="underline underline-offset-2">
             Syarat & Ketentuan
           </Link>{' '}
           serta{' '}
-          <Link href={"/privacy" as any} className="underline underline-offset-2">
+          <Link href={'/privacy' as Route} className="underline underline-offset-2">
             Kebijakan Privasi
           </Link>{' '}
           Pawvels.
@@ -269,11 +284,13 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={32} />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      }
+    >
       <LoginContent />
     </Suspense>
   );

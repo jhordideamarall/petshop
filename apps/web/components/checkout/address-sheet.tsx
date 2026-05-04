@@ -10,15 +10,16 @@ import { toast } from 'sonner';
 import { useAuth } from '@/components/providers/auth-provider';
 import { useLocationStore } from '@/stores/location-store';
 import { JumpingDots } from '@/components/shared/jumping-dots';
+import type { AuthError } from '@supabase/supabase-js';
 
 // Dynamically import the map component with SSR disabled
-const AddressMap = dynamic(() => import('./address-map'), { 
+const AddressMap = dynamic(() => import('./address-map'), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center bg-stone">
       <Loader2 className="animate-spin text-primary" size={24} />
     </div>
-  )
+  ),
 });
 
 interface AddressSheetProps {
@@ -32,11 +33,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const globalLocation = useLocationStore();
   const [step, setStep] = useState<'map' | 'form' | 'otp'>('map');
   const [coords, setCoords] = useState<[number, number]>(
-    globalLocation.coords || [-6.2088, 106.8456]
+    globalLocation.coords || [-6.2088, 106.8456],
   );
   const [isLocating, setIsLocating] = useState(false);
   const [isLoadingDetails, setIsLoadingLoadingDetails] = useState(false);
-  
+
   // Form State
   const [label] = useState('Rumah');
   const [recipient, setRecipient] = useState('');
@@ -46,7 +47,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const [district, setDistrict] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isDefault, setIsDefault] = useState(true);
-  
+
   // OTP State
   const [otpToken, setOtpToken] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -57,14 +58,17 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const handleDetectLocation = () => {
     if ('geolocation' in navigator) {
       setIsLocating(true);
-      
+
       // Check permission status first to provide better feedback
       if ('permissions' in navigator) {
         navigator.permissions.query({ name: 'geolocation' }).then((result) => {
           if (latestStatusRef.current === 'denied' || result.state === 'denied') {
-            toast.error('Izin lokasi diblokir oleh browser. Klik ikon "Tune/Lock" di sebelah URL untuk mereset izin.', {
-              duration: 5000
-            });
+            toast.error(
+              'Izin lokasi diblokir oleh browser. Klik ikon "Tune/Lock" di sebelah URL untuk mereset izin.',
+              {
+                duration: 5000,
+              },
+            );
             setIsLocating(false);
             return;
           }
@@ -78,13 +82,14 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
         },
         (error) => {
           setIsLocating(false);
-          if (error.code === 1) { // PERMISSION_DENIED
+          if (error.code === 1) {
+            // PERMISSION_DENIED
             toast.error('Izin lokasi ditolak. Silakan aktifkan di pengaturan browser Anda.');
           } else {
             toast.error('Gagal mendeteksi lokasi. Pastikan GPS aktif.');
           }
         },
-        { timeout: 8000, enableHighAccuracy: true }
+        { timeout: 8000, enableHighAccuracy: true },
       );
     } else {
       toast.error('Browser ini tidak mendukung deteksi lokasi (Membutuhkan HTTPS)');
@@ -117,7 +122,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       setDistrict(details.district || '');
       setPostalCode(details.postcode || '');
       setStep('form');
-    } catch (error) {
+    } catch {
       toast.error('Gagal mengambil detail alamat');
     } finally {
       setIsLoadingLoadingDetails(false);
@@ -130,7 +135,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       return;
     }
 
-    const formattedPhone = phone.startsWith('0') ? `+62${phone.slice(1)}` : phone.startsWith('+') ? phone : `+62${phone}`;
+    const formattedPhone = phone.startsWith('0')
+      ? `+62${phone.slice(1)}`
+      : phone.startsWith('+')
+        ? phone
+        : `+62${phone}`;
 
     if (user) {
       await saveAddress(user.id);
@@ -144,15 +153,16 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
         options: {
           data: {
             full_name: recipient,
-          }
-        }
+          },
+        },
       });
 
       if (error) throw error;
 
       toast.success('Kode OTP telah dikirim ke nomor HP kamu');
       setStep('otp');
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Gagal mengirim OTP');
     } finally {
       setIsVerifying(false);
@@ -168,18 +178,24 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
     // DEMO MODE BYPASS: Allows testing without real SMS
     if (otpToken === '123456') {
       toast.success('Demo: OTP Berhasil diverifikasi');
-      // We need a real user for the address to link to. 
+      // We need a real user for the address to link to.
       // If we are in demo mode and not logged in, we'll try to get the user again
-      const { data: { user: existingUser } } = await supabase.auth.getUser();
+      const {
+        data: { user: existingUser },
+      } = await supabase.auth.getUser();
       if (existingUser) {
         await saveAddress(existingUser.id);
         return;
       }
-      // If no real user, we still need to call verifyOtp to get one, 
+      // If no real user, we still need to call verifyOtp to get one,
       // but since this is demo, we'll just show an error if they aren't actually using a real phone flow.
     }
 
-    const formattedPhone = phone.startsWith('0') ? `+62${phone.slice(1)}` : phone.startsWith('+') ? phone : `+62${phone}`;
+    const formattedPhone = phone.startsWith('0')
+      ? `+62${phone.slice(1)}`
+      : phone.startsWith('+')
+        ? phone
+        : `+62${phone}`;
 
     setIsSaving(true);
     try {
@@ -193,7 +209,8 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       if (!data.user) throw new Error('Verifikasi gagal');
 
       await saveAddress(data.user.id);
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Kode OTP salah atau kedaluwarsa');
       setIsSaving(false);
     }
@@ -221,7 +238,8 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       toast.success('Alamat dan Akun berhasil disimpan');
       onSuccess();
       onClose();
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error;
       toast.error(error.message || 'Gagal menyimpan alamat');
     } finally {
       setIsSaving(false);
@@ -241,7 +259,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       >
         <div className="flex items-center justify-between p-6">
           <h2 className="font-heading text-[18px] font-extrabold text-ink text-left">
-            {step === 'map' ? 'Pilih Titik Lokasi' : step === 'otp' ? 'Verifikasi Nomor HP' : 'Detail Alamat'}
+            {step === 'map'
+              ? 'Pilih Titik Lokasi'
+              : step === 'otp'
+                ? 'Verifikasi Nomor HP'
+                : 'Detail Alamat'}
           </h2>
           <button onClick={onClose} className="rounded-full bg-stone p-2 text-ink-3">
             <X size={20} />
@@ -267,7 +289,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   onClick={handleDetectLocation}
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-stone-3 font-heading text-[14px] font-bold text-ink transition-colors active:bg-stone"
                 >
-                  {isLocating ? <Loader2 className="animate-spin" size={18} /> : <Navigation size={18} />}
+                  {isLocating ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    <Navigation size={18} />
+                  )}
                   Gunakan Lokasi Saat Ini
                 </button>
                 <button
@@ -275,7 +301,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   disabled={isLoadingDetails}
                   className="flex h-14 w-full items-center justify-center rounded-2xl bg-primary font-heading text-[15px] font-extrabold text-white shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
-                  {isLoadingDetails ? <Loader2 className="animate-spin" size={20} /> : 'Konfirmasi Titik Lokasi'}
+                  {isLoadingDetails ? (
+                    <Loader2 className="animate-spin" size={20} />
+                  ) : (
+                    'Konfirmasi Titik Lokasi'
+                  )}
                 </button>
               </div>
             </div>
@@ -283,7 +313,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
             <div className="flex flex-col gap-4 overflow-y-auto max-h-[60vh] no-scrollbar text-left">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Nama Penerima</label>
+                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
+                    Nama Penerima
+                  </label>
                   <input
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
@@ -303,7 +335,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
               </div>
 
               <div>
-                <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Alamat Lengkap</label>
+                <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
+                  Alamat Lengkap
+                </label>
                 <textarea
                   value={fullAddress}
                   onChange={(e) => setFullAddress(e.target.value)}
@@ -354,7 +388,13 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   disabled={isVerifying || isSaving}
                   className="h-14 flex-[2] rounded-2xl bg-primary font-heading text-[15px] font-extrabold text-white shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-70"
                 >
-                  {isVerifying || isSaving ? <JumpingDots /> : user ? 'Simpan Alamat' : 'Simpan & Verifikasi'}
+                  {isVerifying || isSaving ? (
+                    <JumpingDots />
+                  ) : user ? (
+                    'Simpan Alamat'
+                  ) : (
+                    'Simpan & Verifikasi'
+                  )}
                 </button>
               </div>
             </div>
@@ -393,7 +433,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   disabled={isSaving || otpToken.length < 6}
                   className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary font-heading text-[15px] font-extrabold text-white shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
-                  {isSaving ? <JumpingDots /> : (
+                  {isSaving ? (
+                    <JumpingDots />
+                  ) : (
                     <>
                       Verifikasi & Lanjutkan <ArrowRight size={18} />
                     </>

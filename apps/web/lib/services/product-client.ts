@@ -7,8 +7,9 @@ export type Category = Database['public']['Tables']['categories']['Row'];
 /**
  * Returns a relevant high-quality image from Unsplash if the product has no image.
  */
-function getSmartFallbackImage(productName: string): string {
-  return `https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80&product=${encodeURIComponent(productName)}`;
+function getSmartFallbackImage(_productName: string): string {
+  // Use a reliable Unsplash ID for pet-related images
+  return `https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80`;
 }
 
 export interface ProductWithDetails {
@@ -25,10 +26,12 @@ export interface ProductWithDetails {
 
 export async function getActiveProducts(): Promise<ProductWithDetails[]> {
   const supabase = createClient();
-  
+
   const { data, error } = await supabase
     .from('products')
-    .select('id, name, price, promo_price, slug, avg_rating, sold_count, categories(slug), product_images(url)')
+    .select(
+      'id, name, price, promo_price, slug, avg_rating, sold_count, categories(slug), product_images(url)',
+    )
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
@@ -52,7 +55,7 @@ export async function getActiveProducts(): Promise<ProductWithDetails[]> {
   };
 
   // Map the nested data to a flat structure for UI compatibility (camelCase)
-  return ((data as unknown as ProductRowWithJoins[]) || []).map(p => ({
+  return ((data as unknown as ProductRowWithJoins[]) || []).map((p) => ({
     id: p.id,
     name: p.name,
     slug: p.slug,
@@ -61,13 +64,13 @@ export async function getActiveProducts(): Promise<ProductWithDetails[]> {
     imageUrl: p.product_images?.[0]?.url || getSmartFallbackImage(p.name),
     rating: Number(p.avg_rating) || 0,
     soldCount: Number(p.sold_count) || 0,
-    category_slug: p.categories?.slug || null
+    category_slug: p.categories?.slug || null,
   }));
 }
 
 export async function getActiveCategories() {
   const supabase = createClient();
-  
+
   const { data, error } = await supabase
     .from('categories')
     .select('*')

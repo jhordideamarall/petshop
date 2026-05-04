@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/shared/product-grid';
+import { type ProductCardData } from '@/components/shared/product-card';
 import { useCartStore } from '@/stores/cart-store';
 import { useQuery } from '@tanstack/react-query';
-import { getActiveProducts } from '@/lib/services/product-client';
+import { getActiveProducts, type ProductWithDetails } from '@/lib/services/product-client';
 import { Loader2 } from 'lucide-react';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const activeCat = searchParams.get('category');
   const [sort] = useState<'popular' | 'rating' | 'low' | 'high'>('popular');
@@ -16,7 +17,7 @@ export default function ProductsPage() {
   const addItem = useCartStore((state) => state.addItem);
 
   // Fetch real products
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading } = useQuery<ProductWithDetails[]>({
     queryKey: ['products'],
     queryFn: getActiveProducts,
   });
@@ -25,7 +26,7 @@ export default function ProductsPage() {
     let list = [...products];
 
     if (activeCat) {
-      list = list.filter((p: any) => p.category_slug === activeCat);
+      list = list.filter((p) => p.category_slug === activeCat);
     }
 
     if (sort === 'popular') {
@@ -41,18 +42,18 @@ export default function ProductsPage() {
       list = [...list].sort((a, b) => (b.promoPrice ?? b.price) - (a.promoPrice ?? a.price));
     }
 
-    return list.map(p => ({
+    return list.map((p) => ({
       ...p,
       // Values are already mapped in getActiveProducts
     }));
   }, [products, activeCat, sort]);
 
-  const handleAddToCart = (p: any) => {
+  const handleAddToCart = (p: ProductCardData) => {
     addItem({
-      id: p.id,
+      id: String(p.id),
       name: p.name,
       price: p.promoPrice ?? p.price,
-      imageUrl: p.imageUrl,
+      imageUrl: p.imageUrl ?? '',
     });
   };
 
@@ -67,8 +68,26 @@ export default function ProductsPage() {
   return (
     <div className="flex flex-col min-h-screen pb-10">
       <div className="flex-1 pt-14">
-        <ProductGrid products={filtered as any} cols={2} onAddToCart={handleAddToCart} />
+        <ProductGrid
+          products={filtered as ProductCardData[]}
+          cols={2}
+          onAddToCart={handleAddToCart}
+        />
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center pt-14">
+          <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      }
+    >
+      <ProductsContent />
+    </Suspense>
   );
 }

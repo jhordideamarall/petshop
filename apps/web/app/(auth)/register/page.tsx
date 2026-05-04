@@ -7,14 +7,15 @@ import { ChevronLeft, User, Phone, Mail, Loader2, Camera } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import type { AuthError } from '@supabase/supabase-js';
 
 function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-  
+
   const next = searchParams.get('next') || '/';
-  
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -29,9 +30,13 @@ function RegisterContent() {
 
     setIsLoading(true);
     try {
-      const formattedPhone = phone.startsWith('0') ? `+62${phone.slice(1)}` : phone.startsWith('+') ? phone : `+62${phone}`;
-      
-      // Since Supabase Auth usually uses Email/Password or OTP, 
+      const formattedPhone = phone.startsWith('0')
+        ? `+62${phone.slice(1)}`
+        : phone.startsWith('+')
+          ? phone
+          : `+62${phone}`;
+
+      // Since Supabase Auth usually uses Email/Password or OTP,
       // registration here will trigger the OTP flow to verify the phone.
       const { error } = await supabase.auth.signInWithOtp({
         phone: formattedPhone,
@@ -39,8 +44,8 @@ function RegisterContent() {
           data: {
             full_name: name,
             email: email || undefined,
-          }
-        }
+          },
+        },
       });
 
       if (error) throw error;
@@ -48,7 +53,8 @@ function RegisterContent() {
       toast.success('Kode verifikasi dikirim ke HP kamu');
       // Redirect to login to enter OTP, pass the next param
       router.push(`/login?phone=${formattedPhone}&next=${encodeURIComponent(next)}`);
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AuthError;
       toast.error(error.message || 'Gagal mendaftar');
     } finally {
       setIsLoading(false);
@@ -104,7 +110,9 @@ function RegisterContent() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="ml-1 font-heading text-[13px] font-bold text-ink">Nomor Handphone</label>
+            <label className="ml-1 font-heading text-[13px] font-bold text-ink">
+              Nomor Handphone
+            </label>
             <div className="group relative flex items-center">
               <div className="absolute left-4 text-[#A09890] transition-colors group-focus-within:text-primary">
                 <Phone size={18} />
@@ -121,7 +129,9 @@ function RegisterContent() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="ml-1 font-heading text-[13px] font-bold text-ink">Email (Opsional)</label>
+            <label className="ml-1 font-heading text-[13px] font-bold text-ink">
+              Email (Opsional)
+            </label>
             <div className="group relative flex items-center">
               <div className="absolute left-4 text-[#A09890] transition-colors group-focus-within:text-primary">
                 <Mail size={18} />
@@ -147,7 +157,10 @@ function RegisterContent() {
 
         <p className="mt-8 text-center text-sm font-medium text-ink-3">
           Sudah punya akun?{' '}
-          <Link href={`/login?next=${encodeURIComponent(next)}`} className="font-bold text-primary active:opacity-70">
+          <Link
+            href={`/login?next=${encodeURIComponent(next)}`}
+            className="font-bold text-primary active:opacity-70"
+          >
             Masuk di sini
           </Link>
         </p>
@@ -158,11 +171,13 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={32} />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      }
+    >
       <RegisterContent />
     </Suspense>
   );

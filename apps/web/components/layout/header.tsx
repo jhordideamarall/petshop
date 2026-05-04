@@ -9,7 +9,7 @@ import { CategoryChip } from '@/components/shared/category-chip';
 import { SearchModal } from '@/components/shared/search-modal';
 import { getCityFromCoords } from '@petshop/core';
 import { useQuery } from '@tanstack/react-query';
-import { getActiveCategories } from '@/lib/services/product-client';
+import { getActiveCategories, type Category } from '@/lib/services/product-client';
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#E07B39" stroke="none">
@@ -130,7 +130,7 @@ export function Header() {
   const activeCat = searchParams.get('category');
 
   // Fetch real categories
-  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<any[]>({
+  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: getActiveCategories,
   });
@@ -146,7 +146,7 @@ export function Header() {
 
   useEffect(() => {
     setHydrated(true);
-    
+
     // Detect Location only if not already detected
     if ('geolocation' in navigator && !coords) {
       setIsLocating(true);
@@ -167,7 +167,7 @@ export function Header() {
           }
           setIsLocating(false);
         },
-        { timeout: 10000 }
+        { timeout: 10000 },
       );
     } else {
       console.warn('Geolocation not supported by this browser.');
@@ -389,34 +389,35 @@ export function Header() {
                       onClick={() => router.push('/products')}
                     />
                   </m.div>
-                  {isLoadingCats ? (
-                    Array.from({ length: 4 }).map((_, i) => (
-                      <m.div key={i} className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0" />
-                    ))
-                  ) : (
-                    dbCategories.map((cat) => (
-                      <m.div
-                        key={cat.id}
-                        variants={{
-                          hidden: { y: 10, opacity: 0, scale: 0.88 },
-                          show: {
-                            y: 0,
-                            opacity: 1,
-                            scale: 1,
-                            transition: { type: 'spring', stiffness: 300, damping: 22 },
-                          },
-                          exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
-                        }}
-                        style={{ flexShrink: 0 }}
-                      >
-                        <CategoryChip
-                          label={cat.name}
-                          active={activeCat === cat.slug}
-                          onClick={() => router.push(`/products?category=${cat.slug}`)}
+                  {isLoadingCats
+                    ? Array.from({ length: 4 }).map((_, i) => (
+                        <m.div
+                          key={i}
+                          className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
                         />
-                      </m.div>
-                    ))
-                  )}
+                      ))
+                    : dbCategories.map((cat: Category) => (
+                        <m.div
+                          key={cat.id}
+                          variants={{
+                            hidden: { y: 10, opacity: 0, scale: 0.88 },
+                            show: {
+                              y: 0,
+                              opacity: 1,
+                              scale: 1,
+                              transition: { type: 'spring', stiffness: 300, damping: 22 },
+                            },
+                            exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
+                          }}
+                          style={{ flexShrink: 0 }}
+                        >
+                          <CategoryChip
+                            label={cat.name}
+                            active={activeCat === cat.slug}
+                            onClick={() => router.push(`/products?category=${cat.slug}`)}
+                          />
+                        </m.div>
+                      ))}
                 </m.div>
               </m.div>
             )}
