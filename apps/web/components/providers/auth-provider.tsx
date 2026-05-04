@@ -33,7 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
     };
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      // eslint-disable-line @typescript-eslint/no-explicit-any
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
