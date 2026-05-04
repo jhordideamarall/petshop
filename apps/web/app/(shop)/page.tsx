@@ -11,13 +11,14 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import { BestOffersGrid } from '@/components/home/best-offers';
-import { ProductCard } from '@/components/shared/product-card';
+import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
 import { useCartStore } from '@/stores/cart-store';
 import { useQuery } from '@tanstack/react-query';
 import {
   getActiveProducts,
   getActiveCategories,
   type ProductWithDetails,
+  type Category,
 } from '@/lib/services/product-client';
 import { Loader2 } from 'lucide-react';
 

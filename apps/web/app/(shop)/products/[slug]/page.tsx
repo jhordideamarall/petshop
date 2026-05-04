@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getProductBySlug } from '@/lib/services/product-service';
 import { ProductDetailClient } from './_client';
+import type { DetailedProduct } from '@/lib/dummy-products';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -14,5 +15,5 @@ export default async function ProductDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <ProductDetailClient product={product as any} />;
+  return <ProductDetailClient product={product as unknown as DetailedProduct} />;
 }

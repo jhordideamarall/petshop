@@ -105,7 +105,7 @@ export default function CheckoutPage() {
   });
 
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-  const [guestAddress, setGuestAddress] = useState<Address | null>(null);
+  const [guestAddress, setGuestAddress] = useState<Partial<Address> | null>(null);
   const [isAddressSheetOpen, setIsAddressSheetOpen] = useState(false);
 
   useEffect(() => {

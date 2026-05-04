@@ -280,46 +280,51 @@ export function Header() {
             </m.div>
           </m.div>
 
-          {/* ── Search + Filter row ── NO layout prop = no spring bounce on focus */}
+          {/* ── Search + Filter row ── */}
           <m.div
+            layout
             className="flex items-center px-[clamp(16px,5vw,20px)]"
             style={{ marginBottom: searchMb }}
           >
             <m.div
+              layout
               className="flex-1 min-w-0"
               animate={{ marginRight: isProductPage ? 8 : 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 1 }}
             >
               <m.div
+                layout
                 onClick={() => setSearchOpen(true)}
                 animate={{
                   boxShadow: searchOpen
                     ? '0 0 0 2px #E07B39, 0 0 18px rgba(224,123,57,0.5), 0 0 36px rgba(224,123,57,0.22)'
                     : '0 0 0 0px rgba(224,123,57,0)',
                 }}
-                transition={{ duration: 0.2 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 cursor-pointer hover:bg-stone/80"
                 style={{ paddingTop: searchPy, paddingBottom: searchPy }}
               >
-                <span className="flex items-center text-[#E07B39]">
+                <m.span layout className="flex items-center text-[#E07B39]">
                   <SearchIcon />
-                </span>
-                <span className="font-sans text-sm text-[#A09890] truncate">
+                </m.span>
+                <m.span layout className="font-sans text-sm text-[#A09890] truncate">
                   Cari produk untuk peliharaanmu...
-                </span>
+                </m.span>
               </m.div>
             </m.div>
 
             <AnimatePresence mode="popLayout">
               {isProductPage && (
                 <m.div
+                  layout
                   initial={{ width: 0, opacity: 0, scale: 0.8 }}
                   animate={{ width: 46, opacity: 1, scale: 1 }}
                   exit={{ width: 0, opacity: 0, scale: 0.8 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 1 }}
                   className="relative flex-shrink-0"
                 >
                   <m.button
+                    layout
                     whileTap={{ scale: 0.9 }}
                     className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#E07B39]/30 transition-colors shadow-lg shadow-[#E07B39]/20 ${
                       showFilters ? 'bg-white text-[#E07B39]' : 'bg-[#E07B39] text-white'
@@ -328,6 +333,7 @@ export function Header() {
                     aria-label="Filter"
                   >
                     <m.div
+                      layout
                       animate={{ rotate: showFilters ? 180 : 0 }}
                       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                     >
