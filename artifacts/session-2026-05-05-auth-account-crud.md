@@ -178,6 +178,115 @@ export async function updateAddress(addressId: string, fields: Partial<Address>)
 
 ---
 
+## Kronologi Percakapan & Kesalahan AI
+
+### Percakapan lengkap + evaluasi diri
+
+---
+
+**[1] User:** Punya nomor HP `082281872174` tapi pas login diarahkan ke halaman register, padahal nomor ada di database.
+
+**AI:** Langsung cek `check-phone/route.ts` dan login page. Identifikasi format `0` vs `+62`. Buat migration backfill + RPC `check_phone_in_auth`. Update route dengan fallback 3 layer.
+
+**Kesalahan AI:** Terlalu cepat deploy migration tanpa verifikasi apakah data di DB memang ada. Perlu debug dulu sebelum deploy.
+
+---
+
+**[2] User:** Kamu revert padahal aku belum ngapa-ngapain database. Apakah app normal dijalankan?
+
+**AI:** Menjelaskan bahwa `migration repair --status reverted` bukan revert data, hanya fix history tracking. App tetap normal.
+
+**Kesalahan AI:** Tidak menjelaskan di awal bahwa perintah `repair` akan dijalankan dan efeknya apa. Harusnya explain dulu sebelum eksekusi.
+
+---
+
+**[3] User:** Logikanya seperti apa? `0` dan `+62` kan sama, buat aja normalisasi.
+
+**AI:** Langsung update `check-phone` dengan `getBothPhoneFormats()` menggunakan `.in()` query. Sederhanakan migration (hapus RPC yang tidak perlu).
+
+**Evaluasi:** Ini solusi yang benar dan lebih simpel. Seharusnya langsung ke sini dari awal, tidak perlu RPC.
+
+---
+
+**[4] User:** Masih diarahkan ke halaman register dengan nomor yang sama.
+
+**AI:** Buat debug endpoint `/api/auth/debug-phone` untuk cek data real di DB.
+
+**Hasil debug:** `profileRows: null`, `fuzzyMatch: null` — phone tidak ada di `profiles` sama sekali.
+
+**Kesalahan AI:** Terlambat membuat debug endpoint. Harusnya ini langkah pertama sebelum asumsi solusi.
+
+---
+
+**[5] User:** Masih ga bisa! Padahal kalau guest checkout isi alamat dan nomor HP bisa auto login.
+
+**AI:** Baru sadar bahwa phone disimpan di `addresses.phone` (dari guest checkout), bukan di `profiles.phone`. Tambahkan pengecekan `addresses.phone` sebagai layer ke-2.
+
+**Kesalahan AI:** Tidak membaca flow guest checkout dari awal. Kalau langsung baca `address-sheet.tsx` di awal, masalah ini bisa ditemukan jauh lebih cepat dan tidak perlu debug endpoint + 4 iterasi.
+
+---
+
+**[6] User:** Wishlist, Pets, Addresses harus berfungsi. Klik love di product detail tidak menambah wishlist di account page.
+
+**AI:** Audit semua account pages. Temukan: heart button di `_client.tsx` cuma `useState(false)` lokal, tidak ke DB. Fix dengan connect ke `toggleWishlist` + optimistic update.
+
+**Kesalahan AI:** Wishlist page tidak ada tombol hapus — harusnya itu obvious dari UX standar. Tidak diimplementasi di awal.
+
+---
+
+**[7] User:** Wishlist 406 error di console.
+
+**AI:** Fix `.single()` → `.maybeSingle()`.
+
+**Kesalahan AI:** Ini harusnya di-catch waktu pertama kali menulis `toggleWishlist`. `.single()` sudah diketahui throw 406 kalau 0 rows — ini kesalahan dasar yang tidak terdeteksi di code review.
+
+---
+
+**[8] User:** Ada delay saat tekan button love, buat native feel tanpa delay.
+
+**AI:** Implement optimistic update + bounce animation (`scale: [1, 1.35, 1]`).
+
+**Evaluasi:** Solusi tepat dan cepat.
+
+---
+
+**[9] User:** [Screenshot] Pilihan piaraan terpotong, button ketutup bottom nav.
+
+**AI:** Fix type selector dengan `-mx-0 px-5` pada scroll container. Pindah button submit ke luar scroll area dengan `pb-[calc(88px+env(safe-area-inset-bottom)+8px)]`.
+
+**Kesalahan AI:** Butuh 2 iterasi untuk fix button — percobaan pertama (menggunakan `border-t` sebagai sticky footer) masih ketutup nav. Harusnya langsung hitung tinggi nav (`88px`) dari awal.
+
+---
+
+**[10] User:** Alamat bisa edit juga, tidak fleksibel, tidak bisa ubah label utama.
+
+**AI:** Tambah `updateAddress` ke service, buat edit modal lengkap dengan label chips + toggle "Jadikan Utama".
+
+**Evaluasi:** Implementasi selesai dalam satu pass, tidak ada iterasi ulang.
+
+---
+
+**[11] User:** Button masih ketutup bottom nav!
+
+**AI:** Fix padding di pets modal dengan `pb-[calc(88px+env(safe-area-inset-bottom)+8px)]`. Ini iterasi ke-2 untuk masalah yang sama.
+
+**Kesalahan AI:** Masalah button ketutup bottom nav terjadi dua kali (pets modal + address edit modal). Harusnya setelah fix pertama, langsung apply pattern yang sama ke semua modal. Tidak konsisten.
+
+---
+
+### Pola Kesalahan yang Perlu Diingat
+
+| #   | Kesalahan                                                 | Pelajaran                                                                                  |
+| --- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| 1   | Langsung asumsi solusi tanpa debug dulu                   | **Debug first, fix second** — buat debug endpoint sebelum iterasi solusi                   |
+| 2   | Tidak baca semua flow yang relevan di awal                | **Baca semua file terkait** sebelum mulai (address-sheet.tsx harusnya dibaca di awal)      |
+| 3   | `.single()` dipakai tanpa handle 0 rows                   | **Selalu pakai `.maybeSingle()`** untuk optional lookup di Supabase                        |
+| 4   | Fix UI yang sama diulang 2x di file berbeda               | **Apply pattern konsisten** — kalau fix bottom nav di satu modal, langsung fix semua modal |
+| 5   | Tidak explain destructive/repair command sebelum eksekusi | **Explain dulu** perintah yang berpotensi membingungkan user sebelum jalankan              |
+| 6   | Wishlist tanpa tombol hapus — obvious tapi terlewat       | **Think full CRUD** dari awal untuk setiap halaman list                                    |
+
+---
+
 ## Migrations Applied
 
 | Migration                                    | Isi                                                          |
