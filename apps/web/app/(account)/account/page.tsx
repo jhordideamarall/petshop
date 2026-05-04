@@ -14,6 +14,8 @@ import {
   User as UserIcon,
 } from 'lucide-react';
 import type { Route } from 'next';
+import { useQuery } from '@tanstack/react-query';
+import { getUserLoyalty } from '@/lib/services/loyalty-client';
 import { useAuth } from '@/components/providers/auth-provider';
 
 interface MenuItem {
@@ -78,7 +80,9 @@ export default function AccountPage() {
               <div key={href}>
                 <div className="flex items-center gap-3 px-4 py-4">
                   <span className="shrink-0 text-ink-3">{icon}</span>
-                  <span className="flex-1 font-heading text-[15px] font-bold text-ink">{label}</span>
+                  <span className="flex-1 font-heading text-[15px] font-bold text-ink">
+                    {label}
+                  </span>
                   <ChevronRight size={15} className="shrink-0 text-ink-4" />
                 </div>
                 {i < MENU.length - 1 && <div className="mx-4 h-px bg-stone-2" />}
@@ -93,13 +97,37 @@ export default function AccountPage() {
   // Real user data from profiles/metadata
   const displayName = user.user_metadata?.full_name || 'Pawvels User';
   const displayPhone = user.phone || 'No Phone';
-  
-  // Dummy data for loyalty (to be replaced in Phase 8)
-  const CURRENT_POINTS = 0;
-  const NEXT_TIER_POINTS = 500;
-  const CURRENT_TIER = 'Bronze';
-  const NEXT_TIER = 'Silver';
-  const progress = (CURRENT_POINTS / NEXT_TIER_POINTS) * 100;
+
+  const { data: loyalty } = useQuery({
+    queryKey: ['loyalty', user?.id],
+    queryFn: getUserLoyalty,
+    enabled: !!user,
+  });
+
+  const CURRENT_POINTS = loyalty?.total_points || 0;
+  const lifetime = loyalty?.lifetime_points || 0;
+
+  let CURRENT_TIER = 'Bronze';
+  let NEXT_TIER = 'Silver';
+  let NEXT_TIER_POINTS = 500;
+  let progress = 0;
+
+  if (lifetime >= 2000) {
+    CURRENT_TIER = 'Gold';
+    NEXT_TIER = 'Max';
+    NEXT_TIER_POINTS = 2000;
+    progress = 100;
+  } else if (lifetime >= 500) {
+    CURRENT_TIER = 'Silver';
+    NEXT_TIER = 'Gold';
+    NEXT_TIER_POINTS = 2000;
+    progress = ((lifetime - 500) / (2000 - 500)) * 100;
+  } else {
+    CURRENT_TIER = 'Bronze';
+    NEXT_TIER = 'Silver';
+    NEXT_TIER_POINTS = 500;
+    progress = (lifetime / 500) * 100;
+  }
 
   return (
     <div className="bg-[#FDFCFB]">
@@ -161,7 +189,9 @@ export default function AccountPage() {
             <div className="mt-1.5 flex justify-between text-[11px] font-semibold text-white/40">
               <span>{CURRENT_TIER}</span>
               <span>
-                {NEXT_TIER_POINTS - CURRENT_POINTS} poin lagi ke {NEXT_TIER}
+                {NEXT_TIER === 'Max'
+                  ? 'Max Tier'
+                  : `${NEXT_TIER_POINTS - lifetime} poin lagi ke ${NEXT_TIER}`}
               </span>
             </div>
           </div>

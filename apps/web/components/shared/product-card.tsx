@@ -84,7 +84,9 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
   };
 
   return (
-    <a
+    <m.a
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       href={href ?? `/products/${product.slug}`}
       style={{
         background: '#FDFCFB',
@@ -314,6 +316,6 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
           <PriceTag price={product.price} promoPrice={product.promoPrice} size="sm" />
         </div>
       </div>
-    </a>
+    </m.a>
   );
 }

@@ -8,11 +8,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useCartStore, type CartItem } from '@/stores/cart-store';
 import { useAuth } from '@/components/providers/auth-provider';
 import { useQuery } from '@tanstack/react-query';
-import { getUserAddresses } from '@/lib/services/address-client';
+import { getUserAddresses, type Address } from '@/lib/services/address-client';
 import { Loader2, Plus } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
-const AddressSheet = dynamic(() => import('@/components/checkout/address-sheet').then(mod => mod.AddressSheet), { ssr: false });
+const AddressSheet = dynamic(
+  () => import('@/components/checkout/address-sheet').then((mod) => mod.AddressSheet),
+  { ssr: false },
+);
 
 const fmt = (n: number) => n.toLocaleString('id-ID');
 
@@ -91,23 +94,28 @@ export default function CheckoutPage() {
 
   const { user } = useAuth();
 
-  const { data: addresses = [], isLoading: isLoadingAddresses, refetch: refetchAddresses } = useQuery({
+  const {
+    data: addresses = [],
+    isLoading: isLoadingAddresses,
+    refetch: refetchAddresses,
+  } = useQuery({
     queryKey: ['addresses', user?.id],
     queryFn: getUserAddresses,
     enabled: !!user,
   });
 
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [guestAddress, setGuestAddress] = useState<Address | null>(null);
   const [isAddressSheetOpen, setIsAddressSheetOpen] = useState(false);
 
   useEffect(() => {
     if (addresses.length > 0 && !selectedAddressId) {
-      const def = addresses.find(a => a.is_default) || addresses[0];
+      const def = addresses.find((a) => a.is_default) || addresses[0];
       setSelectedAddressId(def.id);
     }
   }, [addresses, selectedAddressId]);
 
-  const activeAddress = addresses.find(a => a.id === selectedAddressId);
+  const activeAddress = guestAddress || addresses.find((a: Address) => a.id === selectedAddressId);
 
   useEffect(() => {
     setHydrated(true);
@@ -133,11 +141,6 @@ export default function CheckoutPage() {
   };
 
   const continueFlow = () => {
-    if (!user) {
-      router.push(`/login?next=/checkout`);
-      return;
-    }
-
     if (!activeAddress && step === 1) {
       setIsAddressSheetOpen(true);
       return;
@@ -155,10 +158,19 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
-      <AddressSheet 
-        isOpen={isAddressSheetOpen} 
-        onClose={() => setIsAddressSheetOpen(false)} 
-        onSuccess={() => refetchAddresses()}
+      <AddressSheet
+        isOpen={isAddressSheetOpen}
+        onClose={() => setIsAddressSheetOpen(false)}
+        onSuccess={(addr) => {
+          setGuestAddress(addr);
+          if (user) {
+            refetchAddresses().then((res) => {
+              const realAddr = res.data?.find((a: Address) => a.full_address === addr.full_address);
+              if (realAddr) setSelectedAddressId(realAddr.id);
+            });
+          }
+          setIsAddressSheetOpen(false);
+        }}
       />
       <header className="sticky top-0 z-50 border-b border-stone-2 bg-white">
         <div className="flex h-16 items-center px-[clamp(16px,5vw,20px)]">
@@ -257,7 +269,7 @@ export default function CheckoutPage() {
                       <span>Alamat Pengiriman</span>
                     </div>
                     {addresses.length > 0 && (
-                      <button 
+                      <button
                         onClick={() => setIsAddressSheetOpen(true)}
                         className="font-heading text-[13px] font-extrabold text-primary"
                       >
@@ -265,7 +277,7 @@ export default function CheckoutPage() {
                       </button>
                     )}
                   </div>
-                  
+
                   {isLoadingAddresses ? (
                     <div className="flex h-24 items-center justify-center rounded-[14px] bg-stone">
                       <Loader2 className="animate-spin text-primary" size={24} />
@@ -293,7 +305,7 @@ export default function CheckoutPage() {
                       </p>
                     </div>
                   ) : (
-                    <button 
+                    <button
                       onClick={() => setIsAddressSheetOpen(true)}
                       className="flex w-full flex-col items-center justify-center gap-2 rounded-[18px] border-2 border-dashed border-stone-3 p-8 transition-colors active:bg-stone"
                     >
@@ -452,8 +464,10 @@ export default function CheckoutPage() {
           >
             {submitting ? (
               <Loader2 className="animate-spin" size={20} />
+            ) : step < 3 ? (
+              'Lanjutkan'
             ) : (
-              step < 3 ? 'Lanjutkan' : `Bayar Rp ${fmt(total)}`
+              `Bayar Rp ${fmt(total)}`
             )}
           </button>
           <div className="safe-bottom" />

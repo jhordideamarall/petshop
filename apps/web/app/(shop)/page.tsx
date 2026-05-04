@@ -14,10 +14,10 @@ import { BestOffersGrid } from '@/components/home/best-offers';
 import { ProductCard } from '@/components/shared/product-card';
 import { useCartStore } from '@/stores/cart-store';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  getActiveProducts, 
+import {
+  getActiveProducts,
   getActiveCategories,
-  type ProductWithDetails 
+  type ProductWithDetails,
 } from '@/lib/services/product-client';
 import { Loader2 } from 'lucide-react';
 
@@ -271,8 +271,12 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
 export default function HomePage() {
   const addItem = useCartStore((state) => state.addItem);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { scrollXProgress } = useScroll({ container: scrollRef });
   const [hydrated, setHydrated] = useState(false);
+
+  // Initialize scroll listener only after hydration to avoid 'not hydrated' errors
+  const { scrollXProgress } = useScroll({
+    container: hydrated ? scrollRef : undefined,
+  });
 
   useEffect(() => {
     setHydrated(true);
@@ -285,14 +289,12 @@ export default function HomePage() {
   });
 
   // Fetch real categories
-  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<any[]>({
+  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: () => getActiveCategories(),
   });
 
-  const bestOffers = useMemo(() => 
-    products.filter(p => (p.promoPrice ?? 0) > 0), 
-  [products]);
+  const bestOffers = useMemo(() => products.filter((p) => (p.promoPrice ?? 0) > 0), [products]);
 
   const handleAddToCart = (product: ProductWithDetails) => {
     addItem({
@@ -485,35 +487,36 @@ export default function HomePage() {
               } as CSSProperties
             }
           >
-            {isLoadingCats ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-9 w-24 animate-pulse rounded-full bg-stone-2 flex-shrink-0" />
-              ))
-            ) : (
-              dbCategories.map((cat: any) => (
-                <Link
-                  key={cat.id}
-                  href={`/products?category=${cat.slug}`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    padding: '8px 16px',
-                    borderRadius: 9999,
-                    border: '1.5px solid rgba(224, 123, 57, 0.3)',
-                    background: '#FDFCFB',
-                    color: '#1A1714',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 600,
-                    fontSize: 13,
-                    whiteSpace: 'nowrap',
-                    textDecoration: 'none',
-                    flexShrink: 0,
-                  }}
-                >
-                  {cat.name}
-                </Link>
-              ))
-            )}
+            {isLoadingCats
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-9 w-24 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
+                  />
+                ))
+              : dbCategories.map((cat: Category) => (
+                  <Link
+                    key={cat.id}
+                    href={`/products?category=${cat.slug}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      padding: '8px 16px',
+                      borderRadius: 9999,
+                      border: '1.5px solid rgba(224, 123, 57, 0.3)',
+                      background: '#FDFCFB',
+                      color: '#1A1714',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 600,
+                      fontSize: 13,
+                      whiteSpace: 'nowrap',
+                      textDecoration: 'none',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
           </div>
         </div>
 
@@ -619,7 +622,7 @@ export default function HomePage() {
               </div>
             </div>
             <Link
-              href={"/products?sale=true" as any}
+              href={'/products?sale=true'}
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
@@ -636,7 +639,7 @@ export default function HomePage() {
               <Loader2 className="animate-spin text-primary" size={24} />
             </div>
           ) : (
-            <BestOffersGrid products={bestOffers.slice(0, 2) as any} />
+            <BestOffersGrid products={bestOffers.slice(0, 2) as unknown as ProductCardData[]} />
           )}
         </div>
 
@@ -660,7 +663,7 @@ export default function HomePage() {
               Semua Produk
             </span>
             <Link
-              href={"/products" as any}
+              href={'/products'}
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
@@ -681,7 +684,7 @@ export default function HomePage() {
             }}
           >
             {isLoading ? (
-               Array.from({ length: 4 }).map((_, i) => (
+              Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="aspect-[4/5] w-full animate-pulse rounded-2xl bg-stone-2" />
               ))
             ) : products.length > 0 ? (
@@ -689,7 +692,7 @@ export default function HomePage() {
                 <ProductCard
                   key={p.id}
                   product={p}
-                  onAddToCart={handleAddToCart as any}
+                  onAddToCart={handleAddToCart as unknown as (product: ProductCardData) => void}
                   priority={index < 4}
                 />
               ))

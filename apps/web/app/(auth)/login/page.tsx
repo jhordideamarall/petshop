@@ -39,6 +39,19 @@ function LoginContent() {
           ? phone
           : `+62${phone}`;
 
+      const checkRes = await fetch('/api/auth/check-phone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formattedPhone }),
+      });
+      const { exists } = await checkRes.json();
+      if (!exists) {
+        router.push(
+          `/register?phone=${encodeURIComponent(phone)}&next=${encodeURIComponent(next)}`,
+        );
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithOtp({
         phone: formattedPhone,
       });
@@ -213,6 +226,12 @@ function LoginContent() {
                   </>
                 )}
               </button>
+              <p className="text-center text-sm text-ink-3">
+                Belum punya akun?{' '}
+                <Link href={'/register' as Route} className="font-bold text-primary">
+                  Daftar sekarang
+                </Link>
+              </p>
             </m.form>
           ) : (
             <m.form

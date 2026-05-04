@@ -7,9 +7,15 @@ export type Category = Database['public']['Tables']['categories']['Row'];
 /**
  * Returns a relevant high-quality image from Unsplash if the product has no image.
  */
-function getSmartFallbackImage(_productName: string): string {
-  // Use a reliable Unsplash ID for pet-related images
-  return `https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80`;
+function getSmartFallbackImage(productName: string): string {
+  const p = productName.toLowerCase();
+  let id = '1583337130417-3346a1be7dee'; // Default Dog
+
+  if (p.includes('kucing') || p.includes('cat')) id = '1514888286974-6c03e2ca1dba';
+  if (p.includes('vitamin') || p.includes('obat')) id = '1584017945396-b371190c121e';
+  if (p.includes('makanan')) id = '1589924691995-400dc9ecc119';
+
+  return `https://images.unsplash.com/photo-${id}?w=800&q=80`;
 }
 
 export interface ProductWithDetails {
@@ -37,7 +43,6 @@ export async function getActiveProducts(): Promise<ProductWithDetails[]> {
 
   if (error) {
     console.error('SUPABASE_FETCH_ERROR_MESSAGE:', error.message);
-    console.error('SUPABASE_FETCH_ERROR_CODE:', error.code);
     return [];
   }
 
@@ -68,12 +73,13 @@ export async function getActiveProducts(): Promise<ProductWithDetails[]> {
   }));
 }
 
-export async function getActiveCategories() {
+export async function getActiveCategories(): Promise<Category[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from('categories')
     .select('*')
+    .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (error) {
@@ -81,5 +87,5 @@ export async function getActiveCategories() {
     return [];
   }
 
-  return data;
+  return data || [];
 }

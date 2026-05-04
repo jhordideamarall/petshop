@@ -250,7 +250,11 @@ export function Header() {
                 className="no-underline"
                 aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
               >
-                <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
+                <m.div
+                  whileTap={{ scale: 0.8, rotate: -5 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                  style={iconBtnStyle}
+                >
                   <m.div
                     key={cartCount}
                     initial={{ scale: 0.8 }}
@@ -263,9 +267,10 @@ export function Header() {
                   {hydrated && cartCount > 0 && (
                     <m.div
                       key={`badge-${cartCount}`}
-                      initial={{ scale: 0.5 }}
-                      animate={{ scale: [1.4, 1] }}
-                      className="badge-bounce absolute top-1 right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border border-white bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
+                      initial={{ scale: 0.3, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 8 }}
+                      className="badge-bounce absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border-2 border-[#FDFCFB] bg-primary px-1 font-heading text-[10px] font-bold text-white shadow-sm"
                     >
                       {cartCount}
                     </m.div>
@@ -324,7 +329,7 @@ export function Header() {
                   >
                     <m.div
                       animate={{ rotate: showFilters ? 180 : 0 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                     >
                       <FilterIcon />
                     </m.div>

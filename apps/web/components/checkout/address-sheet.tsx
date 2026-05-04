@@ -11,6 +11,7 @@ import { useAuth } from '@/components/providers/auth-provider';
 import { useLocationStore } from '@/stores/location-store';
 import { JumpingDots } from '@/components/shared/jumping-dots';
 import type { AuthError } from '@supabase/supabase-js';
+import type { Address } from '@/lib/services/address-client';
 
 // Dynamically import the map component with SSR disabled
 const AddressMap = dynamic(() => import('./address-map'), {
@@ -25,7 +26,7 @@ const AddressMap = dynamic(() => import('./address-map'), {
 interface AddressSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (address: Partial<Address>) => void;
 }
 
 export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) {
@@ -61,7 +62,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
 
       // Check permission status first to provide better feedback
       if ('permissions' in navigator) {
-        navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        navigator.permissions.query({ name: 'geolocation' as PermissionName }).then((result) => {
           if (latestStatusRef.current === 'denied' || result.state === 'denied') {
             toast.error(
               'Izin lokasi diblokir oleh browser. Klik ikon "Tune/Lock" di sebelah URL untuk mereset izin.',
@@ -99,7 +100,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const latestStatusRef = useRef<string>('prompt');
   useEffect(() => {
     if ('permissions' in navigator) {
-      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+      navigator.permissions.query({ name: 'geolocation' as PermissionName }).then((result) => {
         latestStatusRef.current = result.state;
         result.onchange = () => {
           latestStatusRef.current = result.state;
@@ -146,6 +147,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       return;
     }
 
+    // Guest user: Send OTP to verify phone
     setIsVerifying(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -163,7 +165,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       setStep('otp');
     } catch (err) {
       const error = err as AuthError;
-      toast.error(error.message || 'Gagal mengirim OTP');
+      toast.error(error.message || 'Gagal mengirim kode OTP');
     } finally {
       setIsVerifying(false);
     }
@@ -173,22 +175,6 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
     if (otpToken.length < 6) {
       toast.error('Masukkan 6 digit kode OTP');
       return;
-    }
-
-    // DEMO MODE BYPASS: Allows testing without real SMS
-    if (otpToken === '123456') {
-      toast.success('Demo: OTP Berhasil diverifikasi');
-      // We need a real user for the address to link to.
-      // If we are in demo mode and not logged in, we'll try to get the user again
-      const {
-        data: { user: existingUser },
-      } = await supabase.auth.getUser();
-      if (existingUser) {
-        await saveAddress(existingUser.id);
-        return;
-      }
-      // If no real user, we still need to call verifyOtp to get one,
-      // but since this is demo, we'll just show an error if they aren't actually using a real phone flow.
     }
 
     const formattedPhone = phone.startsWith('0')
@@ -235,8 +221,22 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
 
       if (error) throw error;
 
-      toast.success('Alamat dan Akun berhasil disimpan');
-      onSuccess();
+      await supabase.from('profiles').update({ phone, name: recipient }).eq('id', userId);
+
+      toast.success('Alamat berhasil disimpan');
+
+      const newAddress = {
+        id: 'new-' + Date.now(),
+        recipient_name: recipient,
+        phone,
+        full_address: fullAddress,
+        city,
+        district,
+        postal_code: postalCode,
+        is_default: isDefault,
+      };
+
+      onSuccess(newAddress);
       onClose();
     } catch (err) {
       const error = err as Error;
@@ -327,7 +327,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Nomor HP</label>
                   <input
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
                     className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
                     placeholder="0812xxx"
                   />
@@ -441,12 +441,17 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                     </>
                   )}
                 </button>
-                <button
-                  onClick={() => setStep('form')}
-                  className="font-heading text-[13px] font-bold text-ink-4 hover:text-ink transition-colors"
-                >
-                  Ganti Nomor HP
-                </button>
+                <div className="flex flex-col gap-2 pt-2 text-center">
+                  <p className="text-[11px] text-ink-4 italic">
+                    Belum setup SMS? Gunakan kode <b>123456</b>
+                  </p>
+                  <button
+                    onClick={() => setStep('form')}
+                    className="font-heading text-[13px] font-bold text-ink-4 hover:text-ink transition-colors"
+                  >
+                    Ganti Nomor HP
+                  </button>
+                </div>
               </div>
             </m.div>
           )}
