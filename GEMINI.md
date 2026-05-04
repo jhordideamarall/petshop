@@ -21,6 +21,7 @@ This file contains foundational mandates for the Pawvels project. These instruct
   - **Validation**: Confirmation of `pnpm type-check` or test results.
 - **UI AUDIT LOGGING**: Specifically for mobile optimizations, maintain `artifacts/ui-optimization-log.md` with viewport-specific details.
 - Do not blindly assume the project state without reading these files first.
+- **JANGAN UBAH DESIGN/UI kalo tidak di minta**
 
 ### 3. Preserving UI Mandates
 

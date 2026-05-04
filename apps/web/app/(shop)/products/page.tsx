@@ -4,8 +4,9 @@ import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/shared/product-grid';
 import { useCartStore } from '@/stores/cart-store';
-import type { ProductCardData } from '@/components/shared/product-card';
-import { getProducts } from '@/lib/dummy-products';
+import { useQuery } from '@tanstack/react-query';
+import { getActiveProducts } from '@/lib/services/product-client';
+import { Loader2 } from 'lucide-react';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -14,11 +15,17 @@ export default function ProductsPage() {
 
   const addItem = useCartStore((state) => state.addItem);
 
+  // Fetch real products
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: getActiveProducts,
+  });
+
   const filtered = useMemo(() => {
-    let list = getProducts();
+    let list = [...products];
 
     if (activeCat) {
-      list = list.filter((p) => p.category?.toLowerCase() === activeCat.toLowerCase());
+      list = list.filter((p: any) => p.category_slug === activeCat);
     }
 
     if (sort === 'popular') {
@@ -34,10 +41,13 @@ export default function ProductsPage() {
       list = [...list].sort((a, b) => (b.promoPrice ?? b.price) - (a.promoPrice ?? a.price));
     }
 
-    return list;
-  }, [activeCat, sort]);
+    return list.map(p => ({
+      ...p,
+      // Values are already mapped in getActiveProducts
+    }));
+  }, [products, activeCat, sort]);
 
-  const handleAddToCart = (p: ProductCardData) => {
+  const handleAddToCart = (p: any) => {
     addItem({
       id: p.id,
       name: p.name,
@@ -46,10 +56,18 @@ export default function ProductsPage() {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center pt-14">
+        <Loader2 className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen pb-10">
       <div className="flex-1 pt-14">
-        <ProductGrid products={filtered} cols={2} onAddToCart={handleAddToCart} />
+        <ProductGrid products={filtered as any} cols={2} onAddToCart={handleAddToCart} />
       </div>
     </div>
   );

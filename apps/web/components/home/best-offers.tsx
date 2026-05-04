@@ -1,11 +1,12 @@
 'use client';
 import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
-import { getFeaturedProducts } from '@/lib/dummy-products';
 import { useCartStore } from '@/stores/cart-store';
 
-const FEATURED_PRODUCTS = getFeaturedProducts();
+interface BestOffersGridProps {
+  products?: ProductCardData[];
+}
 
-export function BestOffersGrid() {
+export function BestOffersGrid({ products = [] }: BestOffersGridProps) {
   const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = (product: ProductCardData) => {
@@ -23,10 +24,10 @@ export function BestOffersGrid() {
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: 12,
-        padding: '0 16px',
+        padding: '0 clamp(16px, 5vw, 20px)',
       }}
     >
-      {FEATURED_PRODUCTS.map((p, index) => (
+      {products.map((p, index) => (
         <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} priority={index < 2} />
       ))}
     </div>

@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { m, AnimatePresence, useScroll, useSpring, useTransform, LayoutGroup } from 'framer-motion';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
+import { useLocationStore } from '@/stores/location-store';
 import { CategoryChip } from '@/components/shared/category-chip';
 import { SearchModal } from '@/components/shared/search-modal';
-
-const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Mainan'];
+import { getCityFromCoords } from '@petshop/core';
+import { useQuery } from '@tanstack/react-query';
+import { getActiveCategories } from '@/lib/services/product-client';
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#E07B39" stroke="none">
@@ -127,15 +129,49 @@ export function Header() {
   const searchParams = useSearchParams();
   const activeCat = searchParams.get('category');
 
+  // Fetch real categories
+  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<any[]>({
+    queryKey: ['categories'],
+    queryFn: getActiveCategories,
+  });
+
   const isProductPage = pathname === '/products';
   const [showFilters, setShowFilters] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { coords, locationName, setCoords, setLocationName } = useLocationStore();
+  const [isLocating, setIsLocating] = useState(false);
   const items = useCartStore((state) => state.items);
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
     setHydrated(true);
+    
+    // Detect Location only if not already detected
+    if ('geolocation' in navigator && !coords) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setCoords([latitude, longitude]);
+          const city = await getCityFromCoords(latitude, longitude);
+          setLocationName(city);
+          setIsLocating(false);
+        },
+        (error) => {
+          // Only log real errors, not permission denials
+          if (error.code !== 1) {
+            console.error('Geolocation error:', error);
+          } else {
+            console.warn('Geolocation permission denied by user.');
+          }
+          setIsLocating(false);
+        },
+        { timeout: 10000 }
+      );
+    } else {
+      console.warn('Geolocation not supported by this browser.');
+    }
   }, []);
 
   // iOS-native shrink — slow spring, full range
@@ -147,6 +183,8 @@ export function Header() {
   const locationHeight = useTransform(smoothY, [0, 140], [16, 0], { clamp: true });
   const searchPy = useTransform(smoothY, [0, 140], [12, 8], { clamp: true });
   const searchMb = useTransform(smoothY, [0, 140], [20, 12], { clamp: true });
+
+  if (!hydrated) return null;
 
   return (
     <>
@@ -190,14 +228,14 @@ export function Header() {
               </m.div>
               <m.div
                 layout
-                className="flex items-center gap-1"
-                style={{ opacity: locationOpacity, height: locationHeight, overflow: 'hidden' }}
+                className="flex items-center gap-1 overflow-hidden"
+                style={{ opacity: locationOpacity, height: locationHeight }}
               >
                 <span className="flex items-center text-[#A09890]">
                   <MapPin />
                 </span>
                 <span className="font-sans text-[11px] tracking-wide text-[#A09890]">
-                  Jakarta Selatan
+                  {isLocating ? 'Mendeteksi...' : locationName}
                 </span>
               </m.div>
             </Link>
@@ -215,9 +253,9 @@ export function Header() {
                 <m.div whileTap={{ scale: 0.94 }} style={iconBtnStyle}>
                   <m.div
                     key={cartCount}
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: [1.08, 1] }}
-                    transition={{ duration: 0.16, ease: 'easeOut' }}
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 600, damping: 15 }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
                     <CartIcon />
@@ -298,9 +336,6 @@ export function Header() {
 
           {/*
             ── Category chips ──
-            No px-5 here — scroll container goes edge-to-edge.
-            pl-5 gives first chip visual breathing room; overflow-x:auto clips right naturally.
-            overflow:hidden on height wrapper is fine because it covers full header width now.
           */}
           <AnimatePresence>
             {isProductPage && showFilters && (
@@ -354,28 +389,34 @@ export function Header() {
                       onClick={() => router.push('/products')}
                     />
                   </m.div>
-                  {CATEGORIES.map((cat) => (
-                    <m.div
-                      key={cat}
-                      variants={{
-                        hidden: { y: 10, opacity: 0, scale: 0.88 },
-                        show: {
-                          y: 0,
-                          opacity: 1,
-                          scale: 1,
-                          transition: { type: 'spring', stiffness: 300, damping: 22 },
-                        },
-                        exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
-                      }}
-                      style={{ flexShrink: 0 }}
-                    >
-                      <CategoryChip
-                        label={cat}
-                        active={activeCat === cat.toLowerCase()}
-                        onClick={() => router.push(`/products?category=${cat.toLowerCase()}`)}
-                      />
-                    </m.div>
-                  ))}
+                  {isLoadingCats ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <m.div key={i} className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0" />
+                    ))
+                  ) : (
+                    dbCategories.map((cat) => (
+                      <m.div
+                        key={cat.id}
+                        variants={{
+                          hidden: { y: 10, opacity: 0, scale: 0.88 },
+                          show: {
+                            y: 0,
+                            opacity: 1,
+                            scale: 1,
+                            transition: { type: 'spring', stiffness: 300, damping: 22 },
+                          },
+                          exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
+                        }}
+                        style={{ flexShrink: 0 }}
+                      >
+                        <CategoryChip
+                          label={cat.name}
+                          active={activeCat === cat.slug}
+                          onClick={() => router.push(`/products?category=${cat.slug}`)}
+                        />
+                      </m.div>
+                    ))
+                  )}
                 </m.div>
               </m.div>
             )}

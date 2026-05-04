@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { ArrowLeft, CalendarDays, Check, Clock3, PawPrint, ShieldCheck } from 'lucide-react';
+import { useAuth } from '@/components/providers/auth-provider';
 
 type PetType = 'dog' | 'cat' | 'other';
 
@@ -89,8 +90,16 @@ export default function BookingCheckoutPage() {
 
   const canSubmit = !isAddNew || (petName.trim() !== '' && petWeight.trim() !== '');
 
+  const { user } = useAuth();
+
   const handleSubmit = () => {
     if (!canSubmit) return;
+
+    if (!user) {
+      router.push(`/login?next=/booking/checkout`);
+      return;
+    }
+
     const d = new Date();
     const datePart = [
       d.getFullYear(),

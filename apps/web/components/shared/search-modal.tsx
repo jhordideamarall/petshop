@@ -3,7 +3,9 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProducts } from '@/lib/dummy-products';
+import { useQuery } from '@tanstack/react-query';
+import { getActiveProducts } from '@/lib/services/product-client';
+import { Loader2 } from 'lucide-react';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -46,9 +48,20 @@ const SearchInputIcon = () => (
   </svg>
 );
 
+function getSmartFallbackImage(productName: string): string {
+  const query = encodeURIComponent(productName.toLowerCase());
+  return `https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80&sig=${query}`;
+}
+
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: getActiveProducts,
+    enabled: isOpen,
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -58,19 +71,18 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   }, [isOpen]);
 
   const results = useMemo(() => {
-    const products = getProducts();
     const q = query.trim().toLowerCase();
 
     if (!q) {
-      return products.filter((p) => p.promoPrice != null);
+      return products.filter((p) => (p.promoPrice ?? 0) > 0);
     }
 
     return products.filter((p) =>
-      [p.name, p.category, p.type]
+      [p.name, p.slug]
         .filter(Boolean)
         .some((value) => value!.toLowerCase().includes(q)),
     );
-  }, [query]);
+  }, [query, products]);
 
   const trimmedQuery = query.trim();
 
@@ -191,7 +203,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
             {/* Product list */}
             <div className="overflow-y-auto px-2" style={{ maxHeight: 360, paddingBottom: 10 }}>
-              {results.length === 0 ? (
+              {isLoading ? (
+                <div className="flex h-32 items-center justify-center">
+                  <Loader2 className="animate-spin text-primary" size={24} />
+                </div>
+              ) : results.length === 0 ? (
                 <div className="flex flex-col items-center justify-center px-8 py-12 text-center text-[#A09890]">
                   <div
                     className="flex items-center justify-center rounded-full"
@@ -219,14 +235,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               ) : (
                 results.map((product, i) => {
                   const displayPrice = product.promoPrice ?? product.price;
-                  const hasDiscount = product.promoPrice != null;
-                  const initials = product.name
-                    .split(' ')
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .map((word) => word[0])
-                    .join('')
-                    .toUpperCase();
+                  const hasDiscount = (product.promoPrice ?? 0) > 0;
                   const discountPct = hasDiscount
                     ? Math.round(((product.price - product.promoPrice!) / product.price) * 100)
                     : 0;
@@ -257,20 +266,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           className="relative flex-shrink-0 overflow-hidden rounded-[14px]"
                           style={{ width: 58, height: 58, background: '#F5F3F0' }}
                         >
-                          {product.imageUrl ? (
-                            <Image
-                              src={product.imageUrl}
-                              alt={product.name}
-                              fill
-                              className="object-cover"
-                              sizes="58px"
-                              unoptimized
-                            />
-                          ) : (
-                            <span className="flex h-full w-full items-center justify-center font-heading text-[11px] font-extrabold text-[#A09890]">
-                              {initials || 'PV'}
-                            </span>
-                          )}
+                          <Image
+                            src={product.imageUrl || getSmartFallbackImage(product.name)}
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                            sizes="58px"
+                            unoptimized
+                          />
                           {hasDiscount && (
                             <div
                               className="absolute top-1 left-1 rounded-md px-1 font-heading text-[9px] font-bold text-white"
@@ -287,11 +290,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             {product.name}
                           </p>
                           <div className="mt-1 flex items-center gap-2">
-                            {product.category && (
-                              <span className="font-sans text-[11px] font-semibold text-[#A09890]">
-                                {product.category}
-                              </span>
-                            )}
+                            <span className="font-sans text-[11px] font-semibold text-[#A09890]">
+                              Produk
+                            </span>
                             <span className="h-1 w-1 rounded-full bg-[#D8D4CE]" />
                             <span className="font-sans text-[11px] font-semibold text-[#A09890]">
                               {product.soldCount?.toLocaleString('id-ID') ?? 0} terjual

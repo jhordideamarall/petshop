@@ -38,6 +38,8 @@ Work efficiently, safely, and without breaking existing behavior.
 - Avoid modifying many files at once
 - jangan buat file worktree, fokus pada main repo atau branc utama saja
 - setiap melakukan dan menyelesaikan pekerjaan selalu update atau buat file di folder `/artifact` tulis secara detail, di file apa, apa yang kamu ubah, alasannya kenapa. tracking ini adalah
+- **JANGAN UBAH DESIGN/UI kalo tidak di minta**
+- **SETIAP KODE YANG DIUBAH HARUS DICATAT BIAR BISA REVERT DENGAN MUDAH**
 
 ---
 

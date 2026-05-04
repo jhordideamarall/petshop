@@ -109,7 +109,13 @@ export function ProductGallery({
             }}
           >
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-              <NextImage src={img} alt={`Thumbnail ${i + 1}`} fill style={{ objectFit: 'cover' }} />
+              <NextImage 
+                src={img} 
+                alt={`Thumbnail ${i + 1}`} 
+                fill 
+                style={{ objectFit: 'cover' }} 
+                sizes="44px"
+              />
             </div>
           </button>
         ))}

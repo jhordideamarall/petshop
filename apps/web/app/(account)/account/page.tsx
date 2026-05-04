@@ -11,8 +11,10 @@ import {
   PawPrint,
   Settings,
   Star,
+  User as UserIcon,
 } from 'lucide-react';
 import type { Route } from 'next';
+import { useAuth } from '@/components/providers/auth-provider';
 
 interface MenuItem {
   href: Route;
@@ -28,13 +30,77 @@ const MENU: MenuItem[] = [
   { href: '/account/wishlist' as Route, icon: <Heart size={17} />, label: 'Wishlist' },
 ];
 
-const CURRENT_POINTS = 1250;
-const NEXT_TIER_POINTS = 2000;
-const CURRENT_TIER = 'Gold';
-const NEXT_TIER = 'Platinum';
-const progress = ((CURRENT_POINTS - 500) / (NEXT_TIER_POINTS - 500)) * 100;
-
 export default function AccountPage() {
+  const { user, signOut, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  // If not logged in, show a different hero section
+  if (!user) {
+    return (
+      <div className="bg-[#FDFCFB]">
+        <m.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden px-[clamp(16px,5vw,20px)] pb-10 pt-[max(40px,env(safe-area-inset-top))]"
+          style={{
+            background: 'linear-gradient(140deg, #1A1714 0%, #3D2F1E 60%, #2A1F0F 100%)',
+            borderBottomLeftRadius: 28,
+            borderBottomRightRadius: 28,
+          }}
+        >
+          <div className="text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-white/40">
+              <UserIcon size={32} />
+            </div>
+            <h1 className="font-heading text-[22px] font-extrabold text-white">Belum Masuk</h1>
+            <p className="mt-1 text-[13px] font-medium text-white/50">
+              Masuk untuk melihat pesanan dan poin loyalty kamu.
+            </p>
+            <Link
+              href="/login"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-primary px-8 font-heading text-[14px] font-bold text-white shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+            >
+              Masuk / Daftar
+            </Link>
+          </div>
+        </m.div>
+
+        <div className="px-[clamp(16px,5vw,20px)] pt-5 opacity-40 grayscale pointer-events-none">
+          <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
+            {MENU.map(({ href, icon, label }, i) => (
+              <div key={href}>
+                <div className="flex items-center gap-3 px-4 py-4">
+                  <span className="shrink-0 text-ink-3">{icon}</span>
+                  <span className="flex-1 font-heading text-[15px] font-bold text-ink">{label}</span>
+                  <ChevronRight size={15} className="shrink-0 text-ink-4" />
+                </div>
+                {i < MENU.length - 1 && <div className="mx-4 h-px bg-stone-2" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Real user data from profiles/metadata
+  const displayName = user.user_metadata?.full_name || 'Pawvels User';
+  const displayPhone = user.phone || 'No Phone';
+  
+  // Dummy data for loyalty (to be replaced in Phase 8)
+  const CURRENT_POINTS = 0;
+  const NEXT_TIER_POINTS = 500;
+  const CURRENT_TIER = 'Bronze';
+  const NEXT_TIER = 'Silver';
+  const progress = (CURRENT_POINTS / NEXT_TIER_POINTS) * 100;
+
   return (
     <div className="bg-[#FDFCFB]">
       {/* Hero Banner */}
@@ -53,16 +119,15 @@ export default function AccountPage() {
         {/* Settings */}
         <button
           type="button"
-          className="absolute right-5 top-[max(24px,env(safe-area-inset-top))] flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/60 active:scale-90"
-          style={{ transition: 'transform 0.1s' }}
+          className="absolute right-5 top-[max(24px,env(safe-area-inset-top))] flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/60 active:scale-90 transition-transform"
         >
           <Settings size={16} />
         </button>
 
         {/* Profile row */}
         <div>
-          <p className="font-heading text-[22px] font-extrabold text-white">Jhordi D.</p>
-          <p className="mt-0.5 text-[13px] font-medium text-white/50">0812-3456-7890</p>
+          <p className="font-heading text-[22px] font-extrabold text-white">{displayName}</p>
+          <p className="mt-0.5 text-[13px] font-medium text-white/50">{displayPhone}</p>
         </div>
 
         {/* Loyalty points */}
@@ -81,9 +146,6 @@ export default function AccountPage() {
                 <Star size={10} fill="#F4A261" strokeWidth={0} />
                 {CURRENT_TIER}
               </span>
-              <p className="text-[11px] font-semibold text-white/40">
-                ≈ Rp {(CURRENT_POINTS * 10).toLocaleString('id-ID')}
-              </p>
             </div>
           </div>
 
@@ -118,8 +180,7 @@ export default function AccountPage() {
             >
               <Link
                 href={href}
-                className="flex items-center gap-3 px-4 py-4 active:bg-stone"
-                style={{ transition: 'background 0.12s' }}
+                className="flex items-center gap-3 px-4 py-4 active:bg-stone transition-colors"
               >
                 <span className="shrink-0 text-ink-3">{icon}</span>
                 <span className="flex-1 font-heading text-[15px] font-bold text-ink">{label}</span>
@@ -139,9 +200,9 @@ export default function AccountPage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.38 }}
+          onClick={signOut}
           type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-[18px] border border-stone-2 bg-[#FDFCFB]/90 py-3.5 font-heading text-[14px] font-bold text-ink-3 backdrop-blur-md active:scale-[0.98]"
-          style={{ transition: 'transform 0.1s' }}
+          className="flex w-full items-center justify-center gap-2 rounded-[18px] border border-stone-2 bg-[#FDFCFB]/90 py-3.5 font-heading text-[14px] font-bold text-ink-3 backdrop-blur-md active:scale-[0.98] transition-all"
         >
           <LogOut size={15} />
           Keluar

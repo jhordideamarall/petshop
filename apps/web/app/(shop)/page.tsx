@@ -1,6 +1,7 @@
 'use client';
-import { useRef, type CSSProperties } from 'react';
+import { useRef, type CSSProperties, useMemo, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   m,
   useScroll,
@@ -10,10 +11,15 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import { BestOffersGrid } from '@/components/home/best-offers';
-import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
+import { ProductCard } from '@/components/shared/product-card';
 import { useCartStore } from '@/stores/cart-store';
-
-const CATEGORIES = ['Makanan', 'Aksesoris', 'Obat & Vitamin', 'Kandang', 'Grooming', 'Frozen'];
+import { useQuery } from '@tanstack/react-query';
+import { 
+  getActiveProducts, 
+  getActiveCategories,
+  type ProductWithDetails 
+} from '@/lib/services/product-client';
+import { Loader2 } from 'lucide-react';
 
 const BANNERS = [
   {
@@ -58,64 +64,6 @@ const BANNERS = [
   },
 ];
 
-const ALL_PRODUCTS: ProductCardData[] = [
-  {
-    id: '101',
-    slug: 'dog-shampoo-sensitive',
-    name: 'Shampoo Anjing Kulit Sensitif',
-    price: 185000,
-    imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80',
-    rating: 4.9,
-    soldCount: 850,
-  },
-  {
-    id: '102',
-    slug: 'cat-toy-feather',
-    name: 'Mainan Kucing Bulu Interaktif',
-    price: 45000,
-    imageUrl: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=800&q=80',
-    rating: 4.7,
-    soldCount: 2100,
-  },
-  {
-    id: '103',
-    slug: 'rabbit-food-timothy',
-    name: 'Timothy Hay Premium 1kg',
-    price: 125000,
-    imageUrl: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800&q=80',
-    rating: 4.8,
-    soldCount: 430,
-  },
-  {
-    id: '104',
-    slug: 'bird-cage-large',
-    name: 'Kandang Burung Besi Besar',
-    price: 850000,
-    promoPrice: 725000,
-    imageUrl: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=800&q=80',
-    rating: 4.6,
-    soldCount: 120,
-  },
-  {
-    id: '105',
-    slug: 'hamster-wheel-silent',
-    name: 'Hamster Silent Wheel 15cm',
-    price: 95000,
-    imageUrl: 'https://images.unsplash.com/photo-1544161513-0179fe746fd5?w=800&q=80',
-    rating: 4.5,
-    soldCount: 670,
-  },
-  {
-    id: '106',
-    slug: 'fish-food-flakes',
-    name: 'Pelet Ikan Tropis Flakes',
-    price: 35000,
-    imageUrl: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=800&q=80',
-    rating: 4.8,
-    soldCount: 3200,
-  },
-];
-
 const ScissorsIcon = () => (
   <svg
     width="20"
@@ -156,8 +104,6 @@ const FEATURES = [
   { label: 'Poin loyalty', sub: 'Setiap pembelian' },
 ] as const;
 
-import Image from 'next/image';
-
 interface BannerCardProps {
   banner: (typeof BANNERS)[0];
   index: number;
@@ -169,8 +115,6 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
   const step = count > 1 ? 1 / (count - 1) : 1;
   const centerPoint = index * step;
 
-  // Use function-based mapping to completely bypass WAAPI array-based optimization errors
-  // This is much more stable and avoids the "monotonically non-decreasing" browser engine bugs
   const x = useTransform(scrollXProgress, (v) => {
     const dist = (v - centerPoint) / step;
     return dist <= -1 ? 135 : dist >= 1 ? -135 : -dist * 135;
@@ -220,7 +164,6 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
         boxShadow: '0 15px 45px rgba(0,0,0,0.25)',
       }}
     >
-      {/* Background Image with Priority for LCP optimization */}
       <div className="absolute inset-0 z-0 opacity-40">
         <Image
           src={`https://images.unsplash.com/photo-${banner.id === 1 ? '1583337130417-3346a1be7dee' : banner.id === 2 ? '1548546738-8509cb246ed3' : '1585110396000-c9ffd4e4b308'}?w=800&q=80`}
@@ -228,6 +171,7 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
           fill
           priority={index === 0}
           className="object-cover"
+          sizes="(max-width: 430px) 100vw, 430px"
         />
         <div
           className="absolute inset-0"
@@ -328,8 +272,29 @@ export default function HomePage() {
   const addItem = useCartStore((state) => state.addItem);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: scrollRef });
+  const [hydrated, setHydrated] = useState(false);
 
-  const handleAddToCart = (product: ProductCardData) => {
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // Fetch real products
+  const { data: products = [], isLoading } = useQuery<ProductWithDetails[]>({
+    queryKey: ['products'],
+    queryFn: getActiveProducts,
+  });
+
+  // Fetch real categories
+  const { data: dbCategories = [], isLoading: isLoadingCats } = useQuery<any[]>({
+    queryKey: ['categories'],
+    queryFn: () => getActiveCategories(),
+  });
+
+  const bestOffers = useMemo(() => 
+    products.filter(p => (p.promoPrice ?? 0) > 0), 
+  [products]);
+
+  const handleAddToCart = (product: ProductWithDetails) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -337,6 +302,8 @@ export default function HomePage() {
       imageUrl: product.imageUrl,
     });
   };
+
+  if (!hydrated) return null;
 
   return (
     <div
@@ -465,7 +432,7 @@ export default function HomePage() {
           borderTopLeftRadius: 32,
           borderTopRightRadius: 32,
           paddingTop: 16,
-          paddingBottom: 24, // Hapus double padding 100px biar nggak kejauhan
+          paddingBottom: 24,
           marginTop: -32,
           position: 'relative',
           zIndex: 2,
@@ -518,29 +485,35 @@ export default function HomePage() {
               } as CSSProperties
             }
           >
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat}
-                href={`/products?category=${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '8px 16px',
-                  borderRadius: 9999,
-                  border: '1.5px solid rgba(224, 123, 57, 0.3)',
-                  background: '#FDFCFB',
-                  color: '#1A1714',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 600,
-                  fontSize: 13,
-                  whiteSpace: 'nowrap',
-                  textDecoration: 'none',
-                  flexShrink: 0,
-                }}
-              >
-                {cat}
-              </Link>
-            ))}
+            {isLoadingCats ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-9 w-24 animate-pulse rounded-full bg-stone-2 flex-shrink-0" />
+              ))
+            ) : (
+              dbCategories.map((cat: any) => (
+                <Link
+                  key={cat.id}
+                  href={`/products?category=${cat.slug}`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    padding: '8px 16px',
+                    borderRadius: 9999,
+                    border: '1.5px solid rgba(224, 123, 57, 0.3)',
+                    background: '#FDFCFB',
+                    color: '#1A1714',
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 600,
+                    fontSize: 13,
+                    whiteSpace: 'nowrap',
+                    textDecoration: 'none',
+                    flexShrink: 0,
+                  }}
+                >
+                  {cat.name}
+                </Link>
+              ))
+            )}
           </div>
         </div>
 
@@ -646,7 +619,7 @@ export default function HomePage() {
               </div>
             </div>
             <Link
-              href="/products?sale=true"
+              href={"/products?sale=true" as any}
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
@@ -658,7 +631,13 @@ export default function HomePage() {
               Lihat semua
             </Link>
           </div>
-          <BestOffersGrid />
+          {isLoading ? (
+            <div className="flex h-32 items-center justify-center">
+              <Loader2 className="animate-spin text-primary" size={24} />
+            </div>
+          ) : (
+            <BestOffersGrid products={bestOffers.slice(0, 2) as any} />
+          )}
         </div>
 
         <div>
@@ -681,7 +660,7 @@ export default function HomePage() {
               Semua Produk
             </span>
             <Link
-              href="/products"
+              href={"/products" as any}
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
@@ -701,14 +680,24 @@ export default function HomePage() {
               padding: '0 clamp(16px, 5vw, 20px)',
             }}
           >
-            {ALL_PRODUCTS.map((p, index) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onAddToCart={handleAddToCart}
-                priority={index < 4}
-              />
-            ))}
+            {isLoading ? (
+               Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="aspect-[4/5] w-full animate-pulse rounded-2xl bg-stone-2" />
+              ))
+            ) : products.length > 0 ? (
+              products.map((p, index) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={handleAddToCart as any}
+                  priority={index < 4}
+                />
+              ))
+            ) : (
+              <div className="col-span-2 py-10 text-center text-sm font-medium text-ink-4">
+                Belum ada produk tersedia.
+              </div>
+            )}
           </div>
         </div>
       </div>

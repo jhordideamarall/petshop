@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import 'leaflet/dist/leaflet.css';
 import { Inter, Outfit } from 'next/font/google';
 import { cn } from '@petshop/ui/utils';
 import { Providers } from '@/components/providers/providers';
