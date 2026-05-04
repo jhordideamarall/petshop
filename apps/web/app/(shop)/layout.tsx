@@ -1,14 +1,17 @@
 'use client';
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/header';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
 export default function ShopLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [isProductDetail, setIsProductDetail] = useState(false);
 
-  // Product detail pages match /products/[slug] but NOT exactly /products
-  const isProductDetail = pathname.startsWith('/products/') && pathname !== '/products';
+  useEffect(() => {
+    setIsProductDetail(pathname.startsWith('/products/') && pathname !== '/products');
+  }, [pathname]);
 
   return (
     <div
