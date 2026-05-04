@@ -1,6 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
+function getBothPhoneFormats(phone: string): string[] {
+  if (phone.startsWith('+62')) {
+    return [phone, '0' + phone.slice(3)];
+  }
+  if (phone.startsWith('0')) {
+    return [phone, '+62' + phone.slice(1)];
+  }
+  return [phone, '+62' + phone];
+}
+
 export async function POST(request: Request) {
   const { phone } = await request.json();
   if (!phone) return NextResponse.json({ exists: false });
@@ -13,8 +23,29 @@ export async function POST(request: Request) {
   }
 
   const supabase = createClient(url, serviceKey);
+  const phoneVariants = getBothPhoneFormats(phone);
 
-  const { data } = await supabase.from('profiles').select('id').eq('phone', phone).maybeSingle();
+  // 1. Check profiles.phone
+  const { data: profileData } = await supabase
+    .from('profiles')
+    .select('id')
+    .in('phone', phoneVariants)
+    .maybeSingle();
 
-  return NextResponse.json({ exists: !!data });
+  if (profileData) return NextResponse.json({ exists: true });
+
+  // 2. Check addresses.phone (saved from guest checkout flow)
+  const { data: addressData } = await supabase
+    .from('addresses')
+    .select('user_id')
+    .in('phone', phoneVariants)
+    .limit(1)
+    .maybeSingle();
+
+  if (addressData) return NextResponse.json({ exists: true });
+
+  // 3. Fallback: check auth.users directly
+  const { data: authExists } = await supabase.rpc('check_phone_in_auth', { p_phone: phone });
+
+  return NextResponse.json({ exists: !!authExists });
 }

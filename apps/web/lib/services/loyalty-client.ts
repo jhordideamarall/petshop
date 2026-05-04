@@ -25,3 +25,25 @@ export async function getUserLoyalty() {
 
   return data;
 }
+
+export async function getUserLoyaltyHistory() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('loyalty_history')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching loyalty history:', error);
+    return [];
+  }
+
+  return data;
+}

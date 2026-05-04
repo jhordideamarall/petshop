@@ -9,6 +9,9 @@ import { RatingStars } from '@/components/shared/rating-stars';
 import { ProductGallery } from '@/components/shared/product-gallery';
 import { VariantSelector, type VariantOption } from '@/components/shared/variant-selector';
 import { useCartStore } from '@/stores/cart-store';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toggleWishlist, getUserWishlist } from '@/lib/services/wishlist-client';
+
 import type { DetailedProduct } from '@/lib/dummy-products';
 
 interface ProductDetailClientProps {
@@ -136,7 +139,38 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   );
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { data: wishlist = [] } = useQuery({
+    queryKey: ['wishlist'],
+    queryFn: getUserWishlist,
+  });
+
+  type WishlistItem = { id: string; product_id: string };
+  const productId = String(product.id);
+  const isWishlisted = (wishlist as WishlistItem[]).some((w) => w.product_id === productId);
+
+  const wishlistMutation = useMutation({
+    mutationFn: () => toggleWishlist(productId),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['wishlist'] });
+      const prev = queryClient.getQueryData<WishlistItem[]>(['wishlist']) ?? [];
+      const alreadyIn = prev.some((w) => w.product_id === productId);
+      queryClient.setQueryData<WishlistItem[]>(
+        ['wishlist'],
+        alreadyIn
+          ? prev.filter((w) => w.product_id !== productId)
+          : [...prev, { product_id: productId, id: `optimistic-${productId}` }],
+      );
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(['wishlist'], ctx.prev);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+    },
+  });
   const addTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -251,8 +285,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </m.button>
           </Link>
           <m.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsWishlisted(!isWishlisted)}
+            whileTap={{ scale: 0.75 }}
+            animate={{ scale: isWishlisted ? [1, 1.35, 1] : 1 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            onClick={() => wishlistMutation.mutate()}
             style={{
               background: 'none',
               border: 'none',

@@ -2,41 +2,46 @@
 
 import { useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
-import { ArrowLeft, Gift, Star, TrendingUp } from 'lucide-react';
-
-interface PointTx {
-  id: string;
-  label: string;
-  points: number;
-  date: string;
-  type: 'earn' | 'redeem';
-}
+import { ArrowLeft, Gift, Star, TrendingUp, Loader2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getUserLoyalty, getUserLoyaltyHistory } from '@/lib/services/loyalty-client';
 
 const TIERS = [
-  { name: 'Silver', min: 0, max: 500, color: '#9CA3AF' },
-  { name: 'Gold', min: 500, max: 2000, color: '#F4A261' },
-  { name: 'Platinum', min: 2000, max: 5000, color: '#6C5CE7' },
+  { name: 'Bronze', min: 0, max: 500, color: '#CD7F32' },
+  { name: 'Silver', min: 500, max: 2000, color: '#9CA3AF' },
+  { name: 'Gold', min: 2000, max: 5000, color: '#F4A261' },
 ];
-
-const CURRENT_POINTS = 1250;
-
-const HISTORY: PointTx[] = [
-  { id: '1', label: 'Pembelian Royal Canin', points: 320, date: '28 Apr 2026', type: 'earn' },
-  { id: '2', label: 'Pembelian Tali Kekang', points: 185, date: '15 Apr 2026', type: 'earn' },
-  { id: '3', label: 'Redeem Voucher 20k', points: -200, date: '10 Apr 2026', type: 'redeem' },
-  { id: '4', label: 'Pembelian Vitamin Kucing', points: 145, date: '2 Apr 2026', type: 'earn' },
-  { id: '5', label: 'Bonus Ulang Tahun', points: 500, date: '1 Mar 2026', type: 'earn' },
-];
-
-const currentTier =
-  TIERS.find((t) => CURRENT_POINTS >= t.min && CURRENT_POINTS < t.max) ?? TIERS[1];
-const nextTier = TIERS[TIERS.indexOf(currentTier) + 1];
-const progress = nextTier
-  ? ((CURRENT_POINTS - currentTier.min) / (nextTier.min - currentTier.min)) * 100
-  : 100;
 
 export default function LoyaltyPage() {
   const router = useRouter();
+
+  const { data: loyalty, isLoading: isLoadingLoyalty } = useQuery({
+    queryKey: ['loyalty'],
+    queryFn: getUserLoyalty,
+  });
+
+  const { data: history = [], isLoading: isLoadingHistory } = useQuery({
+    queryKey: ['loyalty-history'],
+    queryFn: getUserLoyaltyHistory,
+  });
+
+  const CURRENT_POINTS = loyalty?.total_points || 0;
+  const LIFETIME_POINTS = loyalty?.lifetime_points || 0;
+
+  const currentTier =
+    TIERS.find((t) => LIFETIME_POINTS >= t.min && LIFETIME_POINTS < t.max) ?? TIERS[0];
+  const nextTier = TIERS[TIERS.indexOf(currentTier) + 1];
+  const progress = nextTier
+    ? ((LIFETIME_POINTS - currentTier.min) / (nextTier.min - currentTier.min)) * 100
+    : 100;
+
+  if (isLoadingLoyalty || isLoadingHistory) {
+    return (
+      <div className="flex min-h-[60dvh] items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FDFCFB]">
@@ -129,27 +134,51 @@ export default function LoyaltyPage() {
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {HISTORY.map((tx, i) => (
-              <m.div
-                key={tx.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + i * 0.05 }}
-                className="flex items-center justify-between rounded-[16px] bg-white px-4 py-3 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
-              >
-                <div>
-                  <p className="text-[14px] font-semibold text-ink">{tx.label}</p>
-                  <p className="text-[11px] font-medium text-ink-4">{tx.date}</p>
-                </div>
-                <span
-                  className="font-heading text-[15px] font-extrabold"
-                  style={{ color: tx.type === 'earn' ? '#2D7D52' : '#E53935' }}
-                >
-                  {tx.type === 'earn' ? '+' : ''}
-                  {tx.points.toLocaleString('id-ID')}
-                </span>
-              </m.div>
-            ))}
+            {history.length > 0 ? (
+              history.map(
+                (
+                  tx: {
+                    id: string;
+                    description: string;
+                    created_at: string;
+                    type: string;
+                    points_change: number;
+                  },
+                  i: number,
+                ) => (
+                  <m.div
+                    key={tx.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + i * 0.05 }}
+                    className="flex items-center justify-between rounded-[16px] bg-white px-4 py-3 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+                  >
+                    <div>
+                      <p className="text-[14px] font-semibold text-ink">{tx.description}</p>
+                      <p className="text-[11px] font-medium text-ink-4">
+                        {new Intl.DateTimeFormat('id-ID', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        }).format(new Date(tx.created_at || new Date()))}
+                      </p>
+                    </div>
+                    <span
+                      className="font-heading text-[15px] font-extrabold"
+                      style={{ color: tx.type === 'earn' ? '#2D7D52' : '#E53935' }}
+                    >
+                      {tx.points_change > 0 ? '+' : ''}
+                      {tx.points_change.toLocaleString('id-ID')}
+                    </span>
+                  </m.div>
+                ),
+              )
+            ) : (
+              <div className="mt-4 flex flex-col items-center justify-center py-8 opacity-60">
+                <Gift size={40} className="mb-2 text-ink-4" />
+                <p className="text-sm font-medium">Belum ada riwayat poin.</p>
+              </div>
+            )}
           </div>
         </div>
       </main>

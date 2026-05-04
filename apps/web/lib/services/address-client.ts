@@ -47,6 +47,33 @@ export async function setDefaultAddress(addressId: string) {
   return data;
 }
 
+export async function updateAddress(
+  addressId: string,
+  fields: Partial<
+    Pick<
+      Address,
+      | 'label'
+      | 'recipient_name'
+      | 'phone'
+      | 'full_address'
+      | 'city'
+      | 'district'
+      | 'postal_code'
+      | 'is_default'
+    >
+  >,
+) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('addresses')
+    .update(fields)
+    .eq('id', addressId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 export async function deleteAddress(addressId: string) {
   const supabase = createClient();
 
