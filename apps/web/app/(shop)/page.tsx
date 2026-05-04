@@ -1,5 +1,5 @@
 'use client';
-import { useRef, type CSSProperties, useMemo, useEffect, useState } from 'react';
+import { useRef, type CSSProperties, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -272,16 +272,11 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
 export default function HomePage() {
   const addItem = useCartStore((state) => state.addItem);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [hydrated, setHydrated] = useState(false);
 
-  // Initialize scroll listener only after hydration to avoid 'not hydrated' errors
+  // Initialize scroll listener — useScroll is client-side only
   const { scrollXProgress } = useScroll({
-    container: hydrated ? scrollRef : undefined,
+    container: scrollRef,
   });
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
 
   // Fetch real products
   const { data: products = [], isLoading } = useQuery<ProductWithDetails[]>({
@@ -305,8 +300,6 @@ export default function HomePage() {
       imageUrl: product.imageUrl,
     });
   };
-
-  if (!hydrated) return null;
 
   return (
     <div

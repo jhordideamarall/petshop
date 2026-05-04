@@ -137,7 +137,6 @@ export function Header() {
 
   const isProductPage = pathname === '/products';
   const [showFilters, setShowFilters] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { coords, locationName, setCoords, setLocationName } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
@@ -145,8 +144,6 @@ export function Header() {
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
-    setHydrated(true);
-
     // Detect Location only if not already detected
     if ('geolocation' in navigator && !coords) {
       setIsLocating(true);
@@ -183,8 +180,6 @@ export function Header() {
   const locationHeight = useTransform(smoothY, [0, 140], [16, 0], { clamp: true });
   const searchPy = useTransform(smoothY, [0, 140], [12, 8], { clamp: true });
   const searchMb = useTransform(smoothY, [0, 140], [20, 12], { clamp: true });
-
-  if (!hydrated) return null;
 
   return (
     <>
@@ -248,7 +243,7 @@ export function Header() {
               <Link
                 href="/cart"
                 className="no-underline"
-                aria-label={`Keranjang${hydrated && cartCount > 0 ? `, ${cartCount} item` : ''}`}
+                aria-label={`Keranjang${cartCount > 0 ? `, ${cartCount} item` : ''}`}
               >
                 <m.div
                   whileTap={{ scale: 0.8, rotate: -5 }}
@@ -264,7 +259,7 @@ export function Header() {
                   >
                     <CartIcon />
                   </m.div>
-                  {hydrated && cartCount > 0 && (
+                  {cartCount > 0 && (
                     <m.div
                       key={`badge-${cartCount}`}
                       initial={{ scale: 0.3, opacity: 0 }}

@@ -1,6 +1,7 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import { useEffect } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
@@ -35,22 +36,30 @@ function MapEvents({ onClick }: { onClick: (lat: number, lng: number) => void })
   return null;
 }
 
+function MapFlyTo({ coords }: { coords: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(coords, map.getZoom());
+  }, [coords, map]);
+  return null;
+}
+
 export default function AddressMap({ coords, onClick }: AddressMapProps) {
-  // Use a stable key to prevent re-initialization issues during HMR or Strict Mode
   return (
     <div className="h-full w-full relative" id="map-parent">
-      <MapContainer 
-        key={`map-${coords[0]}-${coords[1]}`}
-        center={coords} 
-        zoom={13} 
-        style={{ height: '100%', width: '100%' }} 
+      <MapContainer
+        center={coords}
+        zoom={13}
+        style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={false}
+        doubleClickZoom={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={coords} />
+        <MapFlyTo coords={coords} />
         <MapEvents onClick={onClick} />
       </MapContainer>
     </div>
