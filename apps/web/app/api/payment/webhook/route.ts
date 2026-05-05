@@ -149,9 +149,7 @@ export async function POST(req: Request) {
               ? 'biteship'
               : (order.shipping_courier || courierName || '').toLowerCase(),
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? shippingMethodStr.toLowerCase().includes('instant')
-                ? 'instant'
-                : 'reg'
+              ? 'standard' // 'biteship' courier in sandbox ONLY accepts 'standard' or 'express'
               : mapServiceType(serviceName || 'reg'),
             delivery_type: 'now',
             origin_collection_method: 'pickup',
