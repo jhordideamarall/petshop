@@ -121,7 +121,7 @@ export async function POST(req: Request) {
               ? "biteship" 
               : (order.shipping_courier || courierName || "").toLowerCase(),
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? "shipper"
+              ? "standard"
               : (serviceName || "reg").toLowerCase(),
             delivery_type: BITESHIP_API_KEY.startsWith('biteship_test')
               ? "now"
