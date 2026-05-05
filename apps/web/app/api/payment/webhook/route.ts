@@ -181,9 +181,10 @@ export async function POST(req: Request) {
               .from('orders')
               .update({
                 shipping_metadata: {
-                  ...order.shipping_metadata,
+                  ...(order.shipping_metadata as ShippingMetadata),
                   biteship_error: biteshipData,
-                  last_retry_at: new Date().toISOString()
+                  last_retry_at: new Date().toISOString(),
+                  debug_last_payload: biteshipPayload
                 }
               })
               .eq('id', order.id);
