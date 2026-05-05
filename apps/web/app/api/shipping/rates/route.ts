@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       .select('*')
       .single();
 
-    const originAreaId = settings?.origin_area_id || process.env.BITESHIP_ORIGIN_AREA_ID || 'IDNP6M3K2W1';
+    const originAreaId = settings?.origin_area_id || process.env.BITESHIP_ORIGIN_AREA_ID || 'IDNP3IDNC445IDND5601';
     const originLat = settings?.origin_latitude ? Number(settings.origin_latitude) : -6.2604822;
     const originLng = settings?.origin_longitude ? Number(settings.origin_longitude) : 106.6296424;
 

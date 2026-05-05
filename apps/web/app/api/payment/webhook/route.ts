@@ -20,6 +20,7 @@ const getSupabaseAdmin = () => {
 
 const XENDIT_CALLBACK_TOKEN = process.env.XENDIT_CALLBACK_TOKEN || '';
 const BITESHIP_API_KEY = process.env.BITESHIP_API_KEY || '';
+const BITESHIP_ORIGIN_AREA_ID = process.env.BITESHIP_ORIGIN_AREA_ID || 'IDNP3IDNC445IDND5601';
 
 export async function POST(req: Request) {
   try {
@@ -106,7 +107,7 @@ export async function POST(req: Request) {
             origin_address: storeSettings?.origin_address || "Tangerang",
             origin_note: "",
             origin_postal_code: storeSettings?.origin_postal_code || 15811, 
-            origin_area_id: storeSettings?.origin_area_id || "IDNP3IDNC445IDND5601",
+            origin_area_id: storeSettings?.origin_area_id || BITESHIP_ORIGIN_AREA_ID,
             destination_contact_name: address.recipient_name || profile?.name || "Customer",
             destination_contact_phone: address.phone || profile?.phone || "",
             destination_contact_email: profile?.email || "",
