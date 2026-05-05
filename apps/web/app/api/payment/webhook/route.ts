@@ -108,8 +108,6 @@ export async function POST(req: Request) {
             origin_note: "",
             origin_postal_code: storeSettings?.origin_postal_code || 15811, 
             origin_area_id: storeSettings?.origin_area_id || BITESHIP_ORIGIN_AREA_ID,
-            origin_latitude: storeSettings?.origin_latitude ? Number(storeSettings.origin_latitude) : -6.2604822,
-            origin_longitude: storeSettings?.origin_longitude ? Number(storeSettings.origin_longitude) : 106.6296424,
             destination_contact_name: address.recipient_name || profile?.name || "Customer",
             destination_contact_phone: address.phone || profile?.phone || "",
             destination_contact_email: profile?.email || "",
@@ -117,8 +115,6 @@ export async function POST(req: Request) {
             destination_note: "",
             destination_postal_code: parseInt(address.postal_code || "0"),
             destination_area_id: address.biteship_area_id,
-            destination_latitude: address.latitude ? Number(address.latitude) : undefined,
-            destination_longitude: address.longitude ? Number(address.longitude) : undefined,
             courier_company: BITESHIP_API_KEY.startsWith('biteship_test') 
               ? "biteship" 
               : (order.shipping_courier || courierName || "").toLowerCase(),
