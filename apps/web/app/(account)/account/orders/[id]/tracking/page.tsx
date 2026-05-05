@@ -126,7 +126,7 @@ export default function TrackingPage() {
               <p className="font-heading text-[14px] font-extrabold text-ink">{trackingData?.waybill_id}</p>
             </div>
             <button 
-              onClick={() => copyToClipboard(trackingData?.waybill_id)}
+              onClick={() => copyToClipboard(trackingData?.waybill_id || "")}
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary shadow-sm border border-stone-2 active:scale-90 transition-all"
             >
               <Copy size={16} />
