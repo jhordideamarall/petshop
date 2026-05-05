@@ -168,6 +168,11 @@ export async function POST(req: Request) {
                 value: it.price,
                 quantity: it.quantity,
                 weight: Math.max(1, it.products?.weight_grams || 100),
+                // Dimensi default (cm) — wajib untuk instant courier (Gojek/Grab).
+                // Tanpa ini Biteship reject 40002021 untuk gojek/grab instant.
+                length: 10,
+                width: 10,
+                height: 10,
               };
             }),
           };
@@ -175,16 +180,50 @@ export async function POST(req: Request) {
           console.log('Attempting Biteship Order Creation for:', order.order_number);
           console.log('Biteship Payload:', JSON.stringify(biteshipPayload, null, 2));
 
-          const biteshipRes = await fetch('https://api.biteship.com/v1/orders', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${BITESHIP_API_KEY}`,
-            },
-            body: JSON.stringify(biteshipPayload),
-          });
+          // SANDBOX MOCK MODE
+          // Biteship sandbox (`biteship_test_*`) tidak support `/v1/orders` untuk
+          // kurir asli (jne/sicepat/gojek) — semua return 40002021 "Failed getting Rates"
+          // dan `biteship/standard` tidak support pickup (40002031).
+          // Untuk dev workflow, simulasi sukses lokal supaya alur UI/tracking bisa diuji.
+          // Production (key non-test) tetap call real Biteship API.
+          const isSandbox = BITESHIP_API_KEY.startsWith('biteship_test');
+          let biteshipRes: Response;
+          let biteshipData: {
+            id?: string;
+            status?: string;
+            courier?: { tracking_id?: string };
+            success?: boolean;
+            error?: string;
+            code?: number;
+            mocked?: boolean;
+          };
 
-          const biteshipData = await biteshipRes.json();
+          if (isSandbox) {
+            const mockOrderId = `mock_${order.order_number}_${Date.now()}`;
+            biteshipData = {
+              id: mockOrderId,
+              status: 'confirmed',
+              courier: { tracking_id: `MOCK-${order.order_number}` },
+              success: true,
+              mocked: true,
+            };
+            biteshipRes = new Response(JSON.stringify(biteshipData), { status: 200 });
+            console.warn(
+              '[Biteship SANDBOX MOCK] Order ' +
+                order.order_number +
+                ' — skipping real API call, writing fake metadata for UI testing.',
+            );
+          } else {
+            biteshipRes = await fetch('https://api.biteship.com/v1/orders', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${BITESHIP_API_KEY}`,
+              },
+              body: JSON.stringify(biteshipPayload),
+            });
+            biteshipData = await biteshipRes.json();
+          }
 
           if (biteshipRes.ok) {
             await supabaseAdmin

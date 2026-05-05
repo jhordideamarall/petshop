@@ -8,17 +8,14 @@ interface ShippingMetadata {
   courier_tracking_id?: string;
 }
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: orderId } = await params;
-    
+
     // 1. Inisialisasi Supabase
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
     // 2. Ambil biteship_order_id dari database
@@ -42,10 +39,31 @@ export async function GET(
 
     // 3. Panggil API Biteship
     const trackingId = courierTrackingId || biteshipOrderId;
+
+    // Sandbox mock — biteship_order_id format `mock_*` artinya order dibuat
+    // di mode mock (lihat webhook/route.ts). Return data tracking simulasi.
+    if (typeof biteshipOrderId === 'string' && biteshipOrderId.startsWith('mock_')) {
+      return NextResponse.json({
+        success: true,
+        mocked: true,
+        order_id: biteshipOrderId,
+        waybill_id: courierTrackingId || trackingId,
+        status: 'confirmed',
+        history: [
+          {
+            note: 'Order diterima sistem (sandbox mock)',
+            updated_at: new Date().toISOString(),
+            status: 'confirmed',
+          },
+        ],
+        link: null,
+      });
+    }
+
     const biteshipRes = await fetch(`https://api.biteship.com/v1/trackings/${trackingId}`, {
       headers: {
-        'Authorization': `Bearer ${BITESHIP_API_KEY}`
-      }
+        Authorization: `Bearer ${BITESHIP_API_KEY}`,
+      },
     });
 
     const trackingData = await biteshipRes.json();
@@ -57,8 +75,11 @@ export async function GET(
     return NextResponse.json(trackingData);
   } catch (error) {
     console.error('TRACKING_API_ERROR:', error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : 'Internal Server Error' 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Internal Server Error',
+      },
+      { status: 500 },
+    );
   }
 }
