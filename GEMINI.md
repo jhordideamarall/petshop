@@ -14,7 +14,7 @@ This file contains foundational mandates for the Pawvels project. These instruct
 
 - **ALWAYS** read `prd.md` and `ARCHITECTURE.md` at the start of a session to understand the project's goal.
 - **ALWAYS** read the `claudeplan/` folder (for the long-term roadmap).
-- **ALWAYS** check the `artifacts/` folder (especially `phase-progress.md` and recent session reports) to understand historical context, audit reports, and past architectural decisions.
+- **ALWAYS** read the `artifacts/` folder (especially `phase-progress.md`, `biteship-pickup-error-analysis.md`, and recent session reports) to understand historical context, audit reports, and past architectural decisions.
 - **MANDATORY EXECUTION ARTIFACT (AUDIT TRAIL)**: After completing ANY task that modifies the codebase, you **MUST** create or update a detailed report in the `artifacts/` folder. This is not optional. The report must include:
   - **Context**: Summary of the task and its objective.
   - **File Manifest**: List of every file created or modified.

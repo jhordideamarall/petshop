@@ -108,6 +108,8 @@ export async function POST(req: Request) {
             origin_note: "",
             origin_postal_code: storeSettings?.origin_postal_code || 15811, 
             origin_area_id: storeSettings?.origin_area_id || BITESHIP_ORIGIN_AREA_ID,
+            origin_latitude: storeSettings?.origin_latitude ? Number(storeSettings.origin_latitude) : -6.2604822,
+            origin_longitude: storeSettings?.origin_longitude ? Number(storeSettings.origin_longitude) : 106.6296424,
             destination_contact_name: address.recipient_name || profile?.name || "Customer",
             destination_contact_phone: address.phone || profile?.phone || "",
             destination_contact_email: profile?.email || "",
@@ -119,11 +121,12 @@ export async function POST(req: Request) {
               ? "biteship" 
               : (order.shipping_courier || courierName || "").toLowerCase(),
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? "standard"
+              ? "shipper"
               : (serviceName || "reg").toLowerCase(),
             delivery_type: BITESHIP_API_KEY.startsWith('biteship_test')
               ? "now"
               : (["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later"),
+            origin_collection_method: "pickup",
             pickup_date: new Date().toISOString().split('T')[0],
             pickup_time: "12:00", 
             items: ((orderItems || []) as unknown[]).map((item) => {

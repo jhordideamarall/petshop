@@ -29,7 +29,7 @@ Work efficiently, safely, and without breaking existing behavior.
 
 ## Workflow
 
-- **MANDATORY CONTEXT GATHERING**: ALWAYS read `prd.md`, `ARCHITECTURE.md`, the `claudeplan/` folder (for the long-term roadmap), and the `artifacts/` folder (especially `phase-progress.md` and recent audit reports) at the start of every session. Do not blindly assume the project state without reading these files first!
+- **MANDATORY CONTEXT GATHERING**: ALWAYS read `prd.md`, `ARCHITECTURE.md`, the `claudeplan/` folder (for the long-term roadmap), and the `artifacts/` folder (especially `phase-progress.md`, `biteship-pickup-error-analysis.md`, and recent audit reports) at the start of every session. Do not blindly assume the project state without reading these files first!
 - **UI/UX LOGGING PROTOCOL**: For any mobile-native optimizations (viewport, spacing, Android/iOS fixes), you **MUST** document the changes in `artifacts/ui-optimization-log.md` with file paths and rationale.
 - - **MANDATORY EXECUTION ARTIFACT**: Setiap tugas yang selesai WAJIB diikuti dengan update detail di folder `artifacts/` yang
     mendokumentasikan: **Apa** yang diubah, **Di mana** (path file), dan **Mengapa** (Rasionale Teknis). Dilarang keras melakukan modifikasi
