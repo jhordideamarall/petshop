@@ -25,10 +25,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Configuration Error' }, { status: 500 });
     }
 
-    const body = await req.json();
+    // Ambil body secara aman untuk menghindari error saat Biteship melakukan tes/ping
+    let body;
+    try {
+      body = await req.json();
+    } catch (e) {
+      console.log('Webhook Warning: Received empty or invalid JSON body during ping/validation');
+      return NextResponse.json({ success: true, message: 'Ping received' });
+    }
+
     console.log('Biteship Webhook Received:', JSON.stringify(body, null, 2));
 
-    const { event, order_id, status, courier_tracking_id } = body;
+    const { event, order_id, status, courier_tracking_id } = body || {};
+
+    // Jika Biteship cuma ngetes URL (tanpa event), balas OK saja
+    if (!event) {
+      return NextResponse.json({ success: true, message: 'Webhook URL validated' });
+    }
 
     // 1. Validasi event (Biteship dashboard uses 'order.status')
     if (event !== 'order.status_update' && event !== 'order.status') {
