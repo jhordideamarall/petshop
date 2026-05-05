@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import type { Route } from 'next';
 import { m } from 'framer-motion';
 import { ArrowLeft, Package, Loader2 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -91,17 +92,28 @@ export default function OrdersPage() {
     <div className="min-h-dvh bg-[#FDFCFB]">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-stone-2 bg-[#FDFCFB]/90 px-5 pb-0 pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl">
-        <div className="flex items-center justify-between pb-3">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-sm font-semibold text-ink-3"
-          >
-            <ArrowLeft size={18} />
-            Kembali
-          </button>
-          <h1 className="font-heading text-[18px] font-extrabold text-ink">Pesanan Saya</h1>
-          <div className="w-10" /> {/* Spacer */}
+        <div className="grid grid-cols-3 items-center pb-3">
+          <div className="flex justify-start">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="flex items-center gap-1 text-sm font-bold text-ink-3 hover:text-primary transition-colors"
+            >
+              <ArrowLeft size={18} />
+              <span>Kembali</span>
+            </button>
+          </div>
+          
+          <h1 className="text-center font-heading text-[17px] font-extrabold text-ink truncate">
+            Pesanan Saya
+          </h1>
+          
+          <div className="flex justify-end invisible pointer-events-none">
+            <button className="flex items-center gap-1 text-sm font-bold">
+              <ArrowLeft size={18} />
+              <span>Kembali</span>
+            </button>
+          </div>
         </div>
 
         {/* Shopee Style Tabs */}
@@ -235,7 +247,7 @@ export default function OrdersPage() {
 
                       {order.status === 'shipped' && (
                         <button 
-                          onClick={() => router.push(`/account/orders/${order.id}/tracking` as any)}
+                          onClick={() => router.push(`/account/orders/${order.id}/tracking` as Route)}
                           className="flex-1 rounded-xl bg-ink py-3 text-[13px] font-extrabold text-white shadow-lg active:scale-95 transition-all"
                         >
                           Lacak Pengiriman
@@ -249,7 +261,7 @@ export default function OrdersPage() {
                       )}
                       
                       <button 
-                        onClick={() => router.push(`/account/orders/${order.id}` as any)}
+                        onClick={() => router.push(`/account/orders/${order.id}` as Route)}
                         className="flex-none rounded-xl bg-stone-2 px-5 py-3 text-[13px] font-extrabold text-ink active:scale-95 transition-all"
                       >
                         Detail

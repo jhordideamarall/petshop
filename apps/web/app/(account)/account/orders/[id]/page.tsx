@@ -3,10 +3,37 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
-import { m } from 'framer-motion';
+import type { Route } from 'next';
 import { ArrowLeft, MapPin, Package, CreditCard, ChevronRight, Loader2, Truck } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
+
+interface OrderItem {
+  id: string;
+  quantity: number;
+  price: number;
+  products: {
+    name: string;
+    product_images: { url: string }[];
+  } | null;
+}
+
+interface Order {
+  id: string;
+  order_number: string;
+  status: string;
+  total: number;
+  shipping_cost: number | null;
+  created_at: string;
+  addresses: {
+    recipient_name: string;
+    phone: string;
+    full_address: string;
+    city: string;
+    postal_code: string;
+  } | null;
+  order_items: OrderItem[];
+}
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'Menunggu Pembayaran',
@@ -39,7 +66,7 @@ export default function OrderDetailPage() {
   const orderId = params.id as string;
   const supabase = createClient();
 
-  const { data: order, isLoading } = useQuery({
+  const { data: order, isLoading } = useQuery<Order>({
     queryKey: ['order', orderId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -49,7 +76,7 @@ export default function OrderDetailPage() {
         .single();
       
       if (error) throw error;
-      return data;
+      return data as unknown as Order;
     }
   });
 
@@ -128,7 +155,7 @@ export default function OrderDetailPage() {
           
           {order.status === 'shipped' && (
             <button 
-              onClick={() => router.push(`/account/orders/${order.id}/tracking` as any)}
+              onClick={() => router.push(`/account/orders/${order.id}/tracking` as Route)}
               className="mt-6 flex w-full items-center justify-between rounded-2xl bg-stone-1 px-5 py-4 border border-stone-2 hover:bg-stone-2 transition-colors"
             >
               <div className="flex items-center gap-3 text-primary">
@@ -144,7 +171,7 @@ export default function OrderDetailPage() {
         <div className="rounded-[28px] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-stone-2">
           <h3 className="font-heading text-[15px] font-extrabold text-ink mb-4">Produk</h3>
           <div className="space-y-4">
-            {order.order_items?.map((item: any) => (
+            {order.order_items?.map((item) => (
               <div key={item.id} className="flex gap-4">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-stone-1 border border-stone-2">
                   <Image

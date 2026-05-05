@@ -7,18 +7,41 @@ import { ArrowLeft, MapPin, Truck, CheckCircle2, Package, Copy, Loader2 } from '
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+interface TrackingHistory {
+  status: string;
+  note: string;
+  updated_at: string;
+}
+
+interface TrackingData {
+  waybill_id: string;
+  courier: {
+    company: string;
+    type: string;
+  };
+  history: TrackingHistory[];
+  destination: {
+    address: string;
+  };
+}
+
+interface TrackingResponse {
+  success: boolean;
+  data: TrackingData;
+}
+
 export default function TrackingPage() {
   const router = useRouter();
   const params = useParams();
   const orderId = params.id as string;
 
-  const { data: trackingResponse, isLoading, error } = useQuery({
+  const { data: trackingResponse, isLoading, error } = useQuery<TrackingResponse>({
     queryKey: ['tracking', orderId],
     queryFn: async () => {
       const res = await fetch(`/api/shipping/track/${orderId}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Gagal mengambil data pelacakan');
-      return data;
+      return data as TrackingResponse;
     },
     retry: false
   });
@@ -120,7 +143,7 @@ export default function TrackingPage() {
               <div className="py-4 text-center text-ink-4 text-[13px]">
                 Belum ada histori pengiriman.
               </div>
-            ) : history.map((step: any, i: number) => {
+            ) : history.map((step: TrackingHistory, i: number) => {
               const isLatest = i === 0;
               return (
                 <m.div 
