@@ -43,16 +43,30 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     // Sandbox mock — biteship_order_id format `mock_*` artinya order dibuat
     // di mode mock (lihat webhook/route.ts). Return data tracking simulasi.
     if (typeof biteshipOrderId === 'string' && biteshipOrderId.startsWith('mock_')) {
+      const now = new Date();
+      const fiveMinsAgo = new Date(now.getTime() - 5 * 60000).toISOString();
+      const tenMinsAgo = new Date(now.getTime() - 10 * 60000).toISOString();
+
       return NextResponse.json({
         success: true,
         mocked: true,
         order_id: biteshipOrderId,
         waybill_id: courierTrackingId || trackingId,
-        status: 'confirmed',
+        status: 'picking_up',
         history: [
           {
-            note: 'Order diterima sistem (sandbox mock)',
-            updated_at: new Date().toISOString(),
+            note: 'Kurir sedang menuju lokasi penjemputan (sandbox mock)',
+            updated_at: now.toISOString(),
+            status: 'picking_up',
+          },
+          {
+            note: 'Kurir berhasil dialokasikan',
+            updated_at: fiveMinsAgo,
+            status: 'allocated',
+          },
+          {
+            note: 'Order diterima sistem',
+            updated_at: tenMinsAgo,
             status: 'confirmed',
           },
         ],
