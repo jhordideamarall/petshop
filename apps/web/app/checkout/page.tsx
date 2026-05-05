@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronLeft, MapPin, Package, WalletCards, Loader2, Plus, Truck, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Check, ChevronLeft, MapPin, Package, Loader2, Plus, Truck, ChevronDown, ShieldCheck } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useCartStore, type CartItem } from '@/stores/cart-store';
@@ -72,7 +72,6 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [shippingId, setShippingId] = useState<string | null>(null);
-  const [paymentId, setPaymentId] = useState('gopay');
   const [expandedCourier, setExpandedCourier] = useState<string | null>(null);
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
