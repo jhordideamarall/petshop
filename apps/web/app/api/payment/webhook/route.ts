@@ -105,7 +105,7 @@ export async function POST(req: Request) {
             origin_contact_name: "Mei",
             origin_contact_phone: "08118621313",
             origin_address: storeSettings?.origin_address || "Tangerang",
-            origin_note: "",
+            origin_note: "Toko Pawvels",
             origin_postal_code: storeSettings?.origin_postal_code || 15811, 
             origin_area_id: storeSettings?.origin_area_id || BITESHIP_ORIGIN_AREA_ID,
             destination_contact_name: address.recipient_name || profile?.name || "Customer",
@@ -137,7 +137,10 @@ export async function POST(req: Request) {
                 description: "-",
                 value: it.price,
                 quantity: it.quantity,
-                weight: Math.max(1, it.products?.weight_grams || 100)
+                weight: Math.max(1, it.products?.weight_grams || 100),
+                height: 10,
+                length: 10,
+                width: 10
               };
             })
           };
