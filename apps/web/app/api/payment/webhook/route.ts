@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+interface ShippingMetadata {
+  biteship_order_id?: string;
+  courier_tracking_id?: string;
+}
+
 // Inisialisasi admin client secara lazy/aman untuk build
 const getSupabaseAdmin = () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -96,11 +101,11 @@ export async function POST(req: Request) {
             shipper_contact_phone: "082281872174", 
             shipper_contact_email: "hello@pawvels.com",
             shipper_organization: "Pawvels",
-            origin_contact_name: "Admin Pawvels",
+            origin_contact_name: "Pawvels Store",
             origin_contact_phone: "082281872174",
             origin_address: storeSettings?.origin_address || "Tangerang",
             origin_note: "",
-            origin_postal_code: 15810, // Kelapa Dua / Pisa Grande area
+            origin_postal_code: storeSettings?.origin_postal_code || 15810, 
             origin_area_id: storeSettings?.origin_area_id || "IDNP6M3K2W1",
             destination_contact_name: address.recipient_name || profile?.name || "Customer",
             destination_contact_phone: address.phone || profile?.phone || "",

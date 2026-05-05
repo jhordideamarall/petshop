@@ -114,14 +114,28 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
     window.open(url, '_blank');
   };
 
+  const [biteshipAreaId, setBiteshipAreaId] = useState('');
+
   const handleConfirmLocation = async () => {
     setIsLoadingLoadingDetails(true);
     try {
+      // 1. Get Address Details from Nominatim
       const details = await getDetailedAddress(coords[0], coords[1]);
       setFullAddress(details.fullAddress);
       setCity(details.city);
       setDistrict(details.district || '');
       setPostalCode(details.postcode || '');
+
+      // 2. Search for Biteship Area ID
+      const searchQuery = `${details.district || details.village || details.city} ${details.postcode || ''}`.trim();
+      const areaRes = await fetch(`/api/shipping/areas?input=${encodeURIComponent(searchQuery)}`);
+      const areaData = await areaRes.json();
+      
+      if (areaRes.ok && areaData.areas?.length > 0) {
+        // Pick the best match (usually the first one)
+        setBiteshipAreaId(areaData.areas[0].id);
+      }
+
       setStep('form');
     } catch {
       toast.error('Gagal mengambil detail alamat');
@@ -216,6 +230,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
           city,
           district,
           postal_code: postalCode,
+          biteship_area_id: biteshipAreaId,
           latitude: coords[0],
           longitude: coords[1],
           is_default: isDefault,
