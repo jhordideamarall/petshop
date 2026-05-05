@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
+
+// Inisialisasi admin client secara lazy/aman untuk build
+const getSupabaseAdmin = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createAdminClient(url, key);
+};
 
 const XENDIT_SECRET_KEY = process.env.XENDIT_SECRET_KEY || '';
 const XENDIT_URL = 'https://api.xendit.co/v2/invoices';
@@ -7,20 +16,26 @@ const XENDIT_URL = 'https://api.xendit.co/v2/invoices';
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
+    const supabaseAdmin = getSupabaseAdmin();
+    
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Configuration Error' }, { status: 500 });
+    }
+
     const { orderId } = await req.json();
 
     if (!orderId) {
       return NextResponse.json({ error: 'Order ID required' }, { status: 400 });
     }
 
-    // 0. Cek Auth
+    // 0. Cek Auth (Wajib biar tau siapa yang bayar)
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. Ambil data order dari database
-    const { data: order, error: orderError } = await supabase
+    // 1. Ambil data order dari database (Pakai Admin buat mastiin dapet data lengkap)
+    const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
       .select(`
         *,
@@ -112,7 +127,8 @@ export async function POST(req: Request) {
     }
 
     // 4. Update order dengan Payment ID & Metadata (Opsional)
-    await supabase
+    // 4. Update order dengan Payment ID & Metadata (Pakai Admin!)
+    const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
         payment_id: xenditData.id,
@@ -123,6 +139,11 @@ export async function POST(req: Request) {
         }
       })
       .eq('id', orderId);
+
+    if (updateError) {
+      console.error('Failed to update order with payment_id:', updateError);
+      // Tetap lanjutkan redirect karena invoice sudah terlanjur dibuat di Xendit
+    }
 
     return NextResponse.json({ 
       token: xenditData.id, // Kita tetap sebut token agar frontend tidak perlu banyak berubah
