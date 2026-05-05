@@ -6,7 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { m } from 'framer-motion';
 import { ArrowLeft, MapPin, Package, CreditCard, ChevronRight, Loader2, Truck } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'Menunggu Pembayaran',
@@ -37,6 +37,7 @@ export default function OrderDetailPage() {
   const router = useRouter();
   const params = useParams();
   const orderId = params.id as string;
+  const supabase = createClient();
 
   const { data: order, isLoading } = useQuery({
     queryKey: ['order', orderId],
