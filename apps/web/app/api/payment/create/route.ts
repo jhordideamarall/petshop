@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const authString = Buffer.from(`${XENDIT_SECRET_KEY}:`).toString('base64');
     
     // Rincian barang
-    const items = order.order_items.map((item: any) => ({
+    const items = order.order_items.map((item: { product_name?: string, products?: { name: string }, quantity: number, price: number }) => ({
       name: (item.product_name || item.products?.name || 'Produk').slice(0, 255),
       quantity: item.quantity,
       price: Math.round(Number(item.price)),
@@ -129,8 +129,9 @@ export async function POST(req: Request) {
       invoice_url: xenditData.invoice_url 
     });
 
-  } catch (error: any) {
-    console.error('PAYMENT_CREATE_ERROR:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    const err = error as Error;
+    console.error('PAYMENT_CREATE_ERROR:', err);
+    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
   }
 }

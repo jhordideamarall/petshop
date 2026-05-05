@@ -38,9 +38,13 @@ This file contains foundational mandates for the Pawvels project. These instruct
     - Must remain solid (`opacity: 1`) for the active card, dynamically fading the background cards.
 - Always cross-reference `artifacts/session-progress-report.md` before performing a large file restoration.
 
-### 4. Surgical Integrity & Type Safety
+### 4. Surgical Integrity & Type Safety (STRICT)
 
 - **NO SILENT SIMPLIFICATION**: Do not delete imports or variables just to pass linting without informing the user.
+- **ZERO ANY POLICY**: Use of `any` is strictly **FORBIDDEN**. 
+  - Always define proper interfaces or types.
+  - If a type is truly unknown, use `unknown` and perform type checking.
+  - If a 3rd party library requires a hack, use `as unknown as YourType` with a specific `eslint-disable-next-line` and a comment explaining WHY.
 - If a variable is blocking the build, report it as an insight. Ask if the variable should be implemented properly or removed.
 - Use explicit type casting (e.g., `as CSSProperties`) only when necessary and ensure the type is imported.
 
@@ -107,7 +111,8 @@ This file contains foundational mandates for the Pawvels project. These instruct
 ### 3. Linter & Type Integrity
 
 - **RULE**: Use `import type` for dependencies used strictly as types (e.g., `import type { Transition } from 'framer-motion'`).
-- **RULE**: Minimize `any`. If a dummy object requires it for build safety, use `as unknown as any` with a specific `eslint-disable-next-line` comment to prevent auto-format shifts.
+- **RULE (ZERO ANY)**: The `any` type is strictly **PROHIBITED**. Every variable, parameter, and return value MUST have a concrete type or interface. Using `any` will cause build failures and is considered a violation of the project's core architecture.
+- **RULE**: Minimize the use of `unknown`. If you must use it, ensure proper type guards are implemented.
 
 ### 4. Mandatory Local Build Check
 

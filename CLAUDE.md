@@ -23,6 +23,7 @@ Work efficiently, safely, and without breaking existing behavior.
 - Do not change existing behavior unless explicitly asked
 - Be careful with important logic (pricing, transactions, etc.)
 - If unsure, explain first before making changes
+- **ZERO ANY POLICY**: Use of `any` is strictly **PROHIBITED**. Always use specific types or interfaces. Build failures due to `any` are unacceptable.
 
 ---
 

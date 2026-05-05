@@ -188,7 +188,7 @@ export default function CheckoutPage() {
 
       return { orderId, ...payData };
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: { orderId: string, invoice_url?: string }) => {
       toast.success('Pesanan berhasil dibuat!');
       clearCart();
       

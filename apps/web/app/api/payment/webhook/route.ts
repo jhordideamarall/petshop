@@ -75,7 +75,7 @@ export async function POST(req: Request) {
             courier_company: order.shipping_courier,
             courier_type: order.shipping_service,
             delivery_type: "now",
-            items: order.order_items.map((item: any) => ({
+            items: order.order_items.map((item: { products?: { name?: string, weight_grams?: number }, price: number, quantity: number }) => ({
               name: item.products?.name || "Produk",
               description: "-",
               value: item.price,
@@ -120,8 +120,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('WEBHOOK_ERROR:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const err = error as Error;
+    console.error('WEBHOOK_ERROR:', err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

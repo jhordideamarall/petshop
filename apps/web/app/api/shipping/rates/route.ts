@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Hitung Berat Total (untuk key cache)
-    const totalWeight = items.reduce((sum: number, item: any) => 
+    const totalWeight = items.reduce((sum: number, item: { product?: { weight?: number }, quantity?: number }) => 
       sum + ((item.product?.weight || 1000) * (item.quantity || 1)), 0);
 
     // 3. Ambil Pengaturan Toko (Origin)
@@ -101,11 +101,20 @@ export async function POST(req: NextRequest) {
     }
 
     // 6. Request Ongkir dari Biteship (Hanya jika cache kosong)
-    const biteshipPayload: any = {
+    const biteshipPayload: {
+      origin_area_id: string,
+      destination_area_id: string,
+      couriers: string,
+      items: Array<{ name: string, description: string, value: number, quantity: number, weight: number }>,
+      origin_latitude?: number,
+      origin_longitude?: number,
+      destination_latitude?: number,
+      destination_longitude?: number
+    } = {
       origin_area_id: originAreaId,
       destination_area_id: destinationAreaId,
       couriers: "gojek,grab,jne,lion,sicepat,jnt,idexpress,anteraja,sap,lalamove",
-      items: (items as any[]).map(item => ({
+      items: (items as Array<{ product?: { name?: string, description?: string, price?: number, weight?: number }, quantity?: number }>).map(item => ({
         name: item.product?.name || 'Produk Pawvels',
         description: item.product?.description || item.product?.name || 'Kebutuhan Hewan',
         value: item.product?.price || 0,
@@ -143,7 +152,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Format output untuk UI
-    const results = data.pricing.map((p: any) => ({
+    const results = (data.pricing as Array<{ courier_code: string, courier_service_code: string, courier_name: string, courier_service_name: string, price: number, duration: string }>).map((p) => ({
       id: `${p.courier_code}_${p.courier_service_code}`,
       courier_code: p.courier_code,
       courier_name: p.courier_name,
@@ -168,10 +177,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(results);
 
-  } catch (error: any) {
-    console.error('SHIPPING_RATES_INTERNAL_ERROR:', error);
+  } catch (error) {
+    const err = error as Error;
+    console.error('SHIPPING_RATES_INTERNAL_ERROR:', err);
     return NextResponse.json(
-      { error: 'Internal Server Error', message: error.message },
+      { error: 'Internal Server Error', message: err.message },
       { status: 500 }
     );
   }
