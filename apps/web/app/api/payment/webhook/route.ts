@@ -98,12 +98,12 @@ export async function POST(req: Request) {
           const [courierName, serviceName] = (order.shipping_method || "").split(' - ');
 
           const biteshipPayload = {
-            shipper_contact_name: storeSettings?.store_name || "Pawvels Petshop",
-            shipper_contact_phone: "082281872174", 
+            shipper_contact_name: "Mei",
+            shipper_contact_phone: "08118621313", 
             shipper_contact_email: "hello@pawvels.com",
             shipper_organization: "Pawvels",
-            origin_contact_name: "Pawvels Store",
-            origin_contact_phone: "082281872174",
+            origin_contact_name: "Mei",
+            origin_contact_phone: "08118621313",
             origin_address: storeSettings?.origin_address || "Tangerang",
             origin_note: "",
             origin_postal_code: storeSettings?.origin_postal_code || 15811, 
