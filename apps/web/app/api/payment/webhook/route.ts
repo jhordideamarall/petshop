@@ -80,12 +80,15 @@ export async function POST(req: Request) {
       // 3. KIRIM KE BITESHIP (Hanya jika belum pernah dikirim)
       if (!order.shipping_metadata?.biteship_order_id) {
         try {
+          if (!BITESHIP_API_KEY) {
+            console.error('Biteship Webhook Error: BITESHIP_API_KEY is not defined in environment variables');
+            return NextResponse.json({ success: true, message: 'Biteship API Key missing' });
+          }
+
           const address = order.addresses;
           if (!address) throw new Error('Order address not found');
 
           // Mapping shipping service (e.g., "JNE - Reguler" -> "reg")
-          // This depends on how shipping_method is stored. 
-          // Usually it's "Courier Name - Service Name"
           const [courierName, serviceName] = (order.shipping_method || "").split(' - ');
 
           const biteshipPayload = {
@@ -126,6 +129,7 @@ export async function POST(req: Request) {
             })
           };
 
+          console.log('Attempting Biteship Order Creation for:', order.order_number);
           console.log('Biteship Payload:', JSON.stringify(biteshipPayload, null, 2));
 
           const biteshipRes = await fetch('https://api.biteship.com/v1/orders', {
@@ -154,20 +158,21 @@ export async function POST(req: Request) {
             
             console.log('Biteship Order Created Successfully:', biteshipData.id);
           } else {
-            console.error('Biteship API Error Response:', biteshipData);
+            console.error('Biteship API Error Response for Order', order.order_number, ':', JSON.stringify(biteshipData, null, 2));
             // Save error to metadata for debugging
             await supabaseAdmin
               .from('orders')
               .update({
                 shipping_metadata: {
                   ...order.shipping_metadata,
-                  biteship_error: biteshipData
+                  biteship_error: biteshipData,
+                  last_retry_at: new Date().toISOString()
                 }
               })
               .eq('id', order.id);
           }
         } catch (bsError) {
-          console.error('Failed to call Biteship API:', bsError);
+          console.error('Failed to call Biteship API for Order', order.order_number, ':', bsError);
         }
       }
     }
