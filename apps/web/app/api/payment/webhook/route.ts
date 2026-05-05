@@ -109,7 +109,19 @@ export async function POST(req: Request) {
           const destLng = address.longitude ? Number(address.longitude) : undefined;
 
           // Mapping shipping service (e.g., "JNE - Reguler" -> "reg")
-          const [courierName, serviceName] = (order.shipping_method || '').split(' - ');
+          const shippingMethodStr = order.shipping_method || '';
+          const [courierName, serviceName] = shippingMethodStr.split(' - ');
+
+          // Helper to map UI service names to Biteship codes
+          const mapServiceType = (service: string) => {
+            const s = service.toLowerCase();
+            if (s.includes('reg')) return 'reg';
+            if (s.includes('ins')) return 'instant';
+            if (s.includes('same')) return 'same_day';
+            if (s.includes('exp')) return 'next_day';
+            if (s.includes('eco')) return 'eco';
+            return 'reg'; // Default
+          };
 
           const biteshipPayload = {
             shipper_contact_name: 'Mei',
@@ -137,15 +149,11 @@ export async function POST(req: Request) {
               ? 'biteship'
               : (order.shipping_courier || courierName || '').toLowerCase(),
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? 'standard'
-              : (serviceName || 'reg').toLowerCase(),
-            delivery_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? 'now'
-              : ['grab', 'gojek', 'lalamove'].includes(
-                    (order.shipping_courier || courierName || '').toLowerCase(),
-                  )
-                ? 'now'
-                : 'later',
+              ? shippingMethodStr.toLowerCase().includes('instant')
+                ? 'instant'
+                : 'reg'
+              : mapServiceType(serviceName || 'reg'),
+            delivery_type: 'now',
             origin_collection_method: 'pickup',
             items: ((orderItems || []) as unknown[]).map((item) => {
               const it = item as {
