@@ -2,7 +2,17 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronLeft, MapPin, Package, Loader2, Plus, Truck, ChevronDown, ShieldCheck } from 'lucide-react';
+import {
+  Check,
+  ChevronLeft,
+  MapPin,
+  Package,
+  Loader2,
+  Plus,
+  Truck,
+  ChevronDown,
+  ShieldCheck,
+} from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useCartStore, type CartItem } from '@/stores/cart-store';
@@ -22,7 +32,6 @@ const AddressSheet = dynamic(
 const fmt = (n: number) => n.toLocaleString('id-ID');
 
 const steps = ['Alamat', 'Pengiriman', 'Bayar'];
-
 
 function Thumb({ item, size = 52 }: { item: CartItem; size?: number }) {
   const label = item.name
@@ -134,7 +143,7 @@ export default function CheckoutPage() {
     () => items.reduce((total, item) => total + item.price * item.quantity, 0),
     [items],
   );
-  
+
   const selectedShipping = shippingOptions.find((option) => option.id === shippingId);
   const shippingPrice = selectedShipping ? selectedShipping.price : 0;
   const total = subtotal + shippingPrice;
@@ -171,7 +180,9 @@ export default function CheckoutPage() {
       // Validate all product IDs
       for (const item of payloadItems) {
         if (!validateUUID(item.product_id)) {
-          throw new Error(`Produk "${item.product_name}" memiliki ID tidak valid (${item.product_id}). Mohon gunakan produk asli dari database.`);
+          throw new Error(
+            `Produk "${item.product_name}" memiliki ID tidak valid (${item.product_id}). Mohon gunakan produk asli dari database.`,
+          );
         }
         if (item.variant_id && !validateUUID(item.variant_id)) {
           throw new Error(`Varian produk "${item.product_name}" memiliki ID tidak valid.`);
@@ -195,6 +206,8 @@ export default function CheckoutPage() {
         subtotal,
         shippingCost: selectedShipping.price,
         shippingCourier: selectedShipping.name,
+        shippingCourierCode: selectedShipping.courier_code,
+        shippingServiceCode: selectedShipping.service_code,
         totalWeight,
       });
 
@@ -213,10 +226,10 @@ export default function CheckoutPage() {
 
       return { orderId, ...payData };
     },
-    onSuccess: (data: { orderId: string, invoice_url?: string }) => {
+    onSuccess: (data: { orderId: string; invoice_url?: string }) => {
       toast.success('Pesanan berhasil dibuat!');
       clearCart();
-      
+
       if (data.invoice_url) {
         window.location.href = data.invoice_url;
       } else {
@@ -462,7 +475,9 @@ export default function CheckoutPage() {
                 ) : shippingOptions.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 gap-3 text-stone-500 text-center px-6">
                     <Truck className="h-8 w-8" />
-                    <p className="text-sm">Pilihan pengiriman tidak tersedia. Pastikan Kota & Kecamatan benar.</p>
+                    <p className="text-sm">
+                      Pilihan pengiriman tidak tersedia. Pastikan Kota & Kecamatan benar.
+                    </p>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
@@ -476,8 +491,12 @@ export default function CheckoutPage() {
                           key={code}
                           className="overflow-hidden rounded-[20px] border-2 bg-white transition-all"
                           style={{
-                            borderColor: hasSelected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                            boxShadow: hasSelected ? '0 12px 24px -12px rgba(224, 123, 57, 0.15)' : 'none',
+                            borderColor: hasSelected
+                              ? 'var(--color-orange)'
+                              : 'var(--color-stone-2)',
+                            boxShadow: hasSelected
+                              ? '0 12px 24px -12px rgba(224, 123, 57, 0.15)'
+                              : 'none',
                           }}
                         >
                           {/* Courier Header (Dropdown Trigger) */}
@@ -529,7 +548,9 @@ export default function CheckoutPage() {
                                         className="flex items-center gap-3 rounded-[14px] p-3 text-left transition-colors active:bg-stone-2"
                                         style={{
                                           background: selected ? '#FFFFFF' : 'transparent',
-                                          boxShadow: selected ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
+                                          boxShadow: selected
+                                            ? '0 4px 12px rgba(0,0,0,0.05)'
+                                            : 'none',
                                         }}
                                       >
                                         <div className="min-w-0 flex-1">
@@ -578,9 +599,12 @@ export default function CheckoutPage() {
                       <ShieldCheck size={32} />
                     </div>
                     <div>
-                      <h3 className="font-heading text-[17px] font-extrabold text-ink">Pembayaran Aman</h3>
+                      <h3 className="font-heading text-[17px] font-extrabold text-ink">
+                        Pembayaran Aman
+                      </h3>
                       <p className="mt-2 text-sm font-medium text-ink-3 leading-relaxed">
-                        Anda akan diarahkan ke gerbang pembayaran aman Xendit untuk memilih metode pembayaran (QRIS, VA, atau E-Wallet).
+                        Anda akan diarahkan ke gerbang pembayaran aman Xendit untuk memilih metode
+                        pembayaran (QRIS, VA, atau E-Wallet).
                       </p>
                     </div>
                   </div>

@@ -108,11 +108,11 @@ export async function POST(req: Request) {
           const destLat = address.latitude ? Number(address.latitude) : undefined;
           const destLng = address.longitude ? Number(address.longitude) : undefined;
 
-          // Mapping shipping service (e.g., "JNE - Reguler" -> "reg")
+          // Ambil kode kurir & servis langsung dari DB (Step 4 Fix)
+          // Jika tidak ada (order lama), fallback ke parsing string
           const shippingMethodStr = order.shipping_method || '';
           const [courierName, serviceName] = shippingMethodStr.split(' - ');
 
-          // Helper to map UI service names to Biteship codes
           const mapServiceType = (service: string) => {
             const s = service.toLowerCase();
             if (s.includes('reg')) return 'reg';
@@ -120,8 +120,14 @@ export async function POST(req: Request) {
             if (s.includes('same')) return 'same_day';
             if (s.includes('exp')) return 'next_day';
             if (s.includes('eco')) return 'eco';
-            return 'reg'; // Default
+            return 'reg';
           };
+
+          const finalCourierCode =
+            order.shipping_courier_code ||
+            (order.shipping_courier || courierName || '').toLowerCase();
+          const finalServiceCode =
+            order.shipping_service_code || mapServiceType(serviceName || 'reg');
 
           const biteshipPayload = {
             shipper_contact_name: 'Mei',
@@ -147,10 +153,10 @@ export async function POST(req: Request) {
             destination_longitude: destLng,
             courier_company: BITESHIP_API_KEY.startsWith('biteship_test')
               ? 'biteship'
-              : (order.shipping_courier || courierName || '').toLowerCase(),
+              : finalCourierCode,
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? 'standard' // 'biteship' courier in sandbox ONLY accepts 'standard' or 'express'
-              : mapServiceType(serviceName || 'reg'),
+              ? 'standard'
+              : finalServiceCode,
             delivery_type: 'now',
             origin_collection_method: 'pickup',
             items: ((orderItems || []) as unknown[]).map((item) => {

@@ -30,6 +30,8 @@ export interface CheckoutPayload {
   subtotal: number;
   shippingCost: number;
   shippingCourier: string;
+  shippingCourierCode?: string;
+  shippingServiceCode?: string;
   totalWeight: number;
 }
 
@@ -112,6 +114,8 @@ export async function createOrder(payload: CheckoutPayload) {
     p_subtotal: payload.subtotal,
     p_shipping_cost: payload.shippingCost,
     p_shipping_courier: payload.shippingCourier,
+    p_shipping_courier_code: payload.shippingCourierCode,
+    p_shipping_service_code: payload.shippingServiceCode,
     p_total_weight: payload.totalWeight,
   });
 
