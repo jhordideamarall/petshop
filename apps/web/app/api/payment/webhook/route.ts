@@ -10,11 +10,11 @@ interface ShippingMetadata {
 const getSupabaseAdmin = () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!url || !key) {
     return null;
   }
-  
+
   return createClient(url, key);
 };
 
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
           status: 'paid',
           payment_status: 'paid',
           paid_at: new Date().toISOString(),
-          payment_metadata: body
+          payment_metadata: body,
         })
         .eq('order_number', external_id);
 
@@ -87,62 +87,81 @@ export async function POST(req: Request) {
       if (!order.shipping_metadata?.biteship_order_id) {
         try {
           if (!BITESHIP_API_KEY) {
-            console.error('Biteship Webhook Error: BITESHIP_API_KEY is not defined in environment variables');
+            console.error(
+              'Biteship Webhook Error: BITESHIP_API_KEY is not defined in environment variables',
+            );
             return NextResponse.json({ success: true, message: 'Biteship API Key missing' });
           }
 
           const address = order.addresses;
           if (!address) throw new Error('Order address not found');
 
+          // Koordinat Pengirim (Origin) - Fallback ke Toko Kelapa Dua
+          const originLat = storeSettings?.origin_latitude
+            ? Number(storeSettings.origin_latitude)
+            : -6.2604822;
+          const originLng = storeSettings?.origin_longitude
+            ? Number(storeSettings.origin_longitude)
+            : 106.6296424;
+
+          // Koordinat Penerima (Destination)
+          const destLat = address.latitude ? Number(address.latitude) : undefined;
+          const destLng = address.longitude ? Number(address.longitude) : undefined;
+
           // Mapping shipping service (e.g., "JNE - Reguler" -> "reg")
-          const [courierName, serviceName] = (order.shipping_method || "").split(' - ');
+          const [courierName, serviceName] = (order.shipping_method || '').split(' - ');
 
           const biteshipPayload = {
-            shipper_contact_name: "Mei",
-            shipper_contact_phone: "08118621313", 
-            shipper_contact_email: "hello@pawvels.com",
-            shipper_organization: "Pawvels",
-            origin_contact_name: "Mei",
-            origin_contact_phone: "08118621313",
-            origin_address: storeSettings?.origin_address || "Tangerang",
-            origin_note: "Toko Pawvels",
-            origin_postal_code: storeSettings?.origin_postal_code || 15811, 
+            shipper_contact_name: 'Mei',
+            shipper_contact_phone: '08118621313',
+            shipper_contact_email: 'hello@pawvels.com',
+            shipper_organization: 'Pawvels',
+            origin_contact_name: 'Mei',
+            origin_contact_phone: '08118621313',
+            origin_address: storeSettings?.origin_address || 'Tangerang',
+            origin_note: '',
+            origin_postal_code: storeSettings?.origin_postal_code || 15811,
             origin_area_id: storeSettings?.origin_area_id || BITESHIP_ORIGIN_AREA_ID,
-            destination_contact_name: address.recipient_name || profile?.name || "Customer",
-            destination_contact_phone: address.phone || profile?.phone || "",
-            destination_contact_email: profile?.email || "",
+            origin_latitude: originLat,
+            origin_longitude: originLng,
+            destination_contact_name: address.recipient_name || profile?.name || 'Customer',
+            destination_contact_phone: address.phone || profile?.phone || '',
+            destination_contact_email: profile?.email || '',
             destination_address: address.full_address,
-            destination_note: "",
-            destination_postal_code: parseInt(address.postal_code || "0"),
+            destination_note: '',
+            destination_postal_code: parseInt(address.postal_code || '0'),
             destination_area_id: address.biteship_area_id,
-            courier_company: BITESHIP_API_KEY.startsWith('biteship_test') 
-              ? "biteship" 
-              : (order.shipping_courier || courierName || "").toLowerCase(),
+            destination_latitude: destLat,
+            destination_longitude: destLng,
+            courier_company: BITESHIP_API_KEY.startsWith('biteship_test')
+              ? 'biteship'
+              : (order.shipping_courier || courierName || '').toLowerCase(),
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? "standard"
-              : (serviceName || "reg").toLowerCase(),
+              ? 'standard'
+              : (serviceName || 'reg').toLowerCase(),
             delivery_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? "now"
-              : (["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later"),
-            origin_collection_method: "pickup",
+              ? 'now'
+              : ['grab', 'gojek', 'lalamove'].includes(
+                    (order.shipping_courier || courierName || '').toLowerCase(),
+                  )
+                ? 'now'
+                : 'later',
+            origin_collection_method: 'pickup',
             items: ((orderItems || []) as unknown[]).map((item) => {
-              const it = item as { 
-                products?: { name: string, weight_grams: number }, 
-                product_name?: string, 
-                price: number, 
-                quantity: number 
+              const it = item as {
+                products?: { name: string; weight_grams: number };
+                product_name?: string;
+                price: number;
+                quantity: number;
               };
               return {
-                name: it.products?.name || it.product_name || "Produk",
-                description: "-",
+                name: it.products?.name || it.product_name || 'Produk',
+                description: '-',
                 value: it.price,
                 quantity: it.quantity,
                 weight: Math.max(1, it.products?.weight_grams || 100),
-                height: 10,
-                length: 10,
-                width: 10
               };
-            })
+            }),
           };
 
           console.log('Attempting Biteship Order Creation for:', order.order_number);
@@ -152,13 +171,13 @@ export async function POST(req: Request) {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${BITESHIP_API_KEY}`
+              Authorization: `Bearer ${BITESHIP_API_KEY}`,
             },
-            body: JSON.stringify(biteshipPayload)
+            body: JSON.stringify(biteshipPayload),
           });
 
           const biteshipData = await biteshipRes.json();
-          
+
           if (biteshipRes.ok) {
             await supabaseAdmin
               .from('orders')
@@ -167,14 +186,19 @@ export async function POST(req: Request) {
                   ...(order.shipping_metadata as ShippingMetadata),
                   biteship_order_id: biteshipData.id,
                   courier_tracking_id: biteshipData.courier?.tracking_id,
-                  biteship_status: biteshipData.status
-                }
+                  biteship_status: biteshipData.status,
+                },
               })
               .eq('id', order.id);
-            
+
             console.log('Biteship Order Created Successfully:', biteshipData.id);
           } else {
-            console.error('Biteship API Error Response for Order', order.order_number, ':', JSON.stringify(biteshipData, null, 2));
+            console.error(
+              'Biteship API Error Response for Order',
+              order.order_number,
+              ':',
+              JSON.stringify(biteshipData, null, 2),
+            );
             // Save error to metadata for debugging
             await supabaseAdmin
               .from('orders')
@@ -183,8 +207,8 @@ export async function POST(req: Request) {
                   ...(order.shipping_metadata as ShippingMetadata),
                   biteship_error: biteshipData,
                   last_retry_at: new Date().toISOString(),
-                  debug_last_payload: biteshipPayload
-                }
+                  debug_last_payload: biteshipPayload,
+                },
               })
               .eq('id', order.id);
           }
