@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     let body;
     try {
       body = await req.json();
-    } catch (e) {
+    } catch {
       console.log('Webhook Warning: Received empty or invalid JSON body during ping/validation');
       return NextResponse.json({ success: true, message: 'Ping received' });
     }
