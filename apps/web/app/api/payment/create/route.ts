@@ -83,8 +83,8 @@ export async function POST(req: Request) {
         mobile_number: order.profiles?.phone || '',
       },
       items: items,
-      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order_id=${order.id}`,
-      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/account/orders`,
+      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pawvels.vercel.app'}/checkout/success?order_id=${order.id}`,
+      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pawvels.vercel.app'}/account/orders`,
       currency: 'IDR',
       reminder_time: 1,
     };

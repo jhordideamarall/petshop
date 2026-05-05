@@ -52,7 +52,8 @@ export async function POST(req: Request) {
         .single();
 
       if (orderError || !order) {
-        throw new Error('Order not found for webhook');
+        console.warn(`Webhook received for unknown order: ${external_id}`);
+        return NextResponse.json({ success: true, message: 'Order not found, skipping' });
       }
 
       // 2. Update status di database kita

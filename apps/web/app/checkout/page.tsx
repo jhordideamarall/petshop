@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronLeft, MapPin, Package, WalletCards, Loader2, Plus, Truck, ChevronDown } from 'lucide-react';
+import { Check, ChevronLeft, MapPin, Package, WalletCards, Loader2, Plus, Truck, ChevronDown, ShieldCheck } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useCartStore, type CartItem } from '@/stores/cart-store';
@@ -23,13 +23,6 @@ const fmt = (n: number) => n.toLocaleString('id-ID');
 
 const steps = ['Alamat', 'Pengiriman', 'Bayar'];
 
-const paymentOptions = [
-  { id: 'gopay', name: 'GoPay', type: 'E-Wallet' },
-  { id: 'ovo', name: 'OVO', type: 'E-Wallet' },
-  { id: 'dana', name: 'DANA', type: 'E-Wallet' },
-  { id: 'qris', name: 'QRIS', type: 'QRIS' },
-  { id: 'bca', name: 'Virtual Account BCA', type: 'Transfer Bank' },
-];
 
 function Thumb({ item, size = 52 }: { item: CartItem; size?: number }) {
   const label = item.name
@@ -547,33 +540,18 @@ export default function CheckoutPage() {
                 <h2 className="mb-4 font-heading text-[15px] font-extrabold text-ink">
                   Metode Pembayaran
                 </h2>
-                <div className="flex flex-col gap-3">
-                  {paymentOptions.map((option) => {
-                    const selected = option.id === paymentId;
-                    return (
-                      <button
-                        key={option.id}
-                        onClick={() => setPaymentId(option.id)}
-                        className="flex min-h-[72px] items-center gap-3 rounded-[14px] border bg-white px-4 text-left"
-                        style={{
-                          borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-3)',
-                          background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
-                        }}
-                      >
-                        <WalletCards
-                          size={20}
-                          className={selected ? 'text-primary' : 'text-ink-4'}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-heading text-[14px] font-extrabold text-ink">
-                            {option.name}
-                          </p>
-                          <p className="mt-1 text-sm font-medium text-ink-3">{option.type}</p>
-                        </div>
-                        <RadioMark selected={selected} />
-                      </button>
-                    );
-                  })}
+                <div className="rounded-[22px] bg-white p-6 border-2 border-primary/10 shadow-sm">
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <ShieldCheck size={32} />
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-[17px] font-extrabold text-ink">Pembayaran Aman</h3>
+                      <p className="mt-2 text-sm font-medium text-ink-3 leading-relaxed">
+                        Anda akan diarahkan ke gerbang pembayaran aman Xendit untuk memilih metode pembayaran (QRIS, VA, atau E-Wallet).
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <section className="mt-4 rounded-[18px] bg-white p-4">
