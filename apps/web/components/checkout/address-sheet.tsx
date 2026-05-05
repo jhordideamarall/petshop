@@ -357,13 +357,23 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kode Pos</label>
+                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kecamatan</label>
                   <input
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
                     className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
+                    placeholder="Kecamatan"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kode Pos</label>
+                <input
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
+                />
               </div>
 
               <div className="flex items-center gap-3 py-2">

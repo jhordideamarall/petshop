@@ -1,8 +1,9 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
+
 
 const FONNTE_TOKEN = Deno.env.get('FONNTE_TOKEN');
 
-serve(async (req) => {
+Deno.serve(async (req: Request) => {
   try {
     const payload = await req.json();
 

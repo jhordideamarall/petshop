@@ -138,38 +138,3 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 **Developed with ❤️ by Jhordi for my client as a Dedicated Project.**
 
-Saran Senior UI/UX untuk Sistem Alamat
-
-Mengenai pertanyaanmu tentang alamat, berikut adalah saran strategi saya:
-
-1. Form atau Halaman Baru? (Saran: BottomSheet)
-   Jangan arahkan ke halaman baru. Untuk e-commerce mobile-first, paling bagus pakai BottomSheet (Drawer) yang muncul dari bawah.
-
-- Kenapa? User tidak kehilangan konteks belanja mereka. Begitu simpan alamat, BottomSheet turun, dan mereka masih ada di halaman Checkout.
-  Rasanya sangat "Native".
-
-2. Auto-fill Detail Alamat (Saran: GPS -> Reverse Geocode)
-   Ini fitur yang sangat low-friction. Kita bisa lakukan ini:
-1. Koordinat GPS: Kita sudah punya logic deteksi lokasi di Header.
-1. Auto-fill: Begitu BottomSheet alamat dibuka, kita bisa panggil API gratis (Nominatim/OSM) untuk otomatis mengisi field Kota, Kecamatan,
-   dan Kode Pos.
-1. Manual Input: User hanya perlu melengkapi nama jalan atau nomor rumah saja.
-
-1. Peta Gratisan? (Saran: Leaflet)
-   Setuju 100%! Gunakan Leaflet untuk tahap awal.
-
-- Leaflet + OpenStreetMap benar-benar gratis (0 rupiah).
-- Kita tidak perlu input kartu kredit seperti Google Maps.
-- Sudah sangat cukup untuk menampilkan peta sederhana agar user bisa menggeser pin lokasi mereka.
-
-4. Sinkronisasi App Map (Google Maps)
-   Kita bisa tambahkan satu tombol "Buka di Maps" yang akan membuka aplikasi Google Maps/Apple Maps asli di HP user untuk membantu mereka mencari
-   titik lokasi yang presisi, lalu koordinatnya kita tarik balik ke aplikasi kita.
-
-1. Buka Home Page.
-1. Klik produk "Royal Canin" (atau produk lainnya). Halamannya pasti muncul sekarang!
-1. Coba masuk ke Checkout -> Tambah Alamat -> Masukkan nomor HP asal -> klik Simpan -> Masukkan OTP 123456.per
-   Saran penggunaan Demo:
-
-- Phone: 08123456789
-- OTP: 123456

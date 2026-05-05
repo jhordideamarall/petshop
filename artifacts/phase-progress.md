@@ -14,7 +14,7 @@
 | Phase 2           | Design System & App Shell       | ✅ Selesai        |
 | Phase 3           | Authentication                  | 🔲 Belum dimulai  | [next work 3] |
 | Phase 4           | Core E-Commerce (Browse & Cart) | ✅ Selesai        |
-| Phase 5           | Checkout & Payment              | ✅ Selesai        |
+| Phase 5           | Checkout & Payment              | 🔧 In Progress    | [Current: Biteship & Caching] |
 | Phase 6           | Order Management & Admin        | 🔲 Belum dimulai  | [next work4]  |
 | Phase 7           | Booking System                  | 🔲 Belum dimulai  | [next work]   |
 | Phase 8           | Pet Profile & Loyalty           | 🔧 UI In Progress |               |
@@ -215,12 +215,14 @@
    - Apply voucher
 
 2. **Payment integration**:
-   - Midtrans Snap.js untuk credit card / virtual account / QRIS
-   - Webhook handler di API route untuk update `orders.payment_status`
+   - Midtrans Snap.js untuk credit card / virtual account / QRIS (Sudah siap secara logic)
+   - Webhook handler di API route untuk update `orders.payment_status` (Pending)
 
-3. **Shipping**:
-   - RajaOngkir API wrapper
-   - Ongkir calculation per kurir (JNE/J&T/SiCepat)
+3. **Shipping (Biteship Integration)**:
+   - ✅ Biteship API Integration (Rates & Maps)
+   - ✅ **Shipping Rates Caching System**: Hemat biaya Rp 5/request dengan cache 24 jam di DB.
+   - ✅ **Store Settings Table**: Lokasi asal toko (Kelapa Dua) kini dinamis di database.
+   - ⚠️ **BLOCKER**: Menunggu Top-up Saldo Biteship untuk aktivasi Rates API.
 
 4. **Order creation**:
    - `POST /api/orders` → insert ke `orders` + `order_items`, clear cart, trigger notif

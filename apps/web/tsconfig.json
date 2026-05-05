@@ -13,7 +13,8 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["./*"],
-      "@petshop/ui/*": ["../../packages/ui/src/*"]
+      "@petshop/ui/*": ["../../packages/ui/src/*"],
+      "@petshop/utils/*": ["../../packages/utils/src/*"]
     },
     "isolatedModules": true
   },

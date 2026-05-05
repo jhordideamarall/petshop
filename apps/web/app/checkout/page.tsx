@@ -2,14 +2,16 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronLeft, MapPin, Package, WalletCards } from 'lucide-react';
+import { Check, ChevronLeft, MapPin, Package, WalletCards, Loader2, Plus, Truck, ChevronDown } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useCartStore, type CartItem } from '@/stores/cart-store';
 import { useAuth } from '@/components/providers/auth-provider';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { getUserAddresses, type Address } from '@/lib/services/address-client';
-import { Loader2, Plus } from 'lucide-react';
+import { createOrder } from '@/lib/services/order-client';
+import { getShippingRates, type ShippingOption } from '@/lib/services/shipping-client';
+import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
 
 const AddressSheet = dynamic(
@@ -20,17 +22,6 @@ const AddressSheet = dynamic(
 const fmt = (n: number) => n.toLocaleString('id-ID');
 
 const steps = ['Alamat', 'Pengiriman', 'Bayar'];
-
-const shippingOptions = [
-  { id: 'jne', name: 'JNE Reguler', eta: 'Estimasi 2-4 hari', price: 15000 },
-  { id: 'jnt', name: 'JNT Express', eta: 'Estimasi 1-3 hari', price: 12000 },
-  {
-    id: 'same-day',
-    name: 'Same Day Delivery',
-    eta: 'Estimasi < 3 jam (sebelum 14:00)',
-    price: 28000,
-  },
-];
 
 const paymentOptions = [
   { id: 'gopay', name: 'GoPay', type: 'E-Wallet' },
@@ -86,9 +77,10 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState(1);
-  const [shippingId, setShippingId] = useState('jnt');
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [shippingId, setShippingId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState('gopay');
-  const [submitting, setSubmitting] = useState(false);
+  const [expandedCourier, setExpandedCourier] = useState<string | null>(null);
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
 
@@ -104,7 +96,32 @@ export default function CheckoutPage() {
     enabled: !!user,
   });
 
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const count = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
+
+  const { data: shippingOptions = [], isLoading: isLoadingShipping } = useQuery({
+    queryKey: ['shipping-rates', selectedAddressId, count],
+    queryFn: () => (selectedAddressId ? getShippingRates(selectedAddressId, items) : []),
+    enabled: !!selectedAddressId && items.length > 0 && step >= 2,
+    staleTime: 1000 * 60 * 5, // 5 menit
+  });
+
+  const groupedOptions = useMemo(() => {
+    const groups: Record<string, ShippingOption[]> = {};
+    shippingOptions.forEach((opt) => {
+      if (!groups[opt.courier_code]) groups[opt.courier_code] = [];
+      groups[opt.courier_code].push(opt);
+    });
+    return groups;
+  }, [shippingOptions]);
+
+  useEffect(() => {
+    if (shippingOptions.length > 0 && !shippingId) {
+      setShippingId(shippingOptions[0].id);
+      // Auto expand the first one if selected
+      setExpandedCourier(shippingOptions[0].courier_code);
+    }
+  }, [shippingOptions, shippingId]);
+
   const [guestAddress, setGuestAddress] = useState<Partial<Address> | null>(null);
   const [isAddressSheetOpen, setIsAddressSheetOpen] = useState(false);
 
@@ -125,11 +142,67 @@ export default function CheckoutPage() {
     () => items.reduce((total, item) => total + item.price * item.quantity, 0),
     [items],
   );
-  const count = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
-  const selectedShipping =
-    shippingOptions.find((option) => option.id === shippingId) ?? shippingOptions[0];
-  const shippingPrice = step >= 2 ? selectedShipping.price : 0;
+  
+  const selectedShipping = shippingOptions.find((option) => option.id === shippingId);
+  const shippingPrice = selectedShipping ? selectedShipping.price : 0;
   const total = subtotal + shippingPrice;
+
+  const { mutate: handleCheckout, isPending: submitting } = useMutation({
+    mutationFn: async () => {
+      if (!activeAddress || !selectedAddressId || !selectedShipping) throw new Error('Pilih alamat dan pengiriman');
+
+      const totalWeight = items.reduce(
+        (sum, item) => sum + (item.weight || 500) * item.quantity,
+        0,
+      );
+
+      const orderId = await createOrder({
+        addressId: selectedAddressId,
+        items: items.map((item) => ({
+          product_id: String(item.id),
+          variant_id: item.variantId || null,
+          quantity: item.quantity,
+          price: item.price,
+          product_name: item.name,
+          variant_name: item.variantName || null,
+        })),
+        total,
+        subtotal,
+        shippingCost: selectedShipping.price,
+        shippingCourier: selectedShipping.name,
+        totalWeight,
+      });
+
+      // Panggil API untuk membuat transaksi Midtrans
+      const payRes = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const payData = await payRes.json();
+      if (!payRes.ok) {
+        console.error('PAYMENT_INIT_ERROR:', payData);
+        throw new Error(payData.error || 'Gagal menyiapkan pembayaran');
+      }
+
+      return { orderId, ...payData };
+    },
+    onSuccess: (data: any) => {
+      toast.success('Pesanan berhasil dibuat!');
+      clearCart();
+      
+      if (data.invoice_url) {
+        window.location.href = data.invoice_url;
+      } else {
+        router.push('/checkout/success');
+      }
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Gagal membuat pesanan');
+    },
+  });
+
   const hasItems = hydrated && (items.length > 0 || submitting);
 
   const goBack = () => {
@@ -151,9 +224,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    setSubmitting(true);
-    clearCart();
-    router.push('/checkout/success');
+    handleCheckout();
   };
 
   return (
@@ -357,33 +428,111 @@ export default function CheckoutPage() {
                 <h2 className="mb-4 font-heading text-[15px] font-extrabold text-ink">
                   Pilih Metode Pengiriman
                 </h2>
-                <div className="flex flex-col gap-3">
-                  {shippingOptions.map((option) => {
-                    const selected = option.id === shippingId;
-                    return (
-                      <button
-                        key={option.id}
-                        onClick={() => setShippingId(option.id)}
-                        className="flex min-h-[76px] items-center gap-3 rounded-[14px] border bg-white px-4 text-left"
-                        style={{
-                          borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-3)',
-                          background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
-                        }}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="font-heading text-[14px] font-extrabold text-ink">
-                            {option.name}
-                          </p>
-                          <p className="mt-1 text-sm font-medium text-ink-3">{option.eta}</p>
+
+                {isLoadingShipping ? (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3 text-stone-500">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <p className="text-sm">Mencari pilihan pengiriman...</p>
+                  </div>
+                ) : shippingOptions.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3 text-stone-500 text-center px-6">
+                    <Truck className="h-8 w-8" />
+                    <p className="text-sm">Pilihan pengiriman tidak tersedia. Pastikan Kota & Kecamatan benar.</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {Object.entries(groupedOptions).map(([code, options]) => {
+                      const isExpanded = expandedCourier === code;
+                      const hasSelected = options.some((o) => o.id === shippingId);
+                      const selectedOption = options.find((o) => o.id === shippingId);
+
+                      return (
+                        <div
+                          key={code}
+                          className="overflow-hidden rounded-[20px] border-2 bg-white transition-all"
+                          style={{
+                            borderColor: hasSelected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                            boxShadow: hasSelected ? '0 12px 24px -12px rgba(224, 123, 57, 0.15)' : 'none',
+                          }}
+                        >
+                          {/* Courier Header (Dropdown Trigger) */}
+                          <button
+                            onClick={() => setExpandedCourier(isExpanded ? null : code)}
+                            className="flex w-full items-center gap-3 p-5 text-left"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="font-heading text-[16px] font-extrabold text-ink leading-tight">
+                                {options[0].courier_name}
+                              </p>
+                              {hasSelected && !isExpanded && selectedOption && (
+                                <p className="mt-1 text-[13px] font-bold text-primary">
+                                  {selectedOption.service_name} · Rp {fmt(selectedOption.price)}
+                                </p>
+                              )}
+                              {(!hasSelected || isExpanded) && (
+                                <p className="mt-1 text-[13px] font-bold text-ink-4">
+                                  {options.length} Pilihan Layanan
+                                </p>
+                              )}
+                            </div>
+
+                            <div
+                              className="flex h-9 w-9 items-center justify-center rounded-full bg-stone transition-transform"
+                              style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                            >
+                              <ChevronDown size={20} className="text-ink-4" />
+                            </div>
+                          </button>
+
+                          {/* Expanded Services List */}
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <m.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="border-t border-stone-2 bg-stone/30"
+                              >
+                                <div className="flex flex-col p-2">
+                                  {options.map((option) => {
+                                    const selected = option.id === shippingId;
+                                    return (
+                                      <button
+                                        key={option.id}
+                                        onClick={() => setShippingId(option.id)}
+                                        className="flex items-center gap-3 rounded-[14px] p-3 text-left transition-colors active:bg-stone-2"
+                                        style={{
+                                          background: selected ? '#FFFFFF' : 'transparent',
+                                          boxShadow: selected ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
+                                        }}
+                                      >
+                                        <div className="min-w-0 flex-1">
+                                          <p className="font-heading text-[13px] font-extrabold text-ink">
+                                            {option.service_name}
+                                          </p>
+                                          <p className="mt-0.5 text-[11px] font-bold text-ink-4">
+                                            Estimasi {option.etd}
+                                          </p>
+                                        </div>
+                                        <div className="text-right">
+                                          <p className="font-heading text-[14px] font-extrabold text-primary">
+                                            Rp {fmt(option.price)}
+                                          </p>
+                                        </div>
+                                        <RadioMark selected={selected} />
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </m.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                        <p className="font-heading text-[15px] font-extrabold text-primary">
-                          Rp {fmt(option.price)}
-                        </p>
-                        <RadioMark selected={selected} />
-                      </button>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                )}
               </m.div>
             )}
 
@@ -435,12 +584,14 @@ export default function CheckoutPage() {
                     <span>Subtotal</span>
                     <span className="font-heading font-extrabold text-ink">Rp {fmt(subtotal)}</span>
                   </div>
-                  <div className="mt-4 flex justify-between text-sm text-ink-3">
-                    <span>Ongkir</span>
-                    <span className="font-heading font-extrabold text-ink">
-                      Rp {fmt(selectedShipping.price)}
-                    </span>
-                  </div>
+                  {selectedShipping && (
+                    <div className="mt-4 flex justify-between text-sm text-ink-3">
+                      <span>Ongkir</span>
+                      <span className="font-heading font-extrabold text-ink">
+                        Rp {fmt(selectedShipping.price)}
+                      </span>
+                    </div>
+                  )}
                   <div className="my-4 h-px bg-stone-2" />
                   <div className="flex justify-between">
                     <span className="font-heading text-[14px] font-extrabold text-ink">Total</span>

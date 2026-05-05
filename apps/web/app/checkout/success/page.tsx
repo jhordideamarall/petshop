@@ -17,7 +17,17 @@ const CheckIcon = () => (
   </svg>
 );
 
+import { useEffect } from 'react';
+import { useCartStore } from '@/stores/cart-store';
+
 export default function CheckoutSuccessPage() {
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  useEffect(() => {
+    // Double-ensure cart is empty when arriving at success page
+    clearCart();
+  }, [clearCart]);
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-white px-8 py-20 text-center">
       <m.div

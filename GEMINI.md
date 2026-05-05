@@ -13,6 +13,7 @@ This file contains foundational mandates for the Pawvels project. These instruct
 ### 2. Mandatory Context Gathering
 
 - **ALWAYS** read `prd.md` and `ARCHITECTURE.md` at the start of a session to understand the project's goal.
+- **ALWAYS** read the `claudeplan/` folder (for the long-term roadmap).
 - **ALWAYS** check the `artifacts/` folder (especially `phase-progress.md` and recent session reports) to understand historical context, audit reports, and past architectural decisions.
 - **MANDATORY EXECUTION ARTIFACT (AUDIT TRAIL)**: After completing ANY task that modifies the codebase, you **MUST** create or update a detailed report in the `artifacts/` folder. This is not optional. The report must include:
   - **Context**: Summary of the task and its objective.
@@ -74,6 +75,21 @@ This file contains foundational mandates for the Pawvels project. These instruct
 - Frontend: Next.js 15 (App Router).
 - Styling: Tailwind CSS v4 + Framer Motion.
 - State: Zustand with local persistence for Cart.
+
+## 🛡️ Monorepo Integrity Mandates (STRICT)
+
+### 1. Zero-Leakage Policy
+- **CORE LOGIC**: Kalkulasi (Ongkir, Diskon, Poin), Validasi Bisnis, dan Algoritma **DILARANG** berada di `apps/`. Wajib ditaruh di `packages/core`.
+- **API CLIENTS**: Semua panggil Supabase RPC atau 3rd Party API (Midtrans, Biteship) wajib dibungkus dalam `@petshop/api-client`. Jangan panggil langsung di dalam Page/Component.
+- **UI PRIMITIVES**: Komponen murni UI (Button, Card, Badge, PriceTag) wajib berada di `packages/ui`. `apps/web` hanya berisi komponen koordinasi (Layout, Page-Specific Blocks).
+
+### 2. Service Portability
+- **RULE**: Jangan mengimpor `createClient` dari `@/lib/supabase/server` atau `client` langsung ke dalam logic yang bersifat reusable. 
+- **ACTION**: Logic harus menerima `supabaseClient` sebagai parameter atau menggunakan abstraksi dari `@petshop/api-client`. Ini agar Mobile (React Native) bisa memakai logic yang sama.
+
+### 3. State Management reusability
+- **RULE**: Shared state (Cart, User, Settings) wajib berada di `packages/store`.
+- **RATIONALE**: Agar keranjang belanja dan preferensi user sinkron antara aplikasi Web dan Mobile.
 
 ## 🚀 CI/CD & Build Safety Mandates (NEW)
 
