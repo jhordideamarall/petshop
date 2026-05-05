@@ -109,6 +109,13 @@ export async function POST(req: Request) {
 
     const customerEmail = profile?.email || user.email || 'customer@pawvels.com';
 
+    // Tentukan Base URL secara dinamis agar tidak nyasar ke localhost di Vercel
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const dynamicBaseUrl = host ? `${protocol}://${host}` : (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
+    
+    console.log('Detected Base URL for Redirect:', dynamicBaseUrl);
+
     const xenditPayload = {
       external_id: order.order_number,
       amount: Math.round(Number(order.total)),
@@ -120,8 +127,8 @@ export async function POST(req: Request) {
         mobile_number: profile?.phone || '',
       },
       items: items,
-      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout/success?order_id=${order.id}`,
-      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/account/orders`,
+      success_redirect_url: `${dynamicBaseUrl}/checkout/success?order_id=${order.id}`,
+      failure_redirect_url: `${dynamicBaseUrl}/account/orders`,
       currency: 'IDR',
       reminder_time: 1,
     };

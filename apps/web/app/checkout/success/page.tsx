@@ -17,14 +17,17 @@ const CheckIcon = () => (
   </svg>
 );
 
-import { useEffect } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useCartStore } from '@/stores/cart-store';
 
-export default function CheckoutSuccessPage() {
+export default function CheckoutSuccessPage(props: { searchParams: Promise<{ order_id?: string }> }) {
+  const searchParams = use(props.searchParams);
+  const orderId = searchParams.order_id;
   const clearCart = useCartStore((state) => state.clearCart);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Double-ensure cart is empty when arriving at success page
+    setMounted(true);
     clearCart();
   }, [clearCart]);
 
@@ -67,7 +70,7 @@ export default function CheckoutSuccessPage() {
           Nomor Pesanan
         </p>
         <p className="font-heading text-lg font-extrabold tracking-tighter text-ink">
-          PAW-{Date.now().toString().slice(-8).toUpperCase()}
+          {mounted ? (orderId ? `PAW-${orderId.slice(-8).toUpperCase()}` : 'PAW-SUCCESS') : '...'}
         </p>
       </m.div>
 
