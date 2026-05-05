@@ -115,7 +115,9 @@ export async function POST(req: Request) {
             courier_type: BITESHIP_API_KEY.startsWith('biteship_test_')
               ? "standard"
               : (serviceName || "reg").toLowerCase(),
-            delivery_type: ["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later",
+            delivery_type: BITESHIP_API_KEY.startsWith('biteship_test_')
+              ? "now"
+              : (["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later"),
             pickup_date: new Date().toISOString().split('T')[0],
             pickup_time: "12:00", 
             items: ((orderItems || []) as unknown[]).map((item) => {
@@ -130,7 +132,7 @@ export async function POST(req: Request) {
                 description: "-",
                 value: it.price,
                 quantity: it.quantity,
-                weight: it.products?.weight_grams || 100
+                weight: Math.max(1, it.products?.weight_grams || 100)
               };
             })
           };
