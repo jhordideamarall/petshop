@@ -129,8 +129,6 @@ export async function POST(req: Request) {
               ? "now"
               : (["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later"),
             origin_collection_method: "pickup",
-            pickup_date: new Date().toISOString().split('T')[0],
-            pickup_time: "12:00", 
             items: ((orderItems || []) as unknown[]).map((item) => {
               const it = item as { 
                 products?: { name: string, weight_grams: number }, 
