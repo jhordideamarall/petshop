@@ -117,6 +117,8 @@ export async function POST(req: Request) {
             destination_note: "",
             destination_postal_code: parseInt(address.postal_code || "0"),
             destination_area_id: address.biteship_area_id,
+            destination_latitude: address.latitude ? Number(address.latitude) : undefined,
+            destination_longitude: address.longitude ? Number(address.longitude) : undefined,
             courier_company: BITESHIP_API_KEY.startsWith('biteship_test') 
               ? "biteship" 
               : (order.shipping_courier || courierName || "").toLowerCase(),
