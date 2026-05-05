@@ -109,11 +109,15 @@ export async function POST(req: Request) {
             destination_note: "",
             destination_postal_code: parseInt(address.postal_code || "0"),
             destination_area_id: address.biteship_area_id,
-            courier_company: (order.shipping_courier || courierName || "").toLowerCase(),
-            courier_type: (serviceName || "reg").toLowerCase(),
+            courier_company: BITESHIP_API_KEY.startsWith('biteship_test_') 
+              ? "biteship" 
+              : (order.shipping_courier || courierName || "").toLowerCase(),
+            courier_type: BITESHIP_API_KEY.startsWith('biteship_test_')
+              ? "standard"
+              : (serviceName || "reg").toLowerCase(),
             delivery_type: ["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later",
-            delivery_date: new Date().toISOString().split('T')[0], // Today
-            delivery_time: "10:00", // Standard pickup window
+            pickup_date: new Date().toISOString().split('T')[0],
+            pickup_time: "12:00", 
             items: ((orderItems || []) as unknown[]).map((item) => {
               const it = item as { 
                 products?: { name: string, weight_grams: number }, 
