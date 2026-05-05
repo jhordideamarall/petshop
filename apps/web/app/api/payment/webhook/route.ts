@@ -115,13 +115,13 @@ export async function POST(req: Request) {
             destination_note: "",
             destination_postal_code: parseInt(address.postal_code || "0"),
             destination_area_id: address.biteship_area_id,
-            courier_company: BITESHIP_API_KEY.startsWith('biteship_test_') 
+            courier_company: BITESHIP_API_KEY.startsWith('biteship_test') 
               ? "biteship" 
               : (order.shipping_courier || courierName || "").toLowerCase(),
-            courier_type: BITESHIP_API_KEY.startsWith('biteship_test_')
+            courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
               ? "standard"
               : (serviceName || "reg").toLowerCase(),
-            delivery_type: BITESHIP_API_KEY.startsWith('biteship_test_')
+            delivery_type: BITESHIP_API_KEY.startsWith('biteship_test')
               ? "now"
               : (["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later"),
             pickup_date: new Date().toISOString().split('T')[0],
