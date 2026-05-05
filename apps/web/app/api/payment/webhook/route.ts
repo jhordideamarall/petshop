@@ -1,16 +1,29 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+// Inisialisasi admin client secara lazy/aman untuk build
+const getSupabaseAdmin = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    return null;
+  }
+  
+  return createClient(url, key);
+};
 
 const XENDIT_CALLBACK_TOKEN = process.env.XENDIT_CALLBACK_TOKEN || '';
 const BITESHIP_API_KEY = process.env.BITESHIP_API_KEY || '';
 
 export async function POST(req: Request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
+    if (!supabaseAdmin) {
+      console.error('Supabase Admin Client not initialized - Missing Keys');
+      return NextResponse.json({ error: 'Configuration Error' }, { status: 500 });
+    }
+
     const body = await req.json();
     const headers = req.headers;
     const callbackToken = headers.get('x-callback-token');
@@ -58,14 +71,14 @@ export async function POST(req: Request) {
         try {
           const biteshipPayload = {
             shipper_contact_name: "Pawvels Petshop",
-            shipper_contact_phone: "08123456789", // Ganti dengan no telp toko Anda
+            shipper_contact_phone: "08123456789", 
             shipper_contact_email: "hello@pawvels.com",
             shipper_organization: "Pawvels",
             origin_contact_name: "Pawvels Admin",
             origin_contact_phone: "08123456789",
-            origin_address: "Jl. Petshop No. 1, Jakarta", // Ganti dengan alamat pickup Anda
+            origin_address: "Jl. Petshop No. 1, Jakarta", 
             origin_note: "Dekat warung kopi",
-            origin_postal_code: 12345, // Ganti dengan kode pos origin
+            origin_postal_code: 12345, 
             destination_contact_name: order.profiles?.name || "Customer",
             destination_contact_phone: order.profiles?.phone || "",
             destination_contact_email: order.profiles?.email || "",
@@ -96,7 +109,6 @@ export async function POST(req: Request) {
           const biteshipData = await biteshipRes.json();
           
           if (biteshipRes.ok) {
-            // Simpan ID pesanan Biteship ke database kita
             await supabaseAdmin
               .from('orders')
               .update({
