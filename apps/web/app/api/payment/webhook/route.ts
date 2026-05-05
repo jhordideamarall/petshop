@@ -151,12 +151,8 @@ export async function POST(req: Request) {
             destination_area_id: address.biteship_area_id,
             destination_latitude: destLat,
             destination_longitude: destLng,
-            courier_company: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? 'biteship'
-              : finalCourierCode,
-            courier_type: BITESHIP_API_KEY.startsWith('biteship_test')
-              ? 'standard'
-              : finalServiceCode,
+            courier_company: finalCourierCode,
+            courier_type: finalServiceCode,
             delivery_type: 'now',
             origin_collection_method: 'pickup',
             items: ((orderItems || []) as unknown[]).map((item) => {
