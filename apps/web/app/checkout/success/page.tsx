@@ -19,17 +19,34 @@ const CheckIcon = () => (
 
 import { useEffect, useState, use } from 'react';
 import { useCartStore } from '@/stores/cart-store';
+import { createClient } from '@/lib/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 export default function CheckoutSuccessPage(props: { searchParams: Promise<{ order_id?: string }> }) {
   const searchParams = use(props.searchParams);
   const orderId = searchParams.order_id;
   const clearCart = useCartStore((state) => state.clearCart);
   const [mounted, setMounted] = useState(false);
+  const supabase = createClient();
 
   useEffect(() => {
     setMounted(true);
     clearCart();
   }, [clearCart]);
+
+  const { data: order } = useQuery({
+    queryKey: ['order-success', orderId],
+    queryFn: async () => {
+      if (!orderId) return null;
+      const { data } = await supabase
+        .from('orders')
+        .select('order_number')
+        .eq('id', orderId)
+        .single();
+      return data;
+    },
+    enabled: !!orderId
+  });
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-white px-8 py-20 text-center">
@@ -70,7 +87,7 @@ export default function CheckoutSuccessPage(props: { searchParams: Promise<{ ord
           Nomor Pesanan
         </p>
         <p className="font-heading text-lg font-extrabold tracking-tighter text-ink">
-          {mounted ? (orderId ? `PAW-${orderId.slice(-8).toUpperCase()}` : 'PAW-SUCCESS') : '...'}
+          {mounted ? (order?.order_number || '...') : '...'}
         </p>
       </m.div>
 
