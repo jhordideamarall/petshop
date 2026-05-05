@@ -161,7 +161,7 @@ export async function POST(req: Request) {
               .from('orders')
               .update({
                 shipping_metadata: {
-                  ...order.shipping_metadata,
+                  ...(order.shipping_metadata as ShippingMetadata),
                   biteship_order_id: biteshipData.id,
                   courier_tracking_id: biteshipData.courier?.tracking_id,
                   biteship_status: biteshipData.status
