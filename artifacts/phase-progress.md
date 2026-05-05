@@ -224,8 +224,11 @@
    - ✅ **Store Settings Table**: Lokasi asal toko (Kelapa Dua) kini dinamis di database.
    - ⚠️ **BLOCKER**: Menunggu Top-up Saldo Biteship untuk aktivasi Rates API.
 
-4. **Order creation**:
-   - `POST /api/orders` → insert ke `orders` + `order_items`, clear cart, trigger notif
+4. **Order creation & Payment Initialization**:
+   - ✅ **FIXED**: Bug `authString` undefined di `/api/payment/create` (Xendit flow).
+   - ✅ **FIXED**: Bug `22P02` (UUID mismatch) pada `create_order_v1` RPC.
+   - ✅ **STABLE**: Aliran pembuatan order -> invoice Xendit sudah terverifikasi.
+   - ✅ **Validation**: Penambahan proteksi UUID di `CheckoutPage` untuk cegah data dummy.
 
 5. **Checkout success** (`app/checkout/success/page.tsx`):
    - Order confirmation, nomor order, estimasi kirim

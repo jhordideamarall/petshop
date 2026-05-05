@@ -22,6 +22,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Configuration Error' }, { status: 500 });
     }
 
+    // DEFINISIKAN DI PALING ATAS BIAR AMAN DARI SCOPE
+    const authString = Buffer.from(`${XENDIT_SECRET_KEY}:`).toString('base64');
+
     const { orderId } = await req.json();
 
     if (!orderId) {
@@ -34,34 +37,54 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. Ambil data order dari database (Pakai Admin buat mastiin dapet data lengkap)
+    // 1. Ambil data order dasar
     const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
-      .select(`
-        *,
-        order_items (
-          *,
-          products (name)
-        ),
-        profiles (
-          name,
-          email,
-          phone
-        )
-      `)
+      .select('*')
       .eq('id', orderId)
       .single();
 
-    if (orderError || !order) {
+    if (orderError) {
+      console.error('ORDER_FETCH_ERROR:', orderError);
+      return NextResponse.json({ 
+        error: 'Database Error', 
+        message: orderError.message 
+      }, { status: 500 });
+    }
+
+    if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // 2. Siapkan payload untuk Xendit
-    const authString = Buffer.from(`${XENDIT_SECRET_KEY}:`).toString('base64');
-    
-    // Rincian barang
-    const items = order.order_items.map((item: { product_name?: string, products?: { name: string }, quantity: number, price: number }) => ({
-      name: (item.product_name || item.products?.name || 'Produk').slice(0, 255),
+    // 2. Ambil data profil user secara terpisah
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('email, name, phone')
+      .eq('id', order.user_id)
+      .single();
+
+    // 3. Ambil data item pesanan secara terpisah
+    const { data: orderItems } = await supabaseAdmin
+      .from('order_items')
+      .select('*, products(name, weight_grams)')
+      .eq('order_id', order.id);
+
+    if (!orderItems || orderItems.length === 0) {
+      return NextResponse.json({ error: 'Order items not found' }, { status: 400 });
+    }
+
+    interface OrderItemWithProduct {
+      product_name?: string;
+      quantity: number;
+      price: number;
+      products?: {
+        name: string;
+        weight_grams: number;
+      } | null;
+    }
+
+    const items = (orderItems as unknown as OrderItemWithProduct[]).map((item) => ({
+      name: (item.products?.name || item.product_name || 'Produk').slice(0, 255),
       quantity: item.quantity,
       price: Math.round(Number(item.price)),
     }));
@@ -75,8 +98,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // Tambah Diskon (Xendit Invoice butuh harga positif, nanti dikurangi di total? 
-    // Tidak, Xendit Invoice v2 items price can be negative for discounts)
+    // Tambah Diskon
     if (order.discount && Number(order.discount) > 0) {
       items.push({
         name: 'Diskon',
@@ -85,7 +107,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const customerEmail = order.profiles?.email || user.email || 'customer@pawvels.com';
+    const customerEmail = profile?.email || user.email || 'customer@pawvels.com';
 
     const xenditPayload = {
       external_id: order.order_number,
@@ -93,13 +115,13 @@ export async function POST(req: Request) {
       payer_email: customerEmail,
       description: `Pembayaran Pesanan ${order.order_number} - Pawvels`,
       customer: {
-        given_names: order.profiles?.name || user.email?.split('@')[0] || 'Customer',
+        given_names: profile?.name || user.email?.split('@')[0] || 'Customer',
         email: customerEmail,
-        mobile_number: order.profiles?.phone || '',
+        mobile_number: profile?.phone || '',
       },
       items: items,
-      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pawvels.vercel.app'}/checkout/success?order_id=${order.id}`,
-      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pawvels.vercel.app'}/account/orders`,
+      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout/success?order_id=${order.id}`,
+      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/account/orders`,
       currency: 'IDR',
       reminder_time: 1,
     };
@@ -126,7 +148,6 @@ export async function POST(req: Request) {
       }, { status: response.status });
     }
 
-    // 4. Update order dengan Payment ID & Metadata (Opsional)
     // 4. Update order dengan Payment ID & Metadata (Pakai Admin!)
     const { error: updateError } = await supabaseAdmin
       .from('orders')
@@ -142,11 +163,10 @@ export async function POST(req: Request) {
 
     if (updateError) {
       console.error('Failed to update order with payment_id:', updateError);
-      // Tetap lanjutkan redirect karena invoice sudah terlanjur dibuat di Xendit
     }
 
     return NextResponse.json({ 
-      token: xenditData.id, // Kita tetap sebut token agar frontend tidak perlu banyak berubah
+      token: xenditData.id,
       invoice_url: xenditData.invoice_url 
     });
 

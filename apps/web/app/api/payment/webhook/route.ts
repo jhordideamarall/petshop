@@ -37,17 +37,10 @@ export async function POST(req: Request) {
     const { external_id, status } = body;
 
     if (status === 'PAID' || status === 'SETTLED') {
-      // 1. Ambil data order lengkap untuk Biteship
+      // 1. Ambil data order dasar
       const { data: order, error: orderError } = await supabaseAdmin
         .from('orders')
-        .select(`
-          *,
-          order_items (
-            *,
-            products (name, weight_grams)
-          ),
-          profiles (*)
-        `)
+        .select('*, addresses(*)')
         .eq('order_number', external_id)
         .single();
 
@@ -55,6 +48,23 @@ export async function POST(req: Request) {
         console.warn(`Webhook received for unknown order: ${external_id}`);
         return NextResponse.json({ success: true, message: 'Order not found, skipping' });
       }
+
+      // 1b. Ambil data profil, items, dan store settings
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('*')
+        .eq('id', order.user_id)
+        .single();
+
+      const { data: orderItems } = await supabaseAdmin
+        .from('order_items')
+        .select('*, products(name, weight_grams)')
+        .eq('order_id', order.id);
+
+      const { data: storeSettings } = await supabaseAdmin
+        .from('store_settings')
+        .select('*')
+        .single();
 
       // 2. Update status di database kita
       await supabaseAdmin
@@ -70,33 +80,53 @@ export async function POST(req: Request) {
       // 3. KIRIM KE BITESHIP (Hanya jika belum pernah dikirim)
       if (!order.shipping_metadata?.biteship_order_id) {
         try {
+          const address = order.addresses;
+          if (!address) throw new Error('Order address not found');
+
+          // Mapping shipping service (e.g., "JNE - Reguler" -> "reg")
+          // This depends on how shipping_method is stored. 
+          // Usually it's "Courier Name - Service Name"
+          const [courierName, serviceName] = (order.shipping_method || "").split(' - ');
+
           const biteshipPayload = {
-            shipper_contact_name: "Pawvels Petshop",
-            shipper_contact_phone: "08123456789", 
+            shipper_contact_name: storeSettings?.store_name || "Pawvels Petshop",
+            shipper_contact_phone: "082281872174", 
             shipper_contact_email: "hello@pawvels.com",
             shipper_organization: "Pawvels",
-            origin_contact_name: "Pawvels Admin",
-            origin_contact_phone: "08123456789",
-            origin_address: "Jl. Petshop No. 1, Jakarta", 
-            origin_note: "Dekat warung kopi",
-            origin_postal_code: 12345, 
-            destination_contact_name: order.profiles?.name || "Customer",
-            destination_contact_phone: order.profiles?.phone || "",
-            destination_contact_email: order.profiles?.email || "",
-            destination_address: order.shipping_address,
+            origin_contact_name: "Admin Pawvels",
+            origin_contact_phone: "082281872174",
+            origin_address: storeSettings?.origin_address || "Tangerang",
+            origin_note: "",
+            origin_postal_code: 15810, // Kelapa Dua / Pisa Grande area
+            origin_area_id: storeSettings?.origin_area_id || "IDNP6M3K2W1",
+            destination_contact_name: address.recipient_name || profile?.name || "Customer",
+            destination_contact_phone: address.phone || profile?.phone || "",
+            destination_contact_email: profile?.email || "",
+            destination_address: address.full_address,
             destination_note: "",
-            destination_postal_code: parseInt(order.shipping_postal_code),
-            courier_company: order.shipping_courier,
-            courier_type: order.shipping_service,
+            destination_postal_code: parseInt(address.postal_code || "0"),
+            destination_area_id: address.biteship_area_id,
+            courier_company: (order.shipping_courier || courierName || "").toLowerCase(),
+            courier_type: (serviceName || "reg").toLowerCase(),
             delivery_type: "now",
-            items: order.order_items.map((item: { products?: { name?: string, weight_grams?: number }, price: number, quantity: number }) => ({
-              name: item.products?.name || "Produk",
-              description: "-",
-              value: item.price,
-              quantity: item.quantity,
-              weight: item.products?.weight_grams || 100
-            }))
+            items: ((orderItems || []) as unknown[]).map((item) => {
+              const it = item as { 
+                products?: { name: string, weight_grams: number }, 
+                product_name?: string, 
+                price: number, 
+                quantity: number 
+              };
+              return {
+                name: it.products?.name || it.product_name || "Produk",
+                description: "-",
+                value: it.price,
+                quantity: it.quantity,
+                weight: it.products?.weight_grams || 100
+              };
+            })
           };
+
+          console.log('Biteship Payload:', JSON.stringify(biteshipPayload, null, 2));
 
           const biteshipRes = await fetch('https://api.biteship.com/v1/orders', {
             method: 'POST',
@@ -113,18 +143,28 @@ export async function POST(req: Request) {
             await supabaseAdmin
               .from('orders')
               .update({
-                shipping_status: 'processing',
                 shipping_metadata: {
                   ...order.shipping_metadata,
                   biteship_order_id: biteshipData.id,
-                  courier_tracking_id: biteshipData.courier?.tracking_id
+                  courier_tracking_id: biteshipData.courier?.tracking_id,
+                  biteship_status: biteshipData.status
                 }
               })
               .eq('id', order.id);
             
-            console.log('Biteship Order Created:', biteshipData.id);
+            console.log('Biteship Order Created Successfully:', biteshipData.id);
           } else {
-            console.error('Biteship API Error:', biteshipData);
+            console.error('Biteship API Error Response:', biteshipData);
+            // Save error to metadata for debugging
+            await supabaseAdmin
+              .from('orders')
+              .update({
+                shipping_metadata: {
+                  ...order.shipping_metadata,
+                  biteship_error: biteshipData
+                }
+              })
+              .eq('id', order.id);
           }
         } catch (bsError) {
           console.error('Failed to call Biteship API:', bsError);

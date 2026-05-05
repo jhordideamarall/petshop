@@ -205,19 +205,23 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const saveAddress = async (userId: string) => {
     setIsSaving(true);
     try {
-      const { error } = await supabase.from('addresses').insert({
-        user_id: userId,
-        label,
-        recipient_name: recipient,
-        phone,
-        full_address: fullAddress,
-        city,
-        district,
-        postal_code: postalCode,
-        latitude: coords[0],
-        longitude: coords[1],
-        is_default: isDefault,
-      });
+      const { data: savedAddress, error } = await supabase
+        .from('addresses')
+        .insert({
+          user_id: userId,
+          label,
+          recipient_name: recipient,
+          phone,
+          full_address: fullAddress,
+          city,
+          district,
+          postal_code: postalCode,
+          latitude: coords[0],
+          longitude: coords[1],
+          is_default: isDefault,
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -225,18 +229,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
 
       toast.success('Alamat berhasil disimpan');
 
-      const newAddress = {
-        id: 'new-' + Date.now(),
-        recipient_name: recipient,
-        phone,
-        full_address: fullAddress,
-        city,
-        district,
-        postal_code: postalCode,
-        is_default: isDefault,
-      };
-
-      onSuccess(newAddress);
+      if (savedAddress) {
+        onSuccess(savedAddress as Address);
+      }
       onClose();
     } catch (err) {
       const error = err as Error;

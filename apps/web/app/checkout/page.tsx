@@ -141,23 +141,56 @@ export default function CheckoutPage() {
 
   const { mutate: handleCheckout, isPending: submitting } = useMutation({
     mutationFn: async () => {
-      if (!activeAddress || !selectedAddressId || !selectedShipping) throw new Error('Pilih alamat dan pengiriman');
+      const validateUUID = (id: string) => {
+        const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        return regex.test(id);
+      };
+
+      if (!activeAddress || !selectedAddressId || !selectedShipping) {
+        throw new Error('Pilih alamat dan pengiriman');
+      }
+
+      if (!validateUUID(selectedAddressId)) {
+        throw new Error('ID Alamat tidak valid (bukan UUID). Silakan pilih/tambah ulang alamat.');
+      }
 
       const totalWeight = items.reduce(
         (sum, item) => sum + (item.weight || 500) * item.quantity,
         0,
       );
 
+      const payloadItems = items.map((item) => ({
+        product_id: String(item.id),
+        variant_id: item.variantId || null,
+        quantity: item.quantity,
+        price: item.price,
+        product_name: item.name,
+        variant_name: item.variantName || null,
+      }));
+
+      // Validate all product IDs
+      for (const item of payloadItems) {
+        if (!validateUUID(item.product_id)) {
+          throw new Error(`Produk "${item.product_name}" memiliki ID tidak valid (${item.product_id}). Mohon gunakan produk asli dari database.`);
+        }
+        if (item.variant_id && !validateUUID(item.variant_id)) {
+          throw new Error(`Varian produk "${item.product_name}" memiliki ID tidak valid.`);
+        }
+      }
+
+      console.log('CREATE_ORDER_PAYLOAD:', {
+        addressId: selectedAddressId,
+        items: payloadItems,
+        total,
+        subtotal,
+        shippingCost: selectedShipping.price,
+        shippingCourier: selectedShipping.name,
+        totalWeight,
+      });
+
       const orderId = await createOrder({
         addressId: selectedAddressId,
-        items: items.map((item) => ({
-          product_id: String(item.id),
-          variant_id: item.variantId || null,
-          quantity: item.quantity,
-          price: item.price,
-          product_name: item.name,
-          variant_name: item.variantName || null,
-        })),
+        items: payloadItems,
         total,
         subtotal,
         shippingCost: selectedShipping.price,
