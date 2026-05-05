@@ -111,7 +111,9 @@ export async function POST(req: Request) {
             destination_area_id: address.biteship_area_id,
             courier_company: (order.shipping_courier || courierName || "").toLowerCase(),
             courier_type: (serviceName || "reg").toLowerCase(),
-            delivery_type: "now",
+            delivery_type: ["grab", "gojek", "lalamove"].includes((order.shipping_courier || courierName || "").toLowerCase()) ? "now" : "later",
+            delivery_date: new Date().toISOString().split('T')[0], // Today
+            delivery_time: "10:00", // Standard pickup window
             items: ((orderItems || []) as unknown[]).map((item) => {
               const it = item as { 
                 products?: { name: string, weight_grams: number }, 
