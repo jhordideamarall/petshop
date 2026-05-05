@@ -10,6 +10,13 @@ const getSupabaseAdmin = () => {
   return createClient(url, key);
 };
 
+export async function GET() {
+  return NextResponse.json({ 
+    success: true, 
+    message: 'Biteship Webhook Route is Active' 
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const supabaseAdmin = getSupabaseAdmin();
