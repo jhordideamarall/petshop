@@ -10,6 +10,7 @@ import { SearchModal } from '@/components/shared/search-modal';
 import { getCityFromCoords } from '@petshop/core';
 import { useQuery } from '@tanstack/react-query';
 import { getActiveCategories, type Category } from '@/lib/services/product-client';
+import { NotificationSheet } from './notification-sheet';
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF8235" stroke="none">
@@ -138,6 +139,7 @@ export function Header() {
   const isProductPage = pathname === '/products';
   const [showFilters, setShowFilters] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const { coords, locationName, setCoords, setLocationName } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
   const items = useCartStore((state) => state.items);
@@ -184,6 +186,7 @@ export function Header() {
   return (
     <>
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
 
       {/*
         Outer wrapper has NO px-5 so the chip row can span full width.
@@ -273,6 +276,7 @@ export function Header() {
                 whileTap={{ scale: 0.94 }} 
                 style={iconBtnStyle} 
                 aria-label="Notifikasi"
+                onClick={() => setNotifOpen(true)}
               >
                 <m.div
                   whileHover={{ rotate: [0, -15, 15, -15, 0] }}
