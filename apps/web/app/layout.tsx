@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   description: 'Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'Pawvels',
   },
   openGraph: {

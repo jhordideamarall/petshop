@@ -201,7 +201,7 @@ export function Header() {
         Each section that needs horizontal padding applies its own px-5.
       */}
       <m.div
-        className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 flex-shrink-0 pb-0"
+        className="fixed top-0 left-1/2 z-[100] -translate-x-1/2 w-full max-w-[430px] flex-shrink-0"
         animate={{
           boxShadow:
             isProductPage && showFilters
@@ -209,16 +209,16 @@ export function Header() {
               : '0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
         }}
         style={{
-          width: '100%',
-          maxWidth: 430,
-          paddingTop: 'calc(12px + env(safe-area-inset-top))',
-          background: 'rgba(245,243,240,0.85)',
+          paddingTop: 'env(safe-area-inset-top)',
+          background: '#FDFCFB',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           borderBottomLeftRadius: 24,
           borderBottomRightRadius: 24,
         }}
       >
+        <div className="pt-3"></div>
+
         <LayoutGroup>
           {/* ── Title row ── */}
           <m.div
