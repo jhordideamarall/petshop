@@ -148,37 +148,41 @@ export function Header() {
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
-    // Detect Location only if not already detected
-    if ('geolocation' in navigator && !coords) {
-      setIsLocating(true);
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          setCoords([latitude, longitude]);
-          const city = await getCityFromCoords(latitude, longitude);
-          setLocationName(city);
-          setIsLocating(false);
-        },
-        (error) => {
-          // Only log real errors, not permission denials or temporary unavailability
-          if (error.code !== 1 && error.code !== 2) {
-            console.error('Geolocation error:', error.message);
-          } else if (error.code === 2) {
-            console.warn('Geolocation: Position unavailable (bad GPS signal).');
-            setPromptOpen(true);
-          } else {
-            console.warn('Geolocation: Permission denied by user.');
-            setPromptOpen(true);
-          }
-          setIsLocating(false);
-        },
-        { timeout: 10000 },
-      );
+    // 1. Auto-reset stale "Jakarta" values from old persistence
+    if (locationName === 'Jakarta' || locationName === 'Jakarta Selatan') {
+      setLocationName('Pilih Lokasi');
+    }
+
+    // 2. Detect Location only if not already detected
+    if ('geolocation' in navigator) {
+      if (!coords) {
+        setIsLocating(true);
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            setCoords([latitude, longitude]);
+            const city = await getCityFromCoords(latitude, longitude);
+            setLocationName(city);
+            setIsLocating(false);
+          },
+          (error) => {
+            if (error.code === 2) {
+              console.warn('Geolocation: Position unavailable.');
+              setPromptOpen(true);
+            } else if (error.code === 1) {
+              console.warn('Geolocation: Permission denied.');
+              setPromptOpen(true);
+            }
+            setIsLocating(false);
+          },
+          { timeout: 10000 },
+        );
+      }
     } else {
-      console.warn('Geolocation not supported by this browser.');
+      console.warn('Geolocation not supported.');
       setPromptOpen(true);
     }
-  }, []);
+  }, [coords, locationName, setCoords, setLocationName]);
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();
