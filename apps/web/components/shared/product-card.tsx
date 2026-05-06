@@ -3,6 +3,7 @@ import { useState, useRef, type CSSProperties, type MouseEvent } from 'react';
 import NextImage from 'next/image';
 import { AnimatePresence, m } from 'framer-motion';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { PriceTag } from './price-tag';
 import { RatingStars } from './rating-stars';
 
@@ -90,7 +91,7 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
     <MotionLink
       whileTap={{ scale: 0.96 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      href={(href ?? `/products/${product.slug}`) as any}
+      href={(href ?? `/products/${product.slug}`) as Route}
       style={{
         background: '#FDFCFB',
         borderRadius: 16,
