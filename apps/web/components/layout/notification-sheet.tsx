@@ -1,6 +1,6 @@
 'use client';
 import { m, AnimatePresence } from 'framer-motion';
-import { Check, X, BellOff, LogIn } from 'lucide-react';
+import { X, BellOff, LogIn } from 'lucide-react';
 import { useAuth } from '@/components/providers/auth-provider';
 import Link from 'next/link';
 
@@ -50,9 +50,7 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
   const isGuest = !user;
 
   // Guests only see promos
-  const displayNotifs = isGuest 
-    ? DUMMY_NOTIFS.filter(n => n.type === 'promo') 
-    : DUMMY_NOTIFS;
+  const displayNotifs = isGuest ? DUMMY_NOTIFS.filter((n) => n.type === 'promo') : DUMMY_NOTIFS;
 
   return (
     <AnimatePresence>
@@ -72,11 +70,11 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ 
-              type: 'spring', 
-              damping: 22, 
+            transition={{
+              type: 'spring',
+              damping: 22,
               stiffness: 280,
-              mass: 1
+              mass: 1,
             }}
             className="fixed right-[-100px] top-0 z-[160] h-full bg-[#FDFCFB] shadow-2xl"
             style={{
@@ -87,7 +85,7 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
             }}
           >
             {/* Header */}
-            <m.div 
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300, delay: 0.1 }}
@@ -113,7 +111,7 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
             {/* List */}
             <div className="h-full overflow-y-auto pb-32 no-scrollbar">
               {isGuest && (
-                <m.div 
+                <m.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ type: 'spring', damping: 20, stiffness: 300, delay: 0.1 }}
@@ -121,7 +119,8 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
                 >
                   <h4 className="font-heading text-sm font-bold text-ink">Pantau Pesananmu</h4>
                   <p className="mt-1 font-sans text-xs leading-relaxed text-ink-3">
-                    Login sekarang untuk melihat status grooming, pesanan makanan, dan info loyalty point.
+                    Login sekarang untuk melihat status grooming, pesanan makanan, dan info loyalty
+                    point.
                   </p>
                   <Link href="/login" onClick={onClose}>
                     <m.button
@@ -141,27 +140,33 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
                       key={notif.id}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ 
-                        type: 'spring', 
-                        damping: 25, 
+                      transition={{
+                        type: 'spring',
+                        damping: 25,
                         stiffness: 300,
-                        delay: (isGuest ? 0.2 : 0.1) + (index * 0.06) 
+                        delay: (isGuest ? 0.2 : 0.1) + index * 0.06,
                       }}
                       className={`relative flex gap-4 px-6 py-5 transition-colors ${
                         !notif.read ? 'bg-[#FF8235]/5' : 'hover:bg-stone/30'
                       }`}
                     >
-                      <div className={`w-1.5 flex-shrink-0 rounded-full my-1 ${
-                        notif.type === 'order' ? 'bg-[#2D7D52]' :
-                        notif.type === 'promo' ? 'bg-[#FF8235]' :
-                        'bg-[#A09890]'
-                      }`} />
+                      <div
+                        className={`w-1.5 flex-shrink-0 rounded-full my-1 ${
+                          notif.type === 'order'
+                            ? 'bg-[#2D7D52]'
+                            : notif.type === 'promo'
+                              ? 'bg-[#FF8235]'
+                              : 'bg-[#A09890]'
+                        }`}
+                      />
 
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className={`font-heading text-[14px] font-bold leading-tight ${
-                            !notif.read ? 'text-ink' : 'text-ink-2'
-                          }`}>
+                          <h3
+                            className={`font-heading text-[14px] font-bold leading-tight ${
+                              !notif.read ? 'text-ink' : 'text-ink-2'
+                            }`}
+                          >
                             {notif.title}
                           </h3>
                           <span className="flex-shrink-0 font-sans text-[10px] text-ink-4">
