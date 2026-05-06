@@ -2,6 +2,7 @@
 import { useState, useRef, type CSSProperties, type MouseEvent } from 'react';
 import NextImage from 'next/image';
 import { AnimatePresence, m } from 'framer-motion';
+import Link from 'next/link';
 import { PriceTag } from './price-tag';
 import { RatingStars } from './rating-stars';
 
@@ -59,6 +60,8 @@ const CheckIcon = () => (
   </svg>
 );
 
+const MotionLink = m(Link);
+
 export function ProductCard({ product, onAddToCart, href, priority = false }: ProductCardProps) {
   const [justAdded, setJustAdded] = useState(false);
   const [feedbackKey, setFeedbackKey] = useState(0);
@@ -84,10 +87,10 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
   };
 
   return (
-    <m.a
+    <MotionLink
       whileTap={{ scale: 0.96 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      href={href ?? `/products/${product.slug}`}
+      href={(href ?? `/products/${product.slug}`) as any}
       style={{
         background: '#FDFCFB',
         borderRadius: 16,
@@ -316,6 +319,6 @@ export function ProductCard({ product, onAddToCart, href, priority = false }: Pr
           <PriceTag price={product.price} promoPrice={product.promoPrice} size="sm" />
         </div>
       </div>
-    </m.a>
+    </MotionLink>
   );
 }
