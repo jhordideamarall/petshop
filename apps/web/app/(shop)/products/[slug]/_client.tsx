@@ -237,8 +237,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           borderBottom: '1px solid var(--color-stone-2)',
         }}
       >
-        <button
+        <m.button
           onClick={() => router.back()}
+          whileHover={{ scale: 1.1, x: -2 }}
+          whileTap={{ scale: 0.9 }}
           style={{
             background: 'none',
             border: 'none',
@@ -248,7 +250,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           }}
         >
           <ChevronLeft size={24} strokeWidth={2.5} />
-        </button>
+        </m.button>
         <span
           style={{
             fontFamily: 'var(--font-heading)',
@@ -262,7 +264,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <div style={{ display: 'flex', gap: 4 }}>
           <Link href="/cart" className="no-underline">
             <m.button
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.8, rotate: -8 }}
               style={{
                 background: 'none',
                 border: 'none',
@@ -271,12 +274,17 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 position: 'relative',
               }}
             >
-              <ShoppingCart size={22} strokeWidth={2} />
+              <m.div
+                whileHover={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 0.3 }}
+              >
+                <ShoppingCart size={22} strokeWidth={2} />
+              </m.div>
               {hydrated && cartCount > 0 && (
                 <m.div
                   key={cartCount}
-                  initial={{ scale: 0.5 }}
-                  animate={{ scale: [1.4, 1] }}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
                   className="absolute top-1 right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full border border-white bg-primary px-1 font-heading text-[10px] font-bold text-white badge-bounce"
                 >
                   {cartCount}
@@ -285,6 +293,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </m.button>
           </Link>
           <m.button
+            whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.75 }}
             animate={{ scale: isWishlisted ? [1, 1.35, 1] : 1 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
@@ -297,7 +306,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               cursor: 'pointer',
             }}
           >
-            <Heart size={22} fill={isWishlisted ? '#E53935' : 'none'} strokeWidth={2} />
+            <m.div
+              whileHover={{ scale: 1.1, rotate: [0, 5, -5, 0] }}
+            >
+              <Heart size={22} fill={isWishlisted ? '#E53935' : 'none'} strokeWidth={2} />
+            </m.div>
           </m.button>
         </div>
       </div>

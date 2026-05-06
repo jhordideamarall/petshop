@@ -1,5 +1,10 @@
-/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
+// @ts-nocheck
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+/**
+ * IDE Fix: Declare Deno namespace for environments without Deno extension
+ */
+declare const Deno: any;
 
 const FONNTE_TOKEN = Deno.env.get('FONNTE_TOKEN');
 
@@ -34,6 +39,8 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    console.log(`Sending OTP to ${target} with message length: ${message.length}`);
+
     const response = await fetch('https://api.fonnte.com/send', {
       method: 'POST',
       headers: {
@@ -47,20 +54,28 @@ Deno.serve(async (req: Request) => {
     });
 
     const result = await response.json();
+    console.log('Fonnte API Response:', JSON.stringify(result));
 
     if (result.status) {
+      console.log('OTP successfully sent via Fonnte');
       return new Response(JSON.stringify({ success: true }), {
         headers: { 'Content-Type': 'application/json' },
         status: 200,
       });
     } else {
-      return new Response(JSON.stringify({ error: result.reason || 'Fonnte API Failure' }), {
+      console.error('Fonnte API Error:', result.reason || 'Unknown error');
+      return new Response(JSON.stringify({ 
+        error: result.reason || 'Fonnte API Failure',
+        details: result
+      }), {
         headers: { 'Content-Type': 'application/json' },
         status: 500,
       });
     }
-  } catch {
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Edge Function Catch-all Error:', err);
+    return new Response(JSON.stringify({ error: 'Internal Server Error', details: errorMessage }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
     });

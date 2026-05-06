@@ -214,12 +214,44 @@ export function Header() {
             className="flex items-center justify-between px-[clamp(16px,5vw,20px)]"
             style={{ marginBottom: titleRowMb }}
           >
-            <Link href="/" className="flex flex-col no-underline">
-              <m.div layout className="mb-1 flex items-center gap-1.5">
-                <PawIcon />
-                <span className="font-heading text-lg font-extrabold tracking-tight text-ink">
+            <Link href="/" className="flex flex-col no-underline group">
+              <m.div 
+                layout 
+                className="mb-1 flex items-center gap-1.5"
+                whileHover="hover"
+              >
+                <m.div
+                  initial={{ rotate: -180, scale: 0, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 260, 
+                    damping: 20,
+                    delay: 0.1
+                  }}
+                  variants={{
+                    hover: { 
+                      rotate: [0, -15, 15, -15, 0],
+                      scale: 1.15,
+                      transition: { duration: 0.4, ease: "easeInOut" }
+                    }
+                  }}
+                >
+                  <PawIcon />
+                </m.div>
+                <m.span 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 260, 
+                    damping: 20,
+                    delay: 0.15 
+                  }}
+                  className="font-heading text-lg font-extrabold tracking-tight text-ink group-hover:text-primary transition-colors"
+                >
                   Pawvels
-                </span>
+                </m.span>
               </m.div>
               <m.div
                 layout
@@ -236,8 +268,18 @@ export function Header() {
             </Link>
 
             <m.div layout className="flex gap-2">
-              <m.button whileTap={{ scale: 0.94 }} style={iconBtnStyle} aria-label="Notifikasi">
-                <Bell />
+              <m.button 
+                whileHover={{ scale: 1.05, background: 'rgba(245,243,240,0.9)' }}
+                whileTap={{ scale: 0.94 }} 
+                style={iconBtnStyle} 
+                aria-label="Notifikasi"
+              >
+                <m.div
+                  whileHover={{ rotate: [0, -15, 15, -15, 0] }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Bell />
+                </m.div>
                 <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
               </m.button>
               <Link
@@ -246,7 +288,8 @@ export function Header() {
                 aria-label={`Keranjang${cartCount > 0 ? `, ${cartCount} item` : ''}`}
               >
                 <m.div
-                  whileTap={{ scale: 0.8, rotate: -5 }}
+                  whileHover={{ scale: 1.05, background: 'rgba(245,243,240,0.9)' }}
+                  whileTap={{ scale: 0.8, rotate: -8 }}
                   transition={{ type: 'spring', stiffness: 500, damping: 15 }}
                   style={iconBtnStyle}
                 >

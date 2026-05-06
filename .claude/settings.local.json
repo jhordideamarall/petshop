@@ -48,7 +48,10 @@
       "Bash(curl -s 'https://kjvnbnwdcyilzqymknxm.supabase.co/rest/v1/products?or=\\(name.ilike.*Drontal*,name.ilike.*Furminator*,name.ilike.*Nutricoat*,name.ilike.*Omega*,name.ilike.*Me-O*,name.ilike.*Tetes*\\)' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqdm5ibndkY3lpbHpxeW1rbnhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTIwNjcsImV4cCI6MjA5MzI4ODA2N30.V2oz8wRWZwTnpZnB59e37XhU9E2JXlhlko8zsEWVDVY' -H 'Accept: application/json')",
       "Bash(curl -s 'https://kjvnbnwdcyilzqymknxm.supabase.co/rest/v1/product_images?limit=1&select=*' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqdm5ibndkY3lpbHpxeW1rbnhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTIwNjcsImV4cCI6MjA5MzI4ODA2N30.V2oz8wRWZwTnpZnB59e37XhU9E2JXlhlko8zsEWVDVY' -H 'Accept: application/json')",
       "Bash(curl -s 'https://kjvnbnwdcyilzqymknxm.supabase.co/rest/v1/product_images?product_id=in.\\(6ff16ae5-2506-4111-bc32-fef18dbe06c0,3d96aba5-0816-4d6c-b220-85d67b243a7d,51d3522b-aebd-4089-84d9-fe317b019dee,59c70c03-df31-4735-a8e0-370cff7e00ce,35be7b55-d93e-4581-8974-74fa4a661afa,26381674-ef4a-4624-95a7-fb5b5e0a43ef,9c374467-0a7a-49fe-ae74-f0cabd0fd0d5,4c3987ff-be5a-41ac-9fb8-7ecf177236b9\\)&select=product_id,url,sort_order&order=sort_order' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqdm5ibndkY3lpbHpxeW1rbnhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MTIwNjcsImV4cCI6MjA5MzI4ODA2N30.V2oz8wRWZwTnpZnB59e37XhU9E2JXlhlko8zsEWVDVY' -H 'Accept: application/json')",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__get_advisors"
     ]
   },
   "disabledMcpjsonServers": [

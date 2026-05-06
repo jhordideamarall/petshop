@@ -11,7 +11,7 @@ import { useAuth } from '@/components/providers/auth-provider';
 import { useLocationStore } from '@/stores/location-store';
 import { JumpingDots } from '@/components/shared/jumping-dots';
 import type { AuthError } from '@supabase/supabase-js';
-import type { Address } from '@/lib/services/address-client';
+import { type Address, getUserAddresses } from '@/lib/services/address-client';
 
 // Dynamically import the map component with SSR disabled
 const AddressMap = dynamic(() => import('./address-map'), {
@@ -32,7 +32,9 @@ interface AddressSheetProps {
 export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) {
   const { user } = useAuth();
   const globalLocation = useLocationStore();
-  const [step, setStep] = useState<'map' | 'form' | 'otp'>('map');
+  const [step, setStep] = useState<'list' | 'map' | 'form' | 'otp'>('list');
+  const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
   const [coords, setCoords] = useState<[number, number]>(
     globalLocation.coords || [-6.2088, 106.8456],
   );
@@ -40,7 +42,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const [isLoadingDetails, setIsLoadingLoadingDetails] = useState(false);
 
   // Form State
-  const [label] = useState('Rumah');
+  const [label, setLabel] = useState('Rumah');
   const [recipient, setRecipient] = useState('');
   const [phone, setPhone] = useState('');
   const [fullAddress, setFullAddress] = useState('');
@@ -55,6 +57,32 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const [isSaving, setIsSaving] = useState(false);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchAddresses();
+    } else if (isOpen && !user) {
+      setStep('map');
+    }
+  }, [isOpen, user]);
+
+  const fetchAddresses = async () => {
+    setIsLoadingAddresses(true);
+    try {
+      const addresses = await getUserAddresses();
+      setSavedAddresses(addresses);
+      if (addresses.length > 0) {
+        setStep('list');
+      } else {
+        setStep('map');
+      }
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      setStep('map');
+    } finally {
+      setIsLoadingAddresses(false);
+    }
+  };
 
   const handleDetectLocation = () => {
     if ('geolocation' in navigator) {
@@ -219,6 +247,15 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const saveAddress = async (userId: string) => {
     setIsSaving(true);
     try {
+      // 1. If this is marked as default, unset all other addresses for this user first
+      if (isDefault) {
+        await supabase
+          .from('addresses')
+          .update({ is_default: false })
+          .eq('user_id', userId);
+      }
+
+      // 2. Insert the new address
       const { data: savedAddress, error } = await supabase
         .from('addresses')
         .insert({
@@ -269,11 +306,13 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
       >
         <div className="flex items-center justify-between p-6">
           <h2 className="font-heading text-[18px] font-extrabold text-ink text-left">
-            {step === 'map'
-              ? 'Pilih Titik Lokasi'
-              : step === 'otp'
-                ? 'Verifikasi Nomor HP'
-                : 'Detail Alamat'}
+            {step === 'list'
+              ? 'Pilih Alamat'
+              : step === 'map'
+                ? 'Pilih Titik Lokasi'
+                : step === 'otp'
+                  ? 'Verifikasi Nomor HP'
+                  : 'Detail Alamat'}
           </h2>
           <button onClick={onClose} className="rounded-full bg-stone p-2 text-ink-3">
             <X size={20} />
@@ -281,7 +320,56 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
         </div>
 
         <div className="px-6">
-          {step === 'map' ? (
+          {step === 'list' ? (
+            <m.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex flex-col gap-4"
+            >
+              {isLoadingAddresses ? (
+                <div className="flex h-40 items-center justify-center">
+                  <Loader2 className="animate-spin text-primary" size={24} />
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-3 overflow-y-auto max-h-[50vh] no-scrollbar">
+                    {savedAddresses.map((addr) => (
+                      <button
+                        key={addr.id}
+                        onClick={() => {
+                          onSuccess(addr);
+                          onClose();
+                        }}
+                        className="flex flex-col gap-1 rounded-2xl border border-stone-2 p-4 text-left transition-all active:scale-[0.98] hover:border-primary/30"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-heading text-sm font-bold text-ink">
+                            {addr.recipient_name}
+                          </span>
+                          {addr.is_default && (
+                            <span className="rounded-md bg-primary/10 px-2 py-0.5 font-heading text-[10px] font-bold text-primary uppercase tracking-wider">
+                              Utama
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[12px] text-ink-3">{addr.phone}</p>
+                        <p className="line-clamp-2 text-[12px] text-ink-4 leading-relaxed">
+                          {addr.full_address}, {addr.city}, {addr.postal_code}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setStep('map')}
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-3 font-heading text-[14px] font-bold text-ink-3 transition-colors active:bg-stone hover:border-primary/50 hover:text-primary"
+                  >
+                    + Tambah Alamat Baru
+                  </button>
+                </>
+              )}
+            </m.div>
+          ) : step === 'map' ? (
             <div className="flex flex-col gap-6">
               <div className="relative h-[300px] w-full overflow-hidden rounded-2xl border border-stone-2 shadow-inner">
                 <AddressMap coords={coords} onClick={(lat, lng) => setCoords([lat, lng])} />
@@ -320,83 +408,113 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
               </div>
             </div>
           ) : step === 'form' ? (
-            <div className="flex flex-col gap-4 overflow-y-auto max-h-[60vh] no-scrollbar text-left">
-              <div className="grid grid-cols-2 gap-3">
+            <m.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <div className="flex flex-col gap-4 overflow-y-auto max-h-[60vh] no-scrollbar text-left">
+                <div>
+                  <label className="mb-2 block text-[12px] font-bold text-ink-3">Label</label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Rumah', 'Kantor', 'Kos', 'Lainnya'].map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => setLabel(l)}
+                        className={`px-4 py-2 rounded-xl border font-heading text-[13px] font-bold transition-all ${
+                          label === l
+                            ? 'bg-primary border-primary text-white shadow-md shadow-primary/20'
+                            : 'border-stone-3 text-ink-3 bg-white hover:border-primary/50'
+                        }`}
+                      >
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
+                      Nama Penerima
+                    </label>
+                    <input
+                      value={recipient}
+                      onChange={(e) => setRecipient(e.target.value)}
+                      className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
+                      placeholder="Contoh: Andi"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Nomor HP</label>
+                    <input
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                      className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
+                      placeholder="0812xxx"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
-                    Nama Penerima
+                    Alamat Lengkap
                   </label>
-                  <input
-                    value={recipient}
-                    onChange={(e) => setRecipient(e.target.value)}
-                    className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
-                    placeholder="Contoh: Andi"
+                  <textarea
+                    value={fullAddress}
+                    onChange={(e) => setFullAddress(e.target.value)}
+                    className="w-full rounded-xl border border-stone-3 p-4 font-sans text-sm outline-none focus:border-primary"
+                    rows={3}
+                    placeholder="Nama jalan, nomor rumah, dll"
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kota</label>
+                    <input
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="h-12 w-full rounded-xl border border-stone-3 bg-stone px-4 font-sans text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kecamatan</label>
+                    <input
+                      value={district}
+                      onChange={(e) => setDistrict(e.target.value)}
+                      className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
+                      placeholder="Kecamatan"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Nomor HP</label>
+                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kode Pos</label>
                   <input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
                     className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
-                    placeholder="0812xxx"
                   />
+                </div>
+
+                <div className="flex items-start gap-3 py-3 px-1">
+                  <button
+                    onClick={() => setIsDefault(!isDefault)}
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${isDefault ? 'border-primary bg-primary text-white' : 'border-stone-3'}`}
+                  >
+                    {isDefault && <Check size={16} strokeWidth={3} />}
+                  </button>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold text-ink">Jadikan Alamat Utama</span>
+                    <span className="text-[11px] text-ink-4 leading-normal">
+                      Alamat ini akan otomatis terpilih untuk setiap pesanan baru kamu.
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
-                  Alamat Lengkap
-                </label>
-                <textarea
-                  value={fullAddress}
-                  onChange={(e) => setFullAddress(e.target.value)}
-                  className="w-full rounded-xl border border-stone-3 p-4 font-sans text-sm outline-none focus:border-primary"
-                  rows={3}
-                  placeholder="Nama jalan, nomor rumah, dll"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kota</label>
-                  <input
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="h-12 w-full rounded-xl border border-stone-3 bg-stone px-4 font-sans text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kecamatan</label>
-                  <input
-                    value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
-                    placeholder="Kecamatan"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kode Pos</label>
-                <input
-                  value={postalCode}
-                  onChange={(e) => setPostalCode(e.target.value)}
-                  className="h-12 w-full rounded-xl border border-stone-3 px-4 font-sans text-sm outline-none focus:border-primary"
-                />
-              </div>
-
-              <div className="flex items-center gap-3 py-2">
-                <button
-                  onClick={() => setIsDefault(!isDefault)}
-                  className={`flex h-6 w-6 items-center justify-center rounded-md border-2 transition-colors ${isDefault ? 'border-primary bg-primary text-white' : 'border-stone-3'}`}
-                >
-                  {isDefault && <Check size={16} strokeWidth={3} />}
-                </button>
-                <span className="text-sm font-semibold text-ink">Jadikan Alamat Utama</span>
-              </div>
-
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-6">
                 <button
                   onClick={() => setStep('map')}
                   className="h-14 flex-1 rounded-2xl border border-stone-3 font-heading text-[15px] font-bold text-ink"
@@ -417,7 +535,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                   )}
                 </button>
               </div>
-            </div>
+            </m.div>
           ) : (
             <m.div
               initial={{ opacity: 0, x: 20 }}

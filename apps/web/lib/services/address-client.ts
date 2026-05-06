@@ -64,6 +64,17 @@ export async function updateAddress(
   >,
 ) {
   const supabase = createClient();
+
+  // If setting as default, unset others first
+  if (fields.is_default) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from('addresses').update({ is_default: false }).eq('user_id', user.id);
+    }
+  }
+
   const { data, error } = await supabase
     .from('addresses')
     .update(fields)
