@@ -87,7 +87,7 @@ petshop/
 
 ## Milestones (Web)
 
-### **Phase 0 — Foundation & Tooling** (target: ~3 hari)
+### **Phase 0 — Foundation & Tooling** ✅
 **Tujuan**: monorepo siap, tooling production-grade, semua quality gate jalan.
 
 1. Init pnpm workspace + Turborepo (`turbo.json` pipeline: dev/build/lint/test/type-check)
@@ -109,7 +109,7 @@ petshop/
 
 ---
 
-### **Phase 1 — Database Foundation** (target: ~2 hari)
+### **Phase 1 — Database Foundation** ✅
 **Tujuan**: Supabase project siap, schema deployed, types ter-generate.
 
 1. Buat Supabase project (production + staging branch)
@@ -138,7 +138,7 @@ petshop/
 
 ---
 
-### **Phase 2 — Design System & Layout** (target: ~3 hari)
+### **Phase 2 — Design System & Layout** ✅
 **Tujuan**: visual identity konsisten, layout responsif, page kosong sudah ter-routing.
 
 1. Brand tokens di `tailwind.config.ts`: warna (primary orange-soft, accent orange, neutral, success, warning, danger), typography (Inter primary, Outfit display), spacing scale, radius, shadow
@@ -165,7 +165,7 @@ petshop/
 
 ---
 
-### **Phase 3 — Catalog & Product Discovery** (target: ~5 hari)
+### **Phase 3 — Catalog & Product Discovery** ✅
 **Tujuan**: customer bisa browse, search, filter, lihat detail produk. **Read-only, no auth required.**
 
 **Backend**: 100% Supabase-direct via Server Components.
@@ -210,7 +210,7 @@ petshop/
 
 ---
 
-### **Phase 4 — Auth & Account** (target: ~4 hari)
+### **Phase 4 — Auth & Account** ✅
 **Tujuan**: customer bisa register/login, kelola profile, addresses, pets.
 
 **Backend**: Supabase Auth (`@supabase/ssr`) — email/password + Google OAuth.
@@ -259,7 +259,7 @@ petshop/
 
 ---
 
-### **Phase 5 — Cart, Checkout, Payment, Shipping** (target: ~7 hari)
+### **Phase 5 — Cart, Checkout, Payment, Shipping** 🔧
 **Tujuan**: customer bisa selesaikan transaksi end-to-end. **Production-grade — masuk hybrid backend.**
 
 **Backend transition**: setup minimal NestJS hanya untuk operasi kritis (mulai `apps/api`):

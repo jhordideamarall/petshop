@@ -11,6 +11,7 @@ import { getCityFromCoords } from '@petshop/core';
 import { useQuery } from '@tanstack/react-query';
 import { getActiveCategories, type Category } from '@/lib/services/product-client';
 import { NotificationSheet } from './notification-sheet';
+import { LocationPrompt } from '@/components/shared/location-prompt';
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF8235" stroke="none">
@@ -140,6 +141,7 @@ export function Header() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
   const { coords, locationName, setCoords, setLocationName } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
   const items = useCartStore((state) => state.items);
@@ -158,11 +160,15 @@ export function Header() {
           setIsLocating(false);
         },
         (error) => {
-          // Only log real errors, not permission denials
-          if (error.code !== 1) {
-            console.error('Geolocation error:', error);
+          // Only log real errors, not permission denials or temporary unavailability
+          if (error.code !== 1 && error.code !== 2) {
+            console.error('Geolocation error:', error.message);
+          } else if (error.code === 2) {
+            console.warn('Geolocation: Position unavailable (bad GPS signal).');
+            setPromptOpen(true);
           } else {
-            console.warn('Geolocation permission denied by user.');
+            console.warn('Geolocation: Permission denied by user.');
+            setPromptOpen(true);
           }
           setIsLocating(false);
         },
@@ -170,6 +176,7 @@ export function Header() {
       );
     } else {
       console.warn('Geolocation not supported by this browser.');
+      setPromptOpen(true);
     }
   }, []);
 
@@ -187,6 +194,7 @@ export function Header() {
     <>
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+      <LocationPrompt isOpen={promptOpen} onClose={() => setPromptOpen(false)} />
 
       {/*
         Outer wrapper has NO px-5 so the chip row can span full width.
@@ -256,9 +264,10 @@ export function Header() {
                   Pawvels
                 </m.span>
               </m.div>
-              <m.div
+              <m.button
                 layout
-                className="flex items-center gap-1 overflow-hidden"
+                onClick={() => setPromptOpen(true)}
+                className="flex items-center gap-1 overflow-hidden active:opacity-60 transition-opacity"
                 style={{ opacity: locationOpacity, height: locationHeight }}
               >
                 <span className="flex items-center text-[#A09890]">
@@ -267,7 +276,7 @@ export function Header() {
                 <span className="font-sans text-[11px] tracking-wide text-[#A09890]">
                   {isLocating ? 'Mendeteksi...' : locationName}
                 </span>
-              </m.div>
+              </m.button>
             </Link>
 
             <m.div layout className="flex gap-2">

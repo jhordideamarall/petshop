@@ -12,12 +12,12 @@
 | Phase 0           | Infra & Tooling                 | ✅ Selesai        |
 | Phase 1           | Database Foundation             | ✅ Selesai        |
 | Phase 2           | Design System & App Shell       | ✅ Selesai        |
-| Phase 3           | Authentication                  | 🔲 Belum dimulai  | [next work 3] |
+| Phase 3           | Authentication                  | ✅ Selesai        |
 | Phase 4           | Core E-Commerce (Browse & Cart) | ✅ Selesai        |
-| Phase 5           | Checkout & Payment              | 🔧 In Progress    | [Current: Biteship & Caching] |
+| Phase 5           | Checkout & Payment              | 🔧 In Progress    | [Current: Biteship & Address Integrity] |
 | Phase 6           | Order Management & Admin        | 🔲 Belum dimulai  | [next work4]  |
 | Phase 7           | Booking System                  | 🔲 Belum dimulai  | [next work]   |
-| Phase 8           | Pet Profile & Loyalty           | 🔧 UI In Progress |               |
+| Phase 8           | Pet Profile & Loyalty           | 🔧 UI In Progress | [UI Complete] |
 | Phase 9           | Backend API (NestJS)            | 🔲 Belum dimulai  | final         |
 
 > **📝 NOTE: STRATEGI EKSEKUSI "FRONT-END FIRST"**
@@ -123,36 +123,18 @@
 
 ---
 
-## Phase 3 — Authentication (Next)
+## Phase 3 — Authentication ✅
 
-**Estimasi**: 1–2 minggu  
 **Tujuan**: User bisa register dan login sebelum boleh checkout atau booking.
 
-### Yang perlu dikerjakan:
+### Yang sudah dikerjakan:
 
-1. **Supabase Auth setup**
-   - Enable Phone OTP provider di Supabase dashboard
-   - Enable Google OAuth provider
-   - Configure redirect URLs
-
-2. **Auth pages** (mengisi stub yang sudah ada):
-   - `app/(auth)/login/page.tsx` — form phone/email + OTP flow
-   - `app/(auth)/register/page.tsx` — form nama + phone → OTP → profil
-   - `app/(auth)/forgot-password/page.tsx`
-
-3. **Auth state management**
-   - `components/providers/auth-provider.tsx` — Supabase session listener
-   - Tambah ke `providers.tsx`
-   - Custom hook `useAuth()` → session, user, signOut
-
-4. **Protected routes**
-   - Middleware `apps/web/middleware.ts` — redirect ke `/login` jika unauthenticated (untuk `/account/*`, `/checkout`, `/booking/*`)
-
-5. **Header update**
-   - Ganti icon user di header dengan conditional: avatar jika logged in, icon jika guest
-
-6. **Database**:
-   - Trigger `auth_sync` sudah ada di Phase 1 (auto-create `users` record saat signup Supabase)
+- **Supabase Auth setup**: Integrasi Phone OTP (via Fonnte) dan Google OAuth.
+- **Auth Provider**: Centralized global session management via `AuthProvider`.
+- **Login Flow**: 2-step UI (Phone Input -> OTP) dengan Framer Motion.
+- **Register Flow**: Profile creation (Name, Phone, Email) terintegrasi dengan Supabase Auth triggers.
+- **Security**: Middleware protect routes `/account/*`, `/checkout`, `/booking/*` dengan redirect ke `/login`.
+- **Normalisasi Phone**: Sinkronisasi format `08x` dan `+62x` di 3 layer (Profile, Address, Auth).
 
 ---
 
@@ -293,40 +275,36 @@
 
 ---
 
-## Phase 8 — Pet Profile, Loyalty & Polish
+## Phase 8 — Pet Profile, Loyalty & Polish 🔧
 
 **Estimasi**: 2 minggu  
 **Tujuan**: Fitur retention — user punya alasan kembali.
 
-### Sudah dikerjakan (UI — Front-end First):
+### Sudah dikerjakan (UI & Local Logic):
 
 - `app/(account)/layout.tsx` — shared layout dengan BottomNav + safe area padding
 - `app/(account)/account/page.tsx` — dark hero banner (nama + poin loyalty 1,250 + tier Gold + progress bar ke Platinum), menu list bersih tanpa icon box berwarna, tombol Keluar fixed di atas bottom nav
-- `app/(account)/account/orders/page.tsx` — riwayat pesanan dummy dengan status badge (Dikirim/Selesai/Diproses)
-- `app/(account)/account/pets/page.tsx` — kartu Milo & Luna + dashed add-new button + empty state
-- `app/(account)/account/addresses/page.tsx` — alamat tersimpan dengan badge "Utama", add-new CTA
-- `app/(account)/account/loyalty/page.tsx` — hero card gelap + tier progress + history transaksi poin
-- `app/(account)/account/wishlist/page.tsx` — grid produk + quick-add to cart + empty state
-- **Route structure fix**: sub-pages di `(account)/account/[sub]/` agar URL jadi `/account/orders` dll (route group `(account)` tidak memberi URL prefix)
-- **Bug fix cart flash**: `submitting` flag di checkout mencegah flash "Belum ada item" saat `clearCart()` dipanggil sebelum navigasi selesai
-- **Link fix**: checkout success "Lihat Pesanan" → `/account/orders` (sebelumnya `/orders` — 404)
+- `app/(account)/account/orders/page.tsx` — riwayat pesanan dengan status badge (Dikirim/Selesai/Diproses)
+- **Pet Profile (Full CRUD)**: Add modal (bottom sheet), Edit, Delete dengan konfirmasi.
+- **Address Management (Full CRUD)**: Edit modal, Label chips, Sinkronisasi Alamat Utama.
+- **Wishlist System**: Optimistic update, add to cart integration, dan trash functionality.
+- **Loyalty Page**: Hero card gelap + tier progress + history transaksi poin.
+- **Wishlist Page**: Grid produk + quick-add to cart + empty state.
+- **Route structure fix**: sub-pages di `(account)/account/[sub]/` agar URL jadi `/account/orders` dll.
 
 ### Yang perlu dikerjakan:
 
-1. **Koneksi data real** (Phase 3/8):
+1. **Koneksi data real**:
    - Auth: nama & email dari Supabase session
    - Orders: dari tabel `orders` + `order_items`
-   - Pets: dari tabel `pets` (CRUD)
+   - Pets: dari tabel `pets` (Sudah terhubung CRUDnya)
    - Loyalty: dari tabel `loyalty_points`
-   - Wishlist: dari tabel `wishlists` + `products`
+   - Wishlist: dari tabel `wishlists` + `products` (Sudah terhubung)
 
-2. **Pet profile CRUD** (`app/(account)/account/pets/`):
-   - Form tambah/edit hewan (nama, jenis, foto, catatan medis)
-
-3. **Redeem poin saat checkout**:
+2. **Redeem poin saat checkout**:
    - Sambungkan loyalty store ke checkout flow
 
-4. **Review & rating**:
+3. **Review & rating**:
    - Post-purchase review form di order detail
 
 ---

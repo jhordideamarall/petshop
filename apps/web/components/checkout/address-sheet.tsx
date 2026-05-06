@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { m } from 'framer-motion';
-import { X, Loader2, Navigation, Check, ExternalLink, ShieldCheck, ArrowRight } from 'lucide-react';
+import { X, Loader2, Navigation, Check, ExternalLink, ShieldCheck, ArrowRight, Search } from 'lucide-react';
 import { getDetailedAddress } from '@petshop/core';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
@@ -27,9 +27,10 @@ interface AddressSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (address: Partial<Address>) => void;
+  initialData?: Address | null;
 }
 
-export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) {
+export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: AddressSheetProps) {
   const { user } = useAuth();
   const globalLocation = useLocationStore();
   const [step, setStep] = useState<'list' | 'map' | 'form' | 'otp'>('list');
@@ -40,6 +41,8 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   );
   const [isLocating, setIsLocating] = useState(false);
   const [isLoadingDetails, setIsLoadingLoadingDetails] = useState(false);
+  const [mapSearchQuery, setMapSearchQuery] = useState('');
+  const [isSearchingMap, setIsSearchingMap] = useState(false);
 
   // Form State
   const [label, setLabel] = useState('Rumah');
@@ -59,30 +62,36 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const supabase = createClient();
 
   useEffect(() => {
-    if (isOpen && user) {
-      fetchAddresses();
+    if (isOpen && initialData) {
+      // Edit Mode: Pre-fill states
+      setLabel(initialData.label || 'Rumah');
+      setRecipient(initialData.recipient_name || '');
+      setPhone(initialData.phone || '');
+      setFullAddress(initialData.full_address || '');
+      setCity(initialData.city || '');
+      setDistrict(initialData.district || '');
+      setPostalCode(initialData.postal_code || '');
+      setIsDefault(initialData.is_default || false);
+      setCoords([initialData.latitude || -6.2088, initialData.longitude || 106.8456]);
+      setBiteshipAreaId((initialData as any).biteship_area_id || '');
+      setStep('map'); // Start with the map for verification
+    } else if (isOpen && user) {
+      setIsLoadingAddresses(true);
+      getUserAddresses().then(addresses => {
+        setSavedAddresses(addresses);
+        if (addresses.length > 0) {
+          setStep('list');
+        } else {
+          setStep('map');
+        }
+        setIsLoadingAddresses(false);
+      });
     } else if (isOpen && !user) {
       setStep('map');
     }
-  }, [isOpen, user]);
+  }, [isOpen, user, initialData]);
 
-  const fetchAddresses = async () => {
-    setIsLoadingAddresses(true);
-    try {
-      const addresses = await getUserAddresses();
-      setSavedAddresses(addresses);
-      if (addresses.length > 0) {
-        setStep('list');
-      } else {
-        setStep('map');
-      }
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
-      setStep('map');
-    } finally {
-      setIsLoadingAddresses(false);
-    }
-  };
+
 
   const handleDetectLocation = () => {
     if ('geolocation' in navigator) {
@@ -140,6 +149,29 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
   const handleOpenInGoogleMaps = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${coords[0]},${coords[1]}`;
     window.open(url, '_blank');
+  };
+
+  const handleMapSearch = async () => {
+    if (!mapSearchQuery.trim()) return;
+    setIsSearchingMap(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          mapSearchQuery,
+        )}&limit=1`,
+      );
+      const data = await res.json();
+      if (data && data.length > 0) {
+        setCoords([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+        toast.success('Lokasi ditemukan!');
+      } else {
+        toast.error('Lokasi tidak ditemukan');
+      }
+    } catch {
+      toast.error('Gagal mencari lokasi');
+    } finally {
+      setIsSearchingMap(false);
+    }
   };
 
   const [biteshipAreaId, setBiteshipAreaId] = useState('');
@@ -255,25 +287,51 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
           .eq('user_id', userId);
       }
 
-      // 2. Insert the new address
-      const { data: savedAddress, error } = await supabase
-        .from('addresses')
-        .insert({
-          user_id: userId,
-          label,
-          recipient_name: recipient,
-          phone,
-          full_address: fullAddress,
-          city,
-          district,
-          postal_code: postalCode,
-          biteship_area_id: biteshipAreaId,
-          latitude: coords[0],
-          longitude: coords[1],
-          is_default: isDefault,
-        })
-        .select()
-        .single();
+      // 2. Insert or Update the address
+      let result;
+      if (initialData?.id) {
+        // UPDATE MODE
+        result = await supabase
+          .from('addresses')
+          .update({
+            label,
+            recipient_name: recipient,
+            phone,
+            full_address: fullAddress,
+            city,
+            district,
+            postal_code: postalCode,
+            biteship_area_id: biteshipAreaId,
+            latitude: coords[0],
+            longitude: coords[1],
+            is_default: isDefault,
+          })
+          .eq('id', initialData.id)
+          .select()
+          .single();
+      } else {
+        // INSERT MODE
+        result = await supabase
+          .from('addresses')
+          .insert({
+            user_id: userId,
+            label,
+            recipient_name: recipient,
+            phone,
+            full_address: fullAddress,
+            city,
+            district,
+            postal_code: postalCode,
+            biteship_area_id: biteshipAreaId,
+            latitude: coords[0],
+            longitude: coords[1],
+            is_default: isDefault,
+          })
+          .select()
+          .single();
+      }
+
+      const { data: savedAddress, error } = result;
 
       if (error) throw error;
 
@@ -312,7 +370,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
                 ? 'Pilih Titik Lokasi'
                 : step === 'otp'
                   ? 'Verifikasi Nomor HP'
-                  : 'Detail Alamat'}
+                  : initialData ? 'Edit Alamat' : 'Detail Alamat'}
           </h2>
           <button onClick={onClose} className="rounded-full bg-stone p-2 text-ink-3">
             <X size={20} />
@@ -371,6 +429,26 @@ export function AddressSheet({ isOpen, onClose, onSuccess }: AddressSheetProps) 
             </m.div>
           ) : step === 'map' ? (
             <div className="flex flex-col gap-6">
+              {/* Manual Search Fallback */}
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-4" size={18} />
+                <input
+                  type="text"
+                  value={mapSearchQuery}
+                  onChange={(e) => setMapSearchQuery(e.target.value)}
+                  placeholder="Cari nama jalan atau area..."
+                  className="h-12 w-full rounded-xl border border-stone-2 bg-stone/30 pl-11 pr-20 font-sans text-sm outline-none focus:border-primary/50 focus:bg-white"
+                  onKeyDown={(e) => e.key === 'Enter' && handleMapSearch()}
+                />
+                <button
+                  onClick={handleMapSearch}
+                  disabled={isSearchingMap}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-primary/10 px-3 py-1.5 font-heading text-[11px] font-bold text-primary active:scale-95 transition-transform disabled:opacity-50"
+                >
+                  {isSearchingMap ? <Loader2 className="animate-spin" size={14} /> : 'Cari'}
+                </button>
+              </div>
+
               <div className="relative h-[300px] w-full overflow-hidden rounded-2xl border border-stone-2 shadow-inner">
                 <AddressMap coords={coords} onClick={(lat, lng) => setCoords([lat, lng])} />
                 <button

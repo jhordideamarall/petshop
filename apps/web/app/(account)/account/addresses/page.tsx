@@ -3,37 +3,24 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { m, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, MapPin, Plus, Trash2, Loader2, Pencil, X, Check, Star } from 'lucide-react';
+import { ArrowLeft, MapPin, Plus, Trash2, Loader2, Pencil, Star } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getUserAddresses,
   setDefaultAddress,
   deleteAddress,
-  updateAddress,
   type Address,
 } from '@/lib/services/address-client';
 import { AddressSheet } from '@/components/checkout/address-sheet';
 import { toast } from 'sonner';
 
-interface EditForm {
-  label: string;
-  recipient_name: string;
-  phone: string;
-  full_address: string;
-  city: string;
-  district: string;
-  postal_code: string;
-  is_default: boolean;
-}
 
-const LABELS = ['Rumah', 'Kantor', 'Kos', 'Lainnya'];
 
 export default function AddressesPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [editForm, setEditForm] = useState<EditForm | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { data: addresses = [], isLoading } = useQuery({
@@ -50,18 +37,6 @@ export default function AddressesPage() {
     onError: () => toast.error('Gagal mengubah alamat utama'),
   });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, fields }: { id: string; fields: Partial<EditForm> }) =>
-      updateAddress(id, fields),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['addresses'] });
-      toast.success('Alamat berhasil diperbarui');
-      setEditingAddress(null);
-      setEditForm(null);
-    },
-    onError: () => toast.error('Gagal memperbarui alamat'),
-  });
-
   const deleteMutation = useMutation({
     mutationFn: deleteAddress,
     onSuccess: () => {
@@ -74,207 +49,25 @@ export default function AddressesPage() {
 
   const openEdit = (addr: Address) => {
     setEditingAddress(addr);
-    setEditForm({
-      label: addr.label || 'Rumah',
-      recipient_name: addr.recipient_name || '',
-      phone: addr.phone || '',
-      full_address: addr.full_address || '',
-      city: addr.city || '',
-      district: addr.district || '',
-      postal_code: addr.postal_code || '',
-      is_default: addr.is_default || false,
-    });
-  };
-
-  const closeEdit = () => {
-    setEditingAddress(null);
-    setEditForm(null);
-  };
-
-  const handleSaveEdit = () => {
-    if (!editingAddress || !editForm) return;
-    if (!editForm.recipient_name.trim()) {
-      toast.error('Nama penerima wajib diisi');
-      return;
-    }
-    updateMutation.mutate({ id: editingAddress.id, fields: editForm });
   };
 
   return (
     <div className="bg-[#FDFCFB] min-h-screen">
       <AddressSheet
-        isOpen={isSheetOpen}
-        onClose={() => setIsSheetOpen(false)}
+        isOpen={isSheetOpen || !!editingAddress}
+        initialData={editingAddress}
+        onClose={() => {
+          setIsSheetOpen(false);
+          setEditingAddress(null);
+        }}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['addresses'] });
           setIsSheetOpen(false);
+          setEditingAddress(null);
         }}
       />
 
-      {/* Edit Modal */}
-      <AnimatePresence>
-        {editingAddress && editForm && (
-          <>
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeEdit}
-              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            />
-            <m.div
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 60 }}
-              transition={{ type: 'spring', damping: 24, stiffness: 280 }}
-              className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 rounded-t-[28px] bg-white pt-5 shadow-2xl"
-            >
-              {/* Header */}
-              <div className="mb-4 flex items-center justify-between px-5">
-                <h2 className="font-heading text-[18px] font-extrabold text-ink">Edit Alamat</h2>
-                <button type="button" onClick={closeEdit} className="text-ink-3">
-                  <X size={22} />
-                </button>
-              </div>
 
-              {/* Scroll content */}
-              <div
-                className="overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                style={{ maxHeight: '65dvh' }}
-              >
-                <div className="flex flex-col gap-3 px-5 pb-3">
-                  {/* Label chips */}
-                  <div>
-                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Label</label>
-                    <div className="flex gap-2">
-                      {LABELS.map((l) => (
-                        <button
-                          key={l}
-                          type="button"
-                          onClick={() => setEditForm({ ...editForm, label: l })}
-                          className={`rounded-[12px] px-3.5 py-2 text-[13px] font-bold transition-all ${
-                            editForm.label === l
-                              ? 'bg-primary text-white shadow-[0_3px_10px_rgba(224,123,57,0.25)]'
-                              : 'bg-stone text-ink-3'
-                          }`}
-                        >
-                          {l}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-[12px] font-bold text-ink-3">
-                      Nama Penerima *
-                    </label>
-                    <input
-                      type="text"
-                      value={editForm.recipient_name}
-                      onChange={(e) => setEditForm({ ...editForm, recipient_name: e.target.value })}
-                      className="h-12 w-full rounded-[14px] border border-stone-2 bg-stone/30 px-4 text-[14px] font-semibold text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-[12px] font-bold text-ink-3">No. HP</label>
-                    <input
-                      type="tel"
-                      value={editForm.phone}
-                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                      className="h-12 w-full rounded-[14px] border border-stone-2 bg-stone/30 px-4 text-[14px] font-semibold text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-[12px] font-bold text-ink-3">
-                      Alamat Lengkap
-                    </label>
-                    <textarea
-                      value={editForm.full_address}
-                      onChange={(e) => setEditForm({ ...editForm, full_address: e.target.value })}
-                      rows={2}
-                      className="w-full rounded-[14px] border border-stone-2 bg-stone/30 px-4 py-3 text-[14px] font-semibold text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="mb-1 block text-[12px] font-bold text-ink-3">Kota</label>
-                      <input
-                        type="text"
-                        value={editForm.city}
-                        onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                        className="h-12 w-full rounded-[14px] border border-stone-2 bg-stone/30 px-4 text-[13px] font-semibold text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-[12px] font-bold text-ink-3">
-                        Kode Pos
-                      </label>
-                      <input
-                        type="text"
-                        value={editForm.postal_code}
-                        onChange={(e) => setEditForm({ ...editForm, postal_code: e.target.value })}
-                        className="h-12 w-full rounded-[14px] border border-stone-2 bg-stone/30 px-4 text-[13px] font-semibold text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Set as default toggle */}
-                  <button
-                    type="button"
-                    onClick={() => setEditForm({ ...editForm, is_default: !editForm.is_default })}
-                    className={`flex items-center gap-3 rounded-[16px] border px-4 py-3.5 transition-all ${
-                      editForm.is_default
-                        ? 'border-primary/30 bg-[#FFF3E8]'
-                        : 'border-stone-2 bg-stone/20'
-                    }`}
-                  >
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        editForm.is_default ? 'bg-primary text-white' : 'bg-stone text-ink-4'
-                      }`}
-                    >
-                      <Star size={15} fill={editForm.is_default ? 'white' : 'none'} />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-heading text-[14px] font-bold text-ink">
-                        Jadikan Alamat Utama
-                      </p>
-                      <p className="text-[12px] font-medium text-ink-3">
-                        {editForm.is_default
-                          ? 'Ini akan jadi alamat utama'
-                          : 'Aktifkan sebagai alamat utama'}
-                      </p>
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit button — di atas bottom nav */}
-              <div className="px-5 pb-[calc(88px+env(safe-area-inset-bottom)+8px)] pt-3 border-t border-stone-2 bg-white">
-                <button
-                  type="button"
-                  onClick={handleSaveEdit}
-                  disabled={updateMutation.isPending}
-                  className="flex h-13 w-full items-center justify-center gap-2 rounded-[16px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_6px_18px_rgba(224,123,57,0.28)] disabled:opacity-50 active:scale-[0.98]"
-                  style={{ transition: 'transform 0.1s' }}
-                >
-                  {updateMutation.isPending ? (
-                    <Loader2 className="animate-spin" size={18} />
-                  ) : (
-                    <>
-                      <Check size={16} strokeWidth={2.5} />
-                      Simpan Perubahan
-                    </>
-                  )}
-                </button>
-              </div>
-            </m.div>
-          </>
-        )}
-      </AnimatePresence>
 
       {/* Confirm delete */}
       <AnimatePresence>
