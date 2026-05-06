@@ -74,7 +74,7 @@ export default function CheckoutSuccessPage(props: { searchParams: Promise<{ ord
         transition={{ delay: 0.2 }}
         className="mb-8 text-sm text-ink-3"
       >
-        Pesananmu sedang diproses. Notifikasi detail akan dikirimkan melalui WhatsApp.
+        Terima kasih! Pesananmu sedang diproses. Kamu bisa pantau status pengiriman di menu pesanan.
       </m.p>
 
       <m.div

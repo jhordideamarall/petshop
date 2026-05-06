@@ -263,6 +263,18 @@ export async function POST(req: Request) {
           console.error('Failed to call Biteship API for Order', order.order_number, ':', bsError);
         }
       }
+    } else if (status === 'EXPIRED') {
+      // Mark order as expired/cancelled
+      await supabaseAdmin
+        .from('orders')
+        .update({
+          status: 'expired',
+          payment_status: 'unpaid',
+          payment_metadata: body,
+        })
+        .eq('order_number', external_id);
+      
+      console.log('Order Expired:', external_id);
     }
 
     return NextResponse.json({ success: true });
