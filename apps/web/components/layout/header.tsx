@@ -148,41 +148,33 @@ export function Header() {
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
-    // 1. Auto-reset stale "Jakarta" values from old persistence
-    if (locationName === 'Jakarta' || locationName === 'Jakarta Selatan') {
+    // 1. Auto-reset stale "Jakarta" values ONLY IF coords are also missing
+    if (!coords && (locationName === 'Jakarta' || locationName === 'Jakarta Selatan')) {
       setLocationName('Pilih Lokasi');
     }
 
-    // 2. Detect Location only if not already detected
-    if ('geolocation' in navigator) {
-      if (!coords) {
-        setIsLocating(true);
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            setCoords([latitude, longitude]);
-            const city = await getCityFromCoords(latitude, longitude);
-            setLocationName(city);
-            setIsLocating(false);
-          },
-          (error) => {
-            if (error.code === 2) {
-              console.warn('Geolocation: Position unavailable.');
-              setPromptOpen(true);
-            } else if (error.code === 1) {
-              console.warn('Geolocation: Permission denied.');
-              setPromptOpen(true);
-            }
-            setIsLocating(false);
-          },
-          { timeout: 10000 },
-        );
-      }
-    } else {
-      console.warn('Geolocation not supported.');
-      setPromptOpen(true);
+    // 2. Detect Location only if coords are totally missing
+    if (!coords && 'geolocation' in navigator) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setCoords([latitude, longitude]);
+          const city = await getCityFromCoords(latitude, longitude);
+          setLocationName(city);
+          setIsLocating(false);
+        },
+        (error) => {
+          // Only show prompt if it's the FIRST attempt or critical failure
+          if (error.code === 1 || error.code === 2) {
+            setPromptOpen(true);
+          }
+          setIsLocating(false);
+        },
+        { timeout: 8000 },
+      );
     }
-  }, [coords, locationName, setCoords, setLocationName]);
+  }, []); // Only run ONCE on mount
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();
