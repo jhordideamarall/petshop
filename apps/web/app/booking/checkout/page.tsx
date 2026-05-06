@@ -62,6 +62,7 @@ function formatDate(dateId: string) {
 
 export default function BookingCheckoutPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [draft, setDraft] = useState<BookingDraft | null>(null);
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState<PetType>('dog');
@@ -89,8 +90,6 @@ export default function BookingCheckoutPage() {
   const totalDue = service.isHotel ? dpAmount : service.price;
 
   const canSubmit = !isAddNew || (petName.trim() !== '' && petWeight.trim() !== '');
-
-  const { user } = useAuth();
 
   const handleSubmit = () => {
     if (!canSubmit) return;
