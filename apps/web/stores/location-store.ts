@@ -4,8 +4,10 @@ import { persist } from 'zustand/middleware';
 interface LocationState {
   coords: [number, number] | null;
   locationName: string;
+  hasHydrated: boolean;
   setCoords: (coords: [number, number]) => void;
   setLocationName: (name: string) => void;
+  setHasHydrated: (val: boolean) => void;
 }
 
 export const useLocationStore = create<LocationState>()(
@@ -13,11 +15,16 @@ export const useLocationStore = create<LocationState>()(
     (set) => ({
       coords: null,
       locationName: 'Pilih Lokasi',
+      hasHydrated: false,
       setCoords: (coords) => set({ coords }),
       setLocationName: (locationName) => set({ locationName }),
+      setHasHydrated: (hasHydrated) => set({ hasHydrated }),
     }),
     {
       name: 'petshop-location-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );

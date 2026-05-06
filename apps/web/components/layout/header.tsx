@@ -142,12 +142,15 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [promptOpen, setPromptOpen] = useState(false);
-  const { coords, locationName, setCoords, setLocationName } = useLocationStore();
+  const { coords, locationName, hasHydrated, setCoords, setLocationName } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
   const items = useCartStore((state) => state.items);
   const cartCount = useMemo(() => items.reduce((total, item) => total + item.quantity, 0), [items]);
 
   useEffect(() => {
+    // WAIT for hydration to finish before doing ANY logic
+    if (!hasHydrated) return;
+
     // 1. Auto-reset stale "Jakarta" values ONLY IF coords are also missing
     if (!coords && (locationName === 'Jakarta' || locationName === 'Jakarta Selatan')) {
       setLocationName('Pilih Lokasi');
@@ -174,7 +177,7 @@ export function Header() {
         { timeout: 8000 },
       );
     }
-  }, []); // Only run ONCE on mount
+  }, [hasHydrated]); // Run when hydration status changes
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();
