@@ -23,6 +23,10 @@ const AddressMap = dynamic(() => import('./address-map'), {
   ),
 });
 
+interface ExtendedAddress extends Address {
+  biteship_area_id?: string | null;
+}
+
 interface AddressSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -73,7 +77,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
       setPostalCode(initialData.postal_code || '');
       setIsDefault(initialData.is_default || false);
       setCoords([initialData.latitude || -6.2088, initialData.longitude || 106.8456]);
-      setBiteshipAreaId((initialData as any).biteship_area_id || '');
+      setBiteshipAreaId((initialData as ExtendedAddress).biteship_area_id || '');
       setStep('map'); // Start with the map for verification
     } else if (isOpen && user) {
       setIsLoadingAddresses(true);
