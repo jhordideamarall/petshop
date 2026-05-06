@@ -164,22 +164,21 @@ export function Header() {
           if (error.code !== 1 && error.code !== 2) {
             console.error('Geolocation error:', error.message);
           } else if (error.code === 2) {
-            console.warn('Geolocation: Position unavailable.');
-            // Only prompt if we don't have a valid location yet
-            if (locationName === 'Pilih Lokasi') setPromptOpen(true);
+            console.warn('Geolocation: Position unavailable (bad GPS signal).');
+            setPromptOpen(true);
           } else {
-            console.warn('Geolocation: Permission denied.');
-            if (locationName === 'Pilih Lokasi') setPromptOpen(true);
+            console.warn('Geolocation: Permission denied by user.');
+            setPromptOpen(true);
           }
           setIsLocating(false);
         },
         { timeout: 10000 },
       );
     } else {
-      console.warn('Geolocation not supported.');
-      if (locationName === 'Pilih Lokasi') setPromptOpen(true);
+      console.warn('Geolocation not supported by this browser.');
+      setPromptOpen(true);
     }
-  }, [locationName]);
+  }, []);
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();
@@ -227,22 +226,22 @@ export function Header() {
             style={{ marginBottom: titleRowMb }}
           >
             <Link href="/" className="flex flex-col no-underline group">
-              <m.div 
-                layout 
+              <m.div
+                layout
                 className="mb-1 flex items-center gap-1.5"
                 whileHover="hover"
               >
                 <m.div
                   initial={{ rotate: -180, scale: 0, opacity: 0 }}
                   animate={{ rotate: 0, scale: 1, opacity: 1 }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 260, 
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
                     damping: 20,
                     delay: 0.1
                   }}
                   variants={{
-                    hover: { 
+                    hover: {
                       rotate: [0, -15, 15, -15, 0],
                       scale: 1.15,
                       transition: { duration: 0.4, ease: "easeInOut" }
@@ -251,14 +250,14 @@ export function Header() {
                 >
                   <PawIcon />
                 </m.div>
-                <m.span 
+                <m.span
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 260, 
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
                     damping: 20,
-                    delay: 0.15 
+                    delay: 0.15
                   }}
                   className="font-heading text-lg font-extrabold tracking-tight text-ink group-hover:text-primary transition-colors"
                 >
@@ -281,10 +280,10 @@ export function Header() {
             </Link>
 
             <m.div layout className="flex gap-2">
-              <m.button 
+              <m.button
                 whileHover={{ scale: 1.05, background: 'rgba(245,243,240,0.9)' }}
-                whileTap={{ scale: 0.94 }} 
-                style={iconBtnStyle} 
+                whileTap={{ scale: 0.94 }}
+                style={iconBtnStyle}
                 aria-label="Notifikasi"
                 onClick={() => setNotifOpen(true)}
               >
@@ -378,9 +377,8 @@ export function Header() {
                   <m.button
                     layout
                     whileTap={{ scale: 0.9 }}
-                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${
-                      showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
-                    }`}
+                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
+                      }`}
                     onClick={() => setShowFilters(!showFilters)}
                     aria-label="Filter"
                   >
@@ -454,33 +452,33 @@ export function Header() {
                   </m.div>
                   {isLoadingCats
                     ? Array.from({ length: 4 }).map((_, i) => (
-                        <m.div
-                          key={i}
-                          className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
-                        />
-                      ))
+                      <m.div
+                        key={i}
+                        className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
+                      />
+                    ))
                     : dbCategories.map((cat: Category) => (
-                        <m.div
-                          key={cat.id}
-                          variants={{
-                            hidden: { y: 10, opacity: 0, scale: 0.88 },
-                            show: {
-                              y: 0,
-                              opacity: 1,
-                              scale: 1,
-                              transition: { type: 'spring', stiffness: 300, damping: 22 },
-                            },
-                            exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
-                          }}
-                          style={{ flexShrink: 0 }}
-                        >
-                          <CategoryChip
-                            label={cat.name}
-                            active={activeCat === cat.slug}
-                            onClick={() => router.push(`/products?category=${cat.slug}`)}
-                          />
-                        </m.div>
-                      ))}
+                      <m.div
+                        key={cat.id}
+                        variants={{
+                          hidden: { y: 10, opacity: 0, scale: 0.88 },
+                          show: {
+                            y: 0,
+                            opacity: 1,
+                            scale: 1,
+                            transition: { type: 'spring', stiffness: 300, damping: 22 },
+                          },
+                          exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
+                        }}
+                        style={{ flexShrink: 0 }}
+                      >
+                        <CategoryChip
+                          label={cat.name}
+                          active={activeCat === cat.slug}
+                          onClick={() => router.push(`/products?category=${cat.slug}`)}
+                        />
+                      </m.div>
+                    ))}
                 </m.div>
               </m.div>
             )}

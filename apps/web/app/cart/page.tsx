@@ -48,8 +48,8 @@ export default function CartPage() {
   const hasItems = hydrated && items.length > 0;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white pt-[env(safe-area-inset-top)]">
-      <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-stone-2 bg-white px-[clamp(16px,5vw,20px)]">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
+      <header className="sticky top-0 z-50 flex h-[72px] items-center justify-between border-b border-stone-2 bg-white px-[clamp(16px,5vw,20px)]">
         <button
           onClick={() => router.back()}
           className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-white text-ink active:scale-95 transition-transform"
@@ -57,8 +57,8 @@ export default function CartPage() {
         >
           <ChevronLeft size={24} strokeWidth={2.5} />
         </button>
-        <h1 className="mb-1.5 font-heading text-[18px] font-extrabold text-ink">Keranjang</h1>
-        <span className="mb-2 min-w-10 text-right font-heading text-[14px] font-extrabold text-ink">
+        <h1 className="font-heading text-[18px] font-extrabold text-ink">Keranjang</h1>
+        <span className="min-w-10 text-right font-heading text-[14px] font-extrabold text-ink">
           {count} item
         </span>
       </header>

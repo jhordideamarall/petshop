@@ -266,7 +266,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone pt-[env(safe-area-inset-top)]">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-stone">
       <AddressSheet
         isOpen={isAddressSheetOpen}
         onClose={() => setIsAddressSheetOpen(false)}

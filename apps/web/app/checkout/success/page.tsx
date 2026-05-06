@@ -49,7 +49,7 @@ export default function CheckoutSuccessPage(props: { searchParams: Promise<{ ord
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-8 pb-20 pt-[max(40px,env(safe-area-inset-top))] text-center">
+    <div className="flex flex-1 flex-col items-center justify-center bg-white px-8 py-20 text-center">
       <m.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

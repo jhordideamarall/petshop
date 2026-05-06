@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AnimatePresence, m, useScroll, useSpring, useTransform } from 'framer-motion';
 import { CalendarDays, Check, ChevronRight, Clock3, MapPin, PawPrint } from 'lucide-react';
 import { BottomNav } from '@/components/layout/bottom-nav';
-import { useLocationStore } from '@/stores/location-store';
 
 type ServiceId = 'grooming-basic' | 'grooming-full' | 'pet-hotel';
 type PetId = 'milo' | 'luna' | 'add-new';
@@ -185,7 +184,6 @@ export default function BookingPage() {
   const [selectedTimeId, setSelectedTimeId] = useState('10:30');
   const [selectedPetId, setSelectedPetId] = useState<PetId | null>(null);
   const [notes, setNotes] = useState('');
-  const locationName = useLocationStore((s) => s.locationName);
 
   const selectedService = services.find((s) => s.id === selectedServiceId) ?? services[0];
   const selectedDate = dateOptions.find((d) => d.id === selectedDateId) ?? dateOptions[1];
@@ -255,7 +253,7 @@ export default function BookingPage() {
               <h2 className="font-heading text-[17px] font-extrabold text-ink">1. Pilih layanan</h2>
               <p className="mt-0.5 text-sm text-ink-3">Harga sudah termasuk basic check.</p>
             </div>
-            <span className="chip chip-orange">{locationName}</span>
+            <span className="chip chip-orange">Jakarta</span>
           </div>
 
           <div className="flex flex-col gap-3">
