@@ -146,6 +146,13 @@ export default function CheckoutPage() {
 
   const selectedShipping = shippingOptions.find((option) => option.id === shippingId);
   const shippingPrice = selectedShipping ? selectedShipping.price : 0;
+  
+  // Tax 11% (Internal only, not added to total to keep it inclusive/absorbed)
+  const taxAmount = Math.round(subtotal * 0.11);
+  const serviceFee = 0; // Hapus sesuai request
+  const discount = 0;
+
+  // Total tetep Subtotal + Ongkir biar user ga bingung
   const total = subtotal + shippingPrice;
 
   const { mutate: handleCheckout, isPending: submitting } = useMutation({
@@ -209,6 +216,9 @@ export default function CheckoutPage() {
         shippingCourierCode: selectedShipping.courier_code,
         shippingServiceCode: selectedShipping.service_code,
         totalWeight,
+        tax: taxAmount,
+        serviceFee,
+        discount,
       });
 
       // Panggil API untuk membuat transaksi Midtrans

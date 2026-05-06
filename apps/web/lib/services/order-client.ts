@@ -33,6 +33,9 @@ export interface CheckoutPayload {
   shippingCourierCode?: string;
   shippingServiceCode?: string;
   totalWeight: number;
+  tax: number;
+  serviceFee: number;
+  discount: number;
 }
 
 export async function getUserOrders() {
@@ -117,6 +120,9 @@ export async function createOrder(payload: CheckoutPayload) {
     p_shipping_courier_code: payload.shippingCourierCode,
     p_shipping_service_code: payload.shippingServiceCode,
     p_total_weight: payload.totalWeight,
+    p_tax: payload.tax,
+    p_service_fee: payload.serviceFee,
+    p_discount: payload.discount,
   });
 
   if (error) {
