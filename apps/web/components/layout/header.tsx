@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getActiveCategories, type Category } from '@/lib/services/product-client';
 
 const PawIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="#E07B39" stroke="none">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF8235" stroke="none">
     <ellipse cx="7" cy="8" rx="2.5" ry="3" />
     <ellipse cx="17" cy="8" rx="2.5" ry="3" />
     <ellipse cx="4" cy="15" rx="2" ry="2.5" />
@@ -342,7 +342,7 @@ export function Header() {
                 className="flex items-center gap-2.5 rounded-full border border-[#E07B39]/30 bg-stone/60 px-4 cursor-pointer hover:bg-stone/80"
                 style={{ paddingTop: searchPy, paddingBottom: searchPy }}
               >
-                <m.span layout className="flex items-center text-[#E07B39]">
+                <m.span layout className="flex items-center text-[#FF8235]">
                   <SearchIcon />
                 </m.span>
                 <m.span layout className="font-sans text-sm text-[#A09890] truncate">
@@ -364,8 +364,8 @@ export function Header() {
                   <m.button
                     layout
                     whileTap={{ scale: 0.9 }}
-                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#E07B39]/30 transition-colors shadow-lg shadow-[#E07B39]/20 ${
-                      showFilters ? 'bg-white text-[#E07B39]' : 'bg-[#E07B39] text-white'
+                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${
+                      showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
                     }`}
                     onClick={() => setShowFilters(!showFilters)}
                     aria-label="Filter"

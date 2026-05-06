@@ -31,7 +31,7 @@ const BANNERS = [
     cta: 'Belanja sekarang',
     link: '/products?sale=true',
     bg: 'linear-gradient(135deg, #1A1714 0%, #3D2F1E 100%)',
-    accent: '#E07B39',
+    accent: '#FF8235',
   },
   {
     id: 2,
@@ -71,7 +71,7 @@ const ScissorsIcon = () => (
     height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#E07B39"
+    stroke="#FF8235"
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -460,7 +460,7 @@ export default function HomePage() {
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
                 fontSize: 13,
-                color: '#E07B39',
+                color: '#FF8235',
                 textDecoration: 'none',
               }}
             >
@@ -608,7 +608,7 @@ export default function HomePage() {
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 700,
                     fontSize: 13,
-                    color: '#E07B39',
+                    color: '#FF8235',
                   }}
                 >
                   02:14:38
@@ -621,7 +621,7 @@ export default function HomePage() {
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
                 fontSize: 13,
-                color: '#E07B39',
+                color: '#FF8235',
                 textDecoration: 'none',
               }}
             >
@@ -662,7 +662,7 @@ export default function HomePage() {
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
                 fontSize: 13,
-                color: '#E07B39',
+                color: '#FF8235',
                 textDecoration: 'none',
               }}
             >

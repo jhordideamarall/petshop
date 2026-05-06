@@ -10,7 +10,7 @@ const HomeIcon = ({ active }: { active: boolean }) => (
     height="22"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? '#E07B39' : '#A09890'}
+    stroke={active ? '#FF8235' : '#A09890'}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -26,7 +26,7 @@ const ShopIcon = ({ active }: { active: boolean }) => (
     height="22"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? '#E07B39' : '#A09890'}
+    stroke={active ? '#FF8235' : '#A09890'}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -43,7 +43,7 @@ const BookingIcon = ({ active }: { active: boolean }) => (
     height="22"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? '#E07B39' : '#A09890'}
+    stroke={active ? '#FF8235' : '#A09890'}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -62,7 +62,7 @@ const UserIcon = ({ active }: { active: boolean }) => (
     height="22"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? '#E07B39' : '#A09890'}
+    stroke={active ? '#FF8235' : '#A09890'}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -139,7 +139,7 @@ export function BottomNav() {
             <span
               className="font-heading text-[10px] font-semibold tracking-wide"
               style={{
-                color: active ? '#E07B39' : '#A09890',
+                color: active ? '#FF8235' : '#A09890',
               }}
             >
               {label}
