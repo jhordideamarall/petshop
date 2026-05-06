@@ -1,0 +1,17 @@
+{
+  "name": "Pawvels Petshop",
+  "short_name": "Pawvels",
+  "description": "Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFCFB",
+  "theme_color": "#E07B39",
+  "icons": [
+    {
+      "src": "/icon-pawvels.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

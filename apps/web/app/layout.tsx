@@ -23,8 +23,10 @@ export const metadata: Metadata = {
     default: 'Pawvels',
     template: '%s | Pawvels',
   },
+  manifest: '/manifest.json',
   icons: {
     icon: '/icon.svg',
+    apple: '/icon-pawvels.png',
   },
   description: 'Petshop terlengkap di Jakarta. Produk, grooming, dan hotel hewan piaraan.',
   appleWebApp: {
