@@ -62,8 +62,10 @@ export default function OrdersPage() {
     if (activeTab === 'pending') return order.status === 'pending';
     if (activeTab === 'processing') return order.status === 'paid' || order.status === 'processing';
     if (activeTab === 'shipped') return order.status === 'shipped';
-    if (activeTab === 'completed') return order.status === 'completed' || order.status === 'delivered';
-    if (activeTab === 'cancelled') return order.status === 'cancelled' || order.status === 'expired';
+    if (activeTab === 'completed')
+      return order.status === 'completed' || order.status === 'delivered';
+    if (activeTab === 'cancelled')
+      return order.status === 'cancelled' || order.status === 'expired';
     return true;
   });
 
@@ -85,7 +87,7 @@ export default function OrdersPage() {
     },
     onError: (err: Error) => {
       toast.error(err.message);
-    }
+    },
   });
 
   return (
@@ -103,11 +105,11 @@ export default function OrdersPage() {
               <span>Kembali</span>
             </button>
           </div>
-          
+
           <h1 className="text-center font-heading text-[17px] font-extrabold text-ink truncate">
             Pesanan Saya
           </h1>
-          
+
           <div className="flex justify-end invisible pointer-events-none">
             <button className="flex items-center gap-1 text-sm font-bold">
               <ArrowLeft size={18} />
@@ -165,7 +167,7 @@ export default function OrdersPage() {
               const st = STATUS_COLOR[order.status] || STATUS_COLOR.pending;
               const itemsCount = order.order_items?.length || 0;
               const firstItem = order.order_items?.[0];
-              
+
               return (
                 <m.div
                   key={order.id}
@@ -221,7 +223,7 @@ export default function OrdersPage() {
                           {new Intl.DateTimeFormat('id-ID', {
                             day: 'numeric',
                             month: 'long',
-                            year: 'numeric'
+                            year: 'numeric',
                           }).format(new Date(order.created_at || new Date()))}
                         </p>
                         <div className="mt-2 flex items-center justify-between">
@@ -236,18 +238,24 @@ export default function OrdersPage() {
                     {/* Action Buttons */}
                     <div className="mt-5 flex gap-2">
                       {order.status === 'pending' && (
-                        <button 
+                        <button
                           onClick={() => handlePay(order.id)}
                           disabled={isPaying}
                           className="flex-1 rounded-xl bg-primary py-3 text-[13px] font-extrabold text-white shadow-[0_4px_12px_rgba(224,123,57,0.3)] active:scale-95 transition-all disabled:opacity-50"
                         >
-                          {isPaying ? <Loader2 className="mx-auto animate-spin" size={18} /> : 'Bayar Sekarang'}
+                          {isPaying ? (
+                            <Loader2 className="mx-auto animate-spin" size={18} />
+                          ) : (
+                            'Bayar Sekarang'
+                          )}
                         </button>
                       )}
 
                       {order.status === 'shipped' && (
-                        <button 
-                          onClick={() => router.push(`/account/orders/${order.id}/tracking` as Route)}
+                        <button
+                          onClick={() =>
+                            router.push(`/account/orders/${order.id}/tracking` as Route)
+                          }
                           className="flex-1 rounded-xl bg-ink py-3 text-[13px] font-extrabold text-white shadow-lg active:scale-95 transition-all"
                         >
                           Lacak Pengiriman
@@ -259,10 +267,10 @@ export default function OrdersPage() {
                           Beli Lagi
                         </button>
                       )}
-                      
-                      <button 
+
+                      <button
                         onClick={() => router.push(`/account/orders/${order.id}` as Route)}
-                        className="flex-none rounded-xl bg-stone-2 px-5 py-3 text-[13px] font-extrabold text-ink active:scale-95 transition-all"
+                        className="flex-none rounded-xl border-2 border-primary/30 bg-white px-5 py-3 text-[13px] font-extrabold text-ink active:scale-95 transition-all"
                       >
                         Detail
                       </button>
