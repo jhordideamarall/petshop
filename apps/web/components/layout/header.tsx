@@ -164,21 +164,22 @@ export function Header() {
           if (error.code !== 1 && error.code !== 2) {
             console.error('Geolocation error:', error.message);
           } else if (error.code === 2) {
-            console.warn('Geolocation: Position unavailable (bad GPS signal).');
-            setPromptOpen(true);
+            console.warn('Geolocation: Position unavailable.');
+            // Only prompt if we don't have a valid location yet
+            if (locationName === 'Pilih Lokasi') setPromptOpen(true);
           } else {
-            console.warn('Geolocation: Permission denied by user.');
-            setPromptOpen(true);
+            console.warn('Geolocation: Permission denied.');
+            if (locationName === 'Pilih Lokasi') setPromptOpen(true);
           }
           setIsLocating(false);
         },
         { timeout: 10000 },
       );
     } else {
-      console.warn('Geolocation not supported by this browser.');
-      setPromptOpen(true);
+      console.warn('Geolocation not supported.');
+      if (locationName === 'Pilih Lokasi') setPromptOpen(true);
     }
-  }, []);
+  }, [locationName]);
 
   // iOS-native shrink — slow spring, full range
   const { scrollY } = useScroll();

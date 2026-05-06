@@ -12,7 +12,7 @@ export const useLocationStore = create<LocationState>()(
   persist(
     (set) => ({
       coords: null,
-      locationName: 'Jakarta Selatan',
+      locationName: 'Pilih Lokasi',
       setCoords: (coords) => set({ coords }),
       setLocationName: (locationName) => set({ locationName }),
     }),
