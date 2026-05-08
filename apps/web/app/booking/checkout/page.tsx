@@ -5,48 +5,22 @@ import { useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { ArrowLeft, CalendarDays, Check, Clock3, PawPrint, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/components/providers/auth-provider';
+import { createBooking, getServices } from '@/lib/services/booking-client';
+import { addPet, getUserPets } from '@/lib/services/pet-client';
+import type { Service } from '@/lib/services/booking-client';
+import type { Pet } from '@/lib/services/pet-client';
 
 type PetType = 'dog' | 'cat' | 'other';
 
 interface BookingDraft {
   serviceId: string;
   dateId: string;
-  timeId: string;
+  dateEndId: string | null;
+  nights: number | null;
+  timeId: string | null;
   petId: string;
   notes: string;
 }
-
-const SERVICE_INFO: Record<
-  string,
-  { name: string; price: number; accent: string; isHotel: boolean; duration: string }
-> = {
-  'grooming-basic': {
-    name: 'Grooming Basic',
-    price: 85000,
-    accent: '#E07B39',
-    isHotel: false,
-    duration: '1 jam',
-  },
-  'grooming-full': {
-    name: 'Grooming Full',
-    price: 150000,
-    accent: '#2D7D52',
-    isHotel: false,
-    duration: '2 jam',
-  },
-  'pet-hotel': {
-    name: 'Pet Hotel',
-    price: 120000,
-    accent: '#6C5CE7',
-    isHotel: true,
-    duration: '24 jam',
-  },
-};
-
-const PET_INFO: Record<string, { name: string; meta: string }> = {
-  milo: { name: 'Milo', meta: 'Golden Retriever, 3 tahun' },
-  luna: { name: 'Luna', meta: 'Persian Cat, 2 tahun' },
-};
 
 const PET_TYPE_LABELS: Record<PetType, string> = { dog: 'Anjing', cat: 'Kucing', other: 'Lainnya' };
 
@@ -64,6 +38,8 @@ export default function BookingCheckoutPage() {
   const router = useRouter();
   const { user } = useAuth();
   const [draft, setDraft] = useState<BookingDraft | null>(null);
+  const [service, setService] = useState<Service | null>(null);
+  const [existingPet, setExistingPet] = useState<Pet | null>(null);
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState<PetType>('dog');
   const [petWeight, setPetWeight] = useState('');
@@ -77,21 +53,42 @@ export default function BookingCheckoutPage() {
       router.replace('/booking');
       return;
     }
-    setDraft(JSON.parse(raw) as BookingDraft);
-  }, [router]);
+    const parsed = JSON.parse(raw) as BookingDraft;
+    setDraft(parsed);
 
-  if (!draft) return null;
+    // Fetch service info
+    getServices()
+      .then((services: Service[]) => {
+        const found = services.find((s: Service) => s.id === parsed.serviceId);
+        if (found) setService(found);
+      })
+      .catch(console.error);
 
-  const service = SERVICE_INFO[draft.serviceId] ?? SERVICE_INFO['grooming-full'];
+    // Fetch existing pet if not add-new
+    if (parsed.petId !== 'add-new' && user) {
+      getUserPets()
+        .then((pets) => {
+          const found = pets.find((p) => p.id === parsed.petId);
+          if (found) setExistingPet(found);
+        })
+        .catch(console.error);
+    }
+  }, [router, user]);
+
+  if (!draft || !service) return null;
+
   const isAddNew = draft.petId === 'add-new';
-  const existingPet = !isAddNew ? (PET_INFO[draft.petId] ?? null) : null;
 
-  const dpAmount = service.isHotel ? Math.round(service.price * 0.5) : 0;
-  const totalDue = service.isHotel ? dpAmount : service.price;
+  const isHotel = service.type === 'hotel';
+  const hotelNights = draft.nights ?? 1;
+  const hotelTotal = isHotel ? Number(service.price) * hotelNights : 0;
+  const dpAmount = isHotel ? Math.round(hotelTotal * (Number(service.dp_percentage) / 100)) : 0;
+  const totalDue = isHotel ? dpAmount : Number(service.price);
+  const serviceAccent = isHotel ? '#6C5CE7' : service.slug.includes('full') ? '#2D7D52' : '#E07B39';
 
   const canSubmit = !isAddNew || (petName.trim() !== '' && petWeight.trim() !== '');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!canSubmit) return;
 
     if (!user) {
@@ -99,20 +96,43 @@ export default function BookingCheckoutPage() {
       return;
     }
 
-    const d = new Date();
-    const datePart = [
-      d.getFullYear(),
-      String(d.getMonth() + 1).padStart(2, '0'),
-      String(d.getDate()).padStart(2, '0'),
-    ].join('');
-    const rand = Math.floor(1000 + Math.random() * 9000);
-    const bookingNum = `BK-${datePart}-${rand}`;
-    sessionStorage.setItem(
-      'bookingSuccess',
-      JSON.stringify({ bookingNum, ...draft, serviceName: service.name }),
-    );
-    sessionStorage.removeItem('bookingDraft');
-    router.push('/booking/success');
+    try {
+      // Jika tambah pet baru → simpan ke DB dulu
+      let petId = draft.petId;
+      if (isAddNew) {
+        const newPet = await addPet({
+          name: petName.trim(),
+          type: petType as 'dog' | 'cat' | 'bird' | 'hamster' | 'rabbit' | 'fish' | 'other',
+          weight_kg: petWeight ? Number(petWeight) : null,
+        });
+        petId = newPet.id;
+      }
+
+      const booking = await createBooking({
+        pet_id: petId,
+        service_id: draft.serviceId,
+        date_start: draft.dateId,
+        date_end: draft.dateEndId ?? null,
+        time_slot: draft.timeId ? `${draft.timeId}:00` : null,
+        total_amount: isHotel ? hotelTotal : totalDue,
+        dp_amount: dpAmount,
+        notes: draft.notes || null,
+      });
+
+      sessionStorage.setItem(
+        'bookingSuccess',
+        JSON.stringify({
+          bookingNum: booking.booking_number,
+          serviceName: service.name,
+          dateId: draft.dateId,
+          timeId: draft.timeId,
+        }),
+      );
+      sessionStorage.removeItem('bookingDraft');
+      router.push('/booking/success');
+    } catch (err) {
+      console.error('Booking failed:', err);
+    }
   };
 
   return (
@@ -140,8 +160,8 @@ export default function BookingCheckoutPage() {
         <div
           className="rounded-[22px] border p-4"
           style={{
-            borderColor: service.accent + '44',
-            boxShadow: `0 8px 24px ${service.accent}18`,
+            borderColor: serviceAccent + '44',
+            boxShadow: `0 8px 24px ${serviceAccent}18`,
             background: '#FFFFFF',
           }}
         >
@@ -152,15 +172,24 @@ export default function BookingCheckoutPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-stone px-3 py-1.5 font-heading text-[12px] font-bold text-ink-3">
               <CalendarDays size={13} />
-              {formatDate(draft.dateId)}
+              {isHotel
+                ? `${formatDate(draft.dateId)} → ${formatDate(draft.dateEndId ?? draft.dateId)}`
+                : formatDate(draft.dateId)}
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-stone px-3 py-1.5 font-heading text-[12px] font-bold text-ink-3">
-              <Clock3 size={13} />
-              {draft.timeId} WIB
-            </span>
+            {!isHotel && draft.timeId && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-stone px-3 py-1.5 font-heading text-[12px] font-bold text-ink-3">
+                <Clock3 size={13} />
+                {draft.timeId} WIB
+              </span>
+            )}
+            {isHotel && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#6C5CE7]/10 px-3 py-1.5 font-heading text-[12px] font-bold text-[#6C5CE7]">
+                {hotelNights} hari
+              </span>
+            )}
             <span className="inline-flex items-center gap-1.5 rounded-full bg-stone px-3 py-1.5 font-heading text-[12px] font-bold text-ink-3">
               <PawPrint size={13} />
-              {service.duration}
+              {service.duration_minutes ? `${service.duration_minutes} menit` : '24 jam'}
             </span>
           </div>
         </div>
@@ -230,7 +259,17 @@ export default function BookingCheckoutPage() {
                 <p className="font-heading text-[15px] font-extrabold text-ink">
                   {existingPet?.name ?? draft.petId}
                 </p>
-                <p className="text-sm text-ink-3">{existingPet?.meta}</p>
+                <p className="text-sm text-ink-3">
+                  {[
+                    existingPet?.type,
+                    existingPet?.breed,
+                    existingPet?.birth_date
+                      ? `${new Date().getFullYear() - new Date(existingPet.birth_date).getFullYear()} tahun`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}
+                </p>
               </div>
             </div>
           )}
@@ -253,25 +292,28 @@ export default function BookingCheckoutPage() {
           </p>
           <div className="mt-3 space-y-2.5">
             <div className="flex justify-between text-[14px] font-semibold text-ink-3">
-              <span>{service.name}</span>
-              <span>{formatPrice(service.price)}</span>
+              <span>
+                {service.name}
+                {isHotel ? ` × ${hotelNights} hari` : ''}
+              </span>
+              <span>{formatPrice(isHotel ? hotelTotal : Number(service.price))}</span>
             </div>
-            {service.isHotel && (
+            {isHotel && (
               <>
                 <div className="flex justify-between text-[14px] font-semibold text-primary">
-                  <span>DP 50% (sekarang)</span>
+                  <span>DP {service.dp_percentage}% (sekarang)</span>
                   <span>{formatPrice(dpAmount)}</span>
                 </div>
                 <div className="flex justify-between text-[13px] font-semibold text-ink-4">
                   <span>Sisa (saat check-out)</span>
-                  <span>{formatPrice(service.price - dpAmount)}</span>
+                  <span>{formatPrice(hotelTotal - dpAmount)}</span>
                 </div>
               </>
             )}
           </div>
           <div className="mt-3 flex items-center justify-between border-t border-stone-2 pt-3">
             <span className="font-heading text-[14px] font-bold text-ink">
-              {service.isHotel ? 'Bayar sekarang' : 'Total'}
+              {isHotel ? 'Bayar sekarang' : 'Total'}
             </span>
             <span className="font-heading text-[22px] font-extrabold text-primary">
               {formatPrice(totalDue)}
@@ -303,7 +345,7 @@ export default function BookingCheckoutPage() {
           className="flex h-14 w-full items-center justify-center gap-2 rounded-[18px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] active:scale-[0.98] disabled:opacity-50"
         >
           <Check size={18} strokeWidth={2.5} />
-          {service.isHotel ? 'Bayar DP & Konfirmasi' : 'Selesai & Konfirmasi'}
+          {isHotel ? 'Bayar DP & Konfirmasi' : 'Selesai & Konfirmasi'}
         </button>
       </div>
     </div>
