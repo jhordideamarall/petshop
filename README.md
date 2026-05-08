@@ -31,8 +31,9 @@ Business logic is never duplicated. Calculations for shipping, discounts, and po
 ### Structural Breakdown
 
 - 🌐 **apps/web**: A high-speed **Next.js 15** storefront with App Router and Server Components.
-- ⚙️ **apps/api**: A standalone **NestJS** server designed for high-concurrency (Phase 5).
-- 📦 **packages/api-client**: A unified SDK that abstracts all Supabase/API calls.
+- ⚙️ **apps/api**: A robust **NestJS** backend server providing high-concurrency for all platforms.
+- 📱 **apps/mobile**: A native **React Native (Expo)** experience for mobile-first users.
+- 📦 **packages/api-client**: A unified SDK that abstracts all platform interactions.
 - 🎨 **packages/ui**: A private design system built on **Tailwind CSS v4** and **shadcn/ui**.
 - 🛠️ **packages/store**: Shared global state management using **Zustand**.
 
@@ -54,7 +55,7 @@ A personalized engine that tracks pet health/sizes to recommend products and man
 
 ### 4. Owner Intelligence
 
-A dedicated dashboard (Phase 4) that goes beyond "sales" to show **Net Profit, HPP (COGS), and Average Order Value (AOV)**.
+A dedicated management dashboard that provides deep visibility into **Net Profit, HPP (COGS), and Average Order Value (AOV)**.
 
 ---
 
