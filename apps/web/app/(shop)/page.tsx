@@ -411,17 +411,20 @@ export default function HomePage() {
             <div key={feat.label} style={{ display: 'contents' }}>
               <div style={{ padding: '14px 12px', textAlign: 'center' }}>
                 <div
+                  className="text-[12px] lg:text-[14px]"
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 700,
-                    fontSize: 14,
                     color: '#1A1714',
                     marginBottom: 2,
                   }}
                 >
                   {feat.label}
                 </div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#6B6460' }}>
+                <div
+                  className="text-[10px] lg:text-[12px]"
+                  style={{ fontFamily: 'var(--font-sans)', color: '#6B6460' }}
+                >
                   {feat.sub}
                 </div>
               </div>

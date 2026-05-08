@@ -542,7 +542,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: 640px;
+    height: 755px;
     background: linear-gradient(160deg, #b85e22 0%, #e07b39 40%, #f5a46a 100%);
     z-index: 0;
     clip-path: ellipse(130% 100% at 50% 0%);
@@ -554,6 +554,7 @@
 .shop-layout-container {
   max-width: 430px;
 }
+
 @media (min-width: 1024px) {
   .shop-layout-container {
     max-width: 1200px;
@@ -561,9 +562,11 @@
 }
 
 .search-modal-card {
-  width: calc(min(100vw, 430px) - 12px); /* Even wider on mobile */
+  width: calc(min(100vw, 430px) - 12px);
+  /* Even wider on mobile */
   max-width: 418px;
 }
+
 @media (min-width: 1024px) {
   .search-modal-card {
     width: 680px;
