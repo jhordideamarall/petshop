@@ -24,19 +24,17 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
       </div>
 
       <div className="shop-layout-container relative mx-auto min-h-[100dvh] w-full overflow-x-hidden lg:overflow-visible bg-[#FDFCFB] lg:bg-transparent">
-        {/* Header & Banner Background (Grey) - only show on home or list pages. Mobile only. */}
+        {/* Mobile-only Background & Header */}
         {!isProductDetail && (
-          <div
-            className="absolute top-0 left-1/2 w-full -translate-x-1/2 bg-[#F5F3F0] lg:hidden"
-            style={{ maxWidth: 430, height: '40vh' }}
-          />
-        )}
-
-        {/* Floating Header Overlay - Mobile only */}
-        {!isProductDetail && (
-          <div className="lg:hidden">
-            <Header />
-          </div>
+          <>
+            <div
+              className="absolute top-0 left-1/2 w-full -translate-x-1/2 bg-[#F5F3F0] lg:hidden"
+              style={{ maxWidth: 430, height: '40vh' }}
+            />
+            <div className="lg:hidden">
+              <Header />
+            </div>
+          </>
         )}
 
         <main
