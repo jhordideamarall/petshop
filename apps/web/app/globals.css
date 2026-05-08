@@ -508,3 +508,24 @@
     box-shadow: 0 10px 50px rgba(224, 123, 57, 0.2);
   }
 }
+
+/* Responsive Containers */
+.shop-layout-container {
+  max-width: 430px;
+}
+@media (min-width: 1024px) {
+  .shop-layout-container {
+    max-width: 1200px;
+  }
+}
+
+.search-modal-card {
+  width: calc(min(100vw, 430px) - 24px);
+  max-width: 406px;
+}
+@media (min-width: 1024px) {
+  .search-modal-card {
+    width: 680px;
+    max-width: 90vw;
+  }
+}

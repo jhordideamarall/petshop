@@ -111,11 +111,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: -12 }}
             transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-            className="fixed z-[110] left-1/2 -translate-x-1/2"
+            className="fixed z-[110] left-1/2 -translate-x-1/2 search-modal-card lg:z-[210]"
             style={{
               top: 'calc(78px + env(safe-area-inset-top))',
-              width: 'calc(min(100vw, 430px) - 24px)',
-              maxWidth: 406,
               background: 'rgba(253,252,251,0.98)',
               borderRadius: 24,
               border: '1px solid rgba(255,255,255,0.72)',
