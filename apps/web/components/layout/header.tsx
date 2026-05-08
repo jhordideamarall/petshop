@@ -1,17 +1,26 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { m, AnimatePresence, useScroll, useSpring, useTransform, LayoutGroup } from 'framer-motion';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useLocationStore } from '@/stores/location-store';
 import { CategoryChip } from '@/components/shared/category-chip';
-import { SearchModal } from '@/components/shared/search-modal';
 import { getCityFromCoords } from '@petshop/core';
 import { useQuery } from '@tanstack/react-query';
 import { getActiveCategories, type Category } from '@/lib/services/product-client';
-import { NotificationSheet } from './notification-sheet';
 import { LocationPrompt } from '@/components/shared/location-prompt';
+
+// Lazy load modals — JS chunk only fetched after first interaction
+const SearchModal = dynamic(
+  () => import('@/components/shared/search-modal').then((mod) => ({ default: mod.SearchModal })),
+  { ssr: false },
+);
+const NotificationSheet = dynamic(
+  () => import('./notification-sheet').then((mod) => ({ default: mod.NotificationSheet })),
+  { ssr: false },
+);
 
 const PawIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF8235" stroke="none">
@@ -141,6 +150,16 @@ export function Header() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  // Track if modals have ever been opened — only then load their JS chunks
+  const [searchMounted, setSearchMounted] = useState(false);
+  const [notifMounted, setNotifMounted] = useState(false);
+
+  useEffect(() => {
+    if (searchOpen) setSearchMounted(true);
+  }, [searchOpen]);
+  useEffect(() => {
+    if (notifOpen) setNotifMounted(true);
+  }, [notifOpen]);
   const [promptOpen, setPromptOpen] = useState(false);
   const { coords, locationName, hasHydrated, setCoords, setLocationName } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
@@ -191,8 +210,8 @@ export function Header() {
 
   return (
     <>
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-      <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+      {searchMounted && <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />}
+      {notifMounted && <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />}
       <LocationPrompt isOpen={promptOpen} onClose={() => setPromptOpen(false)} />
 
       {/*

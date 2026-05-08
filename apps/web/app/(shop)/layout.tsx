@@ -23,7 +23,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
         <div className="desktop-hero-bg" />
       </div>
 
-      <div className="shop-layout-container relative mx-auto min-h-[100dvh] w-full overflow-x-hidden bg-[#FDFCFB] lg:bg-transparent">
+      <div className="shop-layout-container relative mx-auto min-h-[100dvh] w-full overflow-x-hidden lg:overflow-visible bg-[#FDFCFB] lg:bg-transparent">
         {/* Header & Banner Background (Grey) - only show on home or list pages. Mobile only. */}
         {!isProductDetail && (
           <div

@@ -39,7 +39,12 @@
 - **Files**: `CartPage`, `CheckoutPage`, `BookingPage`, `AccountPage`
 - **Change**: Propagasi `px-[clamp(16px,5vw,20px)]` ke seluruh halaman utama untuk memastikan konsistensi "ruang bernapas" di seluruh _user journey_.
 
-### 7. Code Consistency & Reliability
+### 8. Desktop Navigation "Liquid Glass" Styling
 
-- Semua perubahan telah diverifikasi terhadap project mandates di `GEMINI.md` dan `CLAUDE.md`.
-- Optimasi dilakukan tanpa mengubah visual design utama, hanya meningkatkan ketahanan layout pada berbagai engine browser mobile.
+- **File**: `apps/web/components/layout/desktop-nav.tsx`
+- **Change**: Implementasi gaya "Liquid Glass Apple" pada indikator link aktif dan hover.
+- **Detail**:
+  - **Active Link**: Menggunakan `backdrop-blur-md`, gradient transparan `white/40`, border putih halus `white/60`, dan `inner shadow` untuk efek kedalaman.
+  - **Hover State**: Menambahkan `subtle glass effect` pada link yang tidak aktif saat di-hover.
+  - **Animation**: Menggunakan spring physics yang lebih "organik" (`stiffness: 400`, `damping: 32`) untuk memberikan kesan pergerakan cairan (_liquid_) saat berpindah antar menu.
+- **Alasan**: Meningkatkan estetika premium pada tampilan desktop agar sejalan dengan standar desain modern (Apple-style) dan memberikan feedback visual yang lebih memuaskan bagi pengguna.

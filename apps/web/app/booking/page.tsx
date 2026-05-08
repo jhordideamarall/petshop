@@ -212,12 +212,23 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[330px]">
+    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[330px] lg:max-w-[1052px] lg:pb-12 lg:bg-transparent">
       <m.header
-        className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/90 px-[clamp(16px,5vw,20px)] pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl"
+        className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/90 px-[clamp(16px,5vw,20px)] pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl lg:static lg:border-0 lg:bg-transparent lg:backdrop-blur-none lg:pt-8 lg:px-0"
         style={{ paddingBottom: headerPaddingBottom, boxShadow: headerShadow }}
       >
         <div>
+          <nav className="mb-3 hidden items-center gap-1.5 text-sm font-medium text-ink-4 lg:flex">
+            <button
+              type="button"
+              onClick={() => router.push('/')}
+              className="hover:text-ink transition-colors"
+            >
+              Home
+            </button>
+            <ChevronRight size={14} />
+            <span className="text-ink font-semibold">Booking</span>
+          </nav>
           <m.h1
             className="font-heading font-extrabold text-ink"
             style={{ fontSize: titleSize, lineHeight: titleLineHeight }}
@@ -234,322 +245,426 @@ export default function BookingPage() {
         <StepHeader current={activeStep} />
       </m.header>
 
-      <main className="px-[clamp(16px,5vw,20px)] py-5">
-        {/* 1. Layanan */}
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h2 className="font-heading text-[17px] font-extrabold text-ink">1. Pilih layanan</h2>
-              <p className="mt-0.5 text-sm text-ink-3">Harga sudah termasuk basic check.</p>
-            </div>
-            <span className="chip chip-orange">Jakarta</span>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {services.map((service) => {
-              const selected = service.id === selectedServiceId;
-              const accent = getServiceAccent(service);
-              const badge = service.requires_dp ? `DP ${service.dp_percentage}%` : null;
-              return (
-                <m.button
-                  key={service.id}
-                  type="button"
-                  whileTap={{ scale: 0.985 }}
-                  onClick={() =>
-                    setSelectedServiceId((prev) => (prev === service.id ? null : service.id))
-                  }
-                  className="flex min-h-[104px] w-full items-center gap-3 rounded-[22px] border bg-white px-4 py-4 text-left shadow-sm transition-colors"
-                  style={{
-                    borderColor: selected ? accent : 'var(--color-stone-2)',
-                    boxShadow: selected
-                      ? `0 10px 28px ${accent}22`
-                      : '0 2px 8px rgba(26,23,20,0.04)',
-                  }}
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-heading text-[15px] font-extrabold text-ink">
-                        {service.name}
-                      </h3>
-                      {badge && (
-                        <span className="rounded-full bg-stone-2 px-2 py-0.5 font-heading text-[10px] font-bold text-ink-3">
-                          {badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-ink-3">
-                      {service.description}
-                    </p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="font-heading text-[15px] font-extrabold text-primary">
-                        {formatPrice(Number(service.price))}
-                      </span>
-                      <span className="text-xs font-semibold text-ink-4">
-                        {getServiceUnit(service)}
-                      </span>
-                    </div>
-                  </div>
-                  <RadioMark selected={selected} />
-                </m.button>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* 2. Jadwal */}
-        <section className="mt-7">
-          <div className="mb-4">
-            <h2 className="font-heading text-[17px] font-extrabold text-ink">2. Pilih jadwal</h2>
-            <p className="mt-0.5 text-sm text-ink-3">
-              {isHotel
-                ? 'Pilih tanggal check-in dan check-out.'
-                : 'Pilih hari dan jam yang paling nyaman.'}
-            </p>
-          </div>
-
-          {/* Check-in / Date label */}
-          {isHotel && (
-            <p className="mb-2 font-heading text-[13px] font-bold text-ink-3">Check-in</p>
-          )}
-
-          {/* Date scroll */}
-          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {dateOptions.map((date) => {
-              const selected = date.id === selectedDateId;
-              return (
-                <m.button
-                  key={date.id}
-                  type="button"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => {
-                    setSelectedDateId(date.id);
-                    // Auto-push checkout jika check-in >= checkout
-                    if (isHotel && date.id >= checkoutDateId) {
-                      const nextIdx = dateOptions.findIndex((d) => d.id === date.id) + 1;
-                      if (nextIdx < dateOptions.length) setCheckoutDateId(dateOptions[nextIdx].id);
-                    }
-                  }}
-                  className="flex w-[58px] shrink-0 flex-col items-center rounded-[18px] border py-3 text-center"
-                  style={{
-                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                    background: selected ? 'var(--color-orange)' : '#FFFFFF',
-                    boxShadow: selected
-                      ? '0 6px 18px rgba(224,123,57,0.30)'
-                      : '0 1px 4px rgba(26,23,20,0.04)',
-                  }}
-                >
-                  <span
-                    className="font-heading text-[10px] font-bold leading-none"
-                    style={{ color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)' }}
-                  >
-                    {date.shortLabel}
-                  </span>
-                  <span
-                    className="mt-1.5 font-heading text-[20px] font-extrabold leading-none"
-                    style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
-                  >
-                    {date.dayNum}
-                  </span>
-                  <span
-                    className="mt-1 font-heading text-[10px] font-semibold leading-none"
-                    style={{ color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)' }}
-                  >
-                    {date.monthShort}
-                  </span>
-                </m.button>
-              );
-            })}
-          </div>
-
-          {/* Check-out date scroll — hotel only */}
-          {isHotel && (
-            <m.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-4"
-            >
-              <div className="mb-2 flex items-center justify-between">
-                <p className="font-heading text-[13px] font-bold text-ink-3">Check-out</p>
-                <span className="rounded-full bg-[#6C5CE7]/10 px-2.5 py-1 font-heading text-[12px] font-bold text-[#6C5CE7]">
-                  {hotelNights} hari
-                </span>
+      <div className="lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:mt-6 lg:px-6">
+        <main className="px-[clamp(16px,5vw,20px)] py-5 lg:px-0 lg:pt-0">
+          <div className="lg:rounded-[28px] lg:bg-white lg:p-8 lg:shadow-[0_8px_30px_rgba(26,23,20,0.04)] lg:border lg:border-stone-2">
+            <section>
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <h2 className="font-heading text-[17px] font-extrabold text-ink">
+                    1. Pilih layanan
+                  </h2>
+                  <p className="mt-0.5 text-sm text-ink-3">Harga sudah termasuk basic check.</p>
+                </div>
+                <span className="chip chip-orange">Jakarta</span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {dateOptions
-                  .filter((d) => d.id > selectedDateId)
-                  .map((date) => {
-                    const selected = date.id === checkoutDateId;
+
+              <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+                {services.map((service) => {
+                  const selected = service.id === selectedServiceId;
+                  const accent = getServiceAccent(service);
+                  const badge = service.requires_dp ? `DP ${service.dp_percentage}%` : null;
+                  return (
+                    <m.button
+                      key={service.id}
+                      type="button"
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() =>
+                        setSelectedServiceId((prev) => (prev === service.id ? null : service.id))
+                      }
+                      className="flex min-h-[104px] w-full items-center gap-3 rounded-[22px] border bg-white px-4 py-4 text-left shadow-sm transition-colors"
+                      style={{
+                        borderColor: selected ? accent : 'var(--color-stone-2)',
+                        boxShadow: selected
+                          ? `0 10px 28px ${accent}22`
+                          : '0 2px 8px rgba(26,23,20,0.04)',
+                      }}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-heading text-[15px] font-extrabold text-ink">
+                            {service.name}
+                          </h3>
+                          {badge && (
+                            <span className="rounded-full bg-stone-2 px-2 py-0.5 font-heading text-[10px] font-bold text-ink-3">
+                              {badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-ink-3">
+                          {service.description}
+                        </p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="font-heading text-[15px] font-extrabold text-primary">
+                            {formatPrice(Number(service.price))}
+                          </span>
+                          <span className="text-xs font-semibold text-ink-4">
+                            {getServiceUnit(service)}
+                          </span>
+                        </div>
+                      </div>
+                      <RadioMark selected={selected} />
+                    </m.button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* 2. Jadwal */}
+            <section className="mt-7">
+              <div className="mb-4">
+                <h2 className="font-heading text-[17px] font-extrabold text-ink">
+                  2. Pilih jadwal
+                </h2>
+                <p className="mt-0.5 text-sm text-ink-3">
+                  {isHotel
+                    ? 'Pilih tanggal check-in dan check-out.'
+                    : 'Pilih hari dan jam yang paling nyaman.'}
+                </p>
+              </div>
+
+              {/* Check-in / Date label */}
+              {isHotel && (
+                <p className="mb-2 font-heading text-[13px] font-bold text-ink-3">Check-in</p>
+              )}
+
+              {/* Date scroll */}
+              <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible lg:pb-0">
+                {dateOptions.map((date) => {
+                  const selected = date.id === selectedDateId;
+                  return (
+                    <m.button
+                      key={date.id}
+                      type="button"
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        setSelectedDateId(date.id);
+                        // Auto-push checkout jika check-in >= checkout
+                        if (isHotel && date.id >= checkoutDateId) {
+                          const nextIdx = dateOptions.findIndex((d) => d.id === date.id) + 1;
+                          if (nextIdx < dateOptions.length)
+                            setCheckoutDateId(dateOptions[nextIdx].id);
+                        }
+                      }}
+                      className="flex w-[58px] shrink-0 flex-col items-center rounded-[18px] border py-3 text-center"
+                      style={{
+                        borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                        background: selected ? 'var(--color-orange)' : '#FFFFFF',
+                        boxShadow: selected
+                          ? '0 6px 18px rgba(224,123,57,0.30)'
+                          : '0 1px 4px rgba(26,23,20,0.04)',
+                      }}
+                    >
+                      <span
+                        className="font-heading text-[10px] font-bold leading-none"
+                        style={{
+                          color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
+                        }}
+                      >
+                        {date.shortLabel}
+                      </span>
+                      <span
+                        className="mt-1.5 font-heading text-[20px] font-extrabold leading-none"
+                        style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
+                      >
+                        {date.dayNum}
+                      </span>
+                      <span
+                        className="mt-1 font-heading text-[10px] font-semibold leading-none"
+                        style={{
+                          color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
+                        }}
+                      >
+                        {date.monthShort}
+                      </span>
+                    </m.button>
+                  );
+                })}
+              </div>
+
+              {/* Check-out date scroll — hotel only */}
+              {isHotel && (
+                <m.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="font-heading text-[13px] font-bold text-ink-3">Check-out</p>
+                    <span className="rounded-full bg-[#6C5CE7]/10 px-2.5 py-1 font-heading text-[12px] font-bold text-[#6C5CE7]">
+                      {hotelNights} hari
+                    </span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible lg:pb-0">
+                    {dateOptions
+                      .filter((d) => d.id > selectedDateId)
+                      .map((date) => {
+                        const selected = date.id === checkoutDateId;
+                        return (
+                          <m.button
+                            key={date.id}
+                            type="button"
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setCheckoutDateId(date.id)}
+                            className="flex w-[58px] shrink-0 flex-col items-center rounded-[18px] border py-3 text-center"
+                            style={{
+                              borderColor: selected ? '#6C5CE7' : 'var(--color-stone-2)',
+                              background: selected ? '#6C5CE7' : '#FFFFFF',
+                              boxShadow: selected
+                                ? '0 6px 18px rgba(108,92,231,0.30)'
+                                : '0 1px 4px rgba(26,23,20,0.04)',
+                            }}
+                          >
+                            <span
+                              className="font-heading text-[10px] font-bold leading-none"
+                              style={{
+                                color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
+                              }}
+                            >
+                              {date.shortLabel}
+                            </span>
+                            <span
+                              className="mt-1.5 font-heading text-[20px] font-extrabold leading-none"
+                              style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
+                            >
+                              {date.dayNum}
+                            </span>
+                            <span
+                              className="mt-1 font-heading text-[10px] font-semibold leading-none"
+                              style={{
+                                color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
+                              }}
+                            >
+                              {date.monthShort}
+                            </span>
+                          </m.button>
+                        );
+                      })}
+                  </div>
+                </m.div>
+              )}
+
+              {/* Time scroll — grooming only */}
+              {!isHotel && (
+                <div className="mt-4 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-4 lg:overflow-visible">
+                  {timeSlots.map((slot) => {
+                    const selected = slot.timeSlot === selectedTimeId;
                     return (
                       <m.button
-                        key={date.id}
+                        key={slot.timeSlot}
                         type="button"
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => setCheckoutDateId(date.id)}
-                        className="flex w-[58px] shrink-0 flex-col items-center rounded-[18px] border py-3 text-center"
+                        disabled={!slot.available}
+                        whileTap={slot.available ? { scale: 0.9 } : {}}
+                        onClick={() => updateTime(slot.timeSlot)}
+                        className="shrink-0 rounded-[16px] border px-4 py-3 text-center"
                         style={{
-                          borderColor: selected ? '#6C5CE7' : 'var(--color-stone-2)',
-                          background: selected ? '#6C5CE7' : '#FFFFFF',
+                          borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                          background: selected ? 'var(--color-orange)' : '#FFFFFF',
+                          opacity: slot.available ? 1 : 0.35,
                           boxShadow: selected
-                            ? '0 6px 18px rgba(108,92,231,0.30)'
+                            ? '0 6px 18px rgba(224,123,57,0.30)'
                             : '0 1px 4px rgba(26,23,20,0.04)',
                         }}
                       >
                         <span
-                          className="font-heading text-[10px] font-bold leading-none"
-                          style={{
-                            color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
-                          }}
-                        >
-                          {date.shortLabel}
-                        </span>
-                        <span
-                          className="mt-1.5 font-heading text-[20px] font-extrabold leading-none"
+                          className="font-heading text-[16px] font-extrabold leading-none"
                           style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
                         >
-                          {date.dayNum}
+                          {slot.timeSlot}
                         </span>
-                        <span
-                          className="mt-1 font-heading text-[10px] font-semibold leading-none"
-                          style={{
-                            color: selected ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-4)',
-                          }}
-                        >
-                          {date.monthShort}
-                        </span>
+                        {!slot.available && (
+                          <span className="mt-1 block font-heading text-[9px] font-bold text-ink-4">
+                            penuh
+                          </span>
+                        )}
                       </m.button>
                     );
                   })}
-              </div>
-            </m.div>
-          )}
+                </div>
+              )}
+            </section>
 
-          {/* Time scroll — grooming only */}
-          {!isHotel && (
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {timeSlots.map((slot) => {
-                const selected = slot.timeSlot === selectedTimeId;
-                return (
-                  <m.button
-                    key={slot.timeSlot}
-                    type="button"
-                    disabled={!slot.available}
-                    whileTap={slot.available ? { scale: 0.9 } : {}}
-                    onClick={() => updateTime(slot.timeSlot)}
-                    className="shrink-0 rounded-[16px] border px-4 py-3 text-center"
-                    style={{
-                      borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                      background: selected ? 'var(--color-orange)' : '#FFFFFF',
-                      opacity: slot.available ? 1 : 0.35,
-                      boxShadow: selected
-                        ? '0 6px 18px rgba(224,123,57,0.30)'
-                        : '0 1px 4px rgba(26,23,20,0.04)',
-                    }}
-                  >
-                    <span
-                      className="font-heading text-[16px] font-extrabold leading-none"
-                      style={{ color: selected ? '#FFFFFF' : 'var(--color-ink)' }}
+            {/* 3. Pet */}
+            <section className="mt-7">
+              <div className="mb-3">
+                <h2 className="font-heading text-[17px] font-extrabold text-ink">3. Pilih pet</h2>
+                <p className="mt-0.5 text-sm text-ink-3">
+                  Pilih hewan yang akan datang ke layanan.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+                {userPets.map((pet) => {
+                  const selected = pet.id === selectedPetId;
+                  return (
+                    <m.button
+                      key={pet.id}
+                      type="button"
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() => setSelectedPetId((prev) => (prev === pet.id ? null : pet.id))}
+                      className="flex min-h-[76px] items-center gap-3 rounded-[20px] border bg-white px-4 text-left"
+                      style={{
+                        borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                        background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
+                      }}
                     >
-                      {slot.timeSlot}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-heading text-[15px] font-extrabold text-ink">
+                          {pet.name}
+                        </p>
+                        <p className="mt-0.5 text-sm text-ink-3">
+                          {[
+                            pet.type,
+                            pet.breed,
+                            pet.birth_date
+                              ? `${new Date().getFullYear() - new Date(pet.birth_date).getFullYear()} tahun`
+                              : null,
+                          ]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </p>
+                      </div>
+                      <RadioMark selected={selected} />
+                    </m.button>
+                  );
+                })}
+                {/* Tambah Pet — selalu tampil */}
+                {(() => {
+                  const selected = selectedPetId === ADD_NEW_PET_ID;
+                  return (
+                    <m.button
+                      type="button"
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() =>
+                        setSelectedPetId((prev) =>
+                          prev === ADD_NEW_PET_ID ? null : ADD_NEW_PET_ID,
+                        )
+                      }
+                      className="flex min-h-[76px] items-center gap-3 rounded-[20px] border bg-white px-4 text-left"
+                      style={{
+                        borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
+                        background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
+                      }}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="font-heading text-[15px] font-extrabold text-ink">
+                          Tambah Pet
+                        </p>
+                        <p className="mt-0.5 text-sm text-ink-3">Lengkapi nanti saat checkout</p>
+                      </div>
+                      <RadioMark selected={selected} />
+                    </m.button>
+                  );
+                })()}
+              </div>
+            </section>
+
+            {/* 4. Catatan */}
+            <section className="mt-7">
+              <label
+                htmlFor="booking-notes"
+                className="font-heading text-[17px] font-extrabold text-ink"
+              >
+                Catatan tambahan
+              </label>
+              <textarea
+                id="booking-notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Contoh: kulit sensitif, takut hair dryer, minta update foto..."
+                className="mt-3 min-h-[104px] w-full resize-none rounded-[20px] border border-stone-2 bg-white px-4 py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-4 focus:border-primary"
+              />
+            </section>
+          </div>
+        </main>
+
+        {/* Desktop sticky sidebar */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto rounded-[28px] border border-stone-2 bg-white shadow-[0_12px_40px_rgba(26,23,20,0.06)]">
+            {selectedServiceId !== null ? (
+              <div className="p-6">
+                <p className="font-heading text-xs font-bold uppercase tracking-wider text-ink-4 mb-4">
+                  Ringkasan Booking
+                </p>
+
+                <div className="mb-5">
+                  <p className="font-heading text-[18px] font-extrabold text-ink">
+                    {selectedService?.name}
+                  </p>
+                  <div className="mt-3 flex flex-col gap-2 text-[13px] font-semibold text-ink-3">
+                    <span className="inline-flex items-center gap-2">
+                      <CalendarDays size={15} className="text-primary" />
+                      {isHotel
+                        ? `${selectedDate.dayNum} ${selectedDate.monthShort} → ${dateOptions.find((d) => d.id === checkoutDateId)?.dayNum ?? ''} ${dateOptions.find((d) => d.id === checkoutDateId)?.monthShort ?? ''}`
+                        : `${selectedDate.dayNum} ${selectedDate.monthShort}`}
                     </span>
-                    {!slot.available && (
-                      <span className="mt-1 block font-heading text-[9px] font-bold text-ink-4">
-                        penuh
+                    {isHotel && (
+                      <span className="inline-flex items-center gap-2 text-[#6C5CE7]">
+                        <Clock3 size={15} className="text-[#6C5CE7]" />
+                        {hotelNights} malam
                       </span>
                     )}
-                  </m.button>
-                );
-              })}
-            </div>
-          )}
-        </section>
+                    {!isHotel && selectedTimeId && (
+                      <span className="inline-flex items-center gap-2">
+                        <Clock3 size={15} className="text-primary" /> {selectedTimeId}
+                      </span>
+                    )}
+                    {selectedPetId && selectedPetId !== ADD_NEW_PET_ID && selectedPetName && (
+                      <span className="inline-flex items-center gap-2">
+                        <PawPrint size={15} className="text-primary" /> {selectedPetName}
+                      </span>
+                    )}
+                    {selectedPetId === ADD_NEW_PET_ID && (
+                      <span className="inline-flex items-center gap-2">
+                        <PawPrint size={15} className="text-primary" /> Pet baru
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-        {/* 3. Pet */}
-        <section className="mt-7">
-          <div className="mb-3">
-            <h2 className="font-heading text-[17px] font-extrabold text-ink">3. Pilih pet</h2>
-            <p className="mt-0.5 text-sm text-ink-3">Pilih hewan yang akan datang ke layanan.</p>
-          </div>
+                <div className="mb-5 flex items-center gap-2.5 rounded-[14px] bg-[#FFF8F3] border border-orange-100 px-4 py-3 text-xs font-semibold text-ink-3">
+                  <MapPin size={15} className="shrink-0 text-primary" />
+                  <span>Cabang Jakarta Selatan · konfirmasi maks. 10 menit</span>
+                </div>
 
-          <div className="flex flex-col gap-3">
-            {userPets.map((pet) => {
-              const selected = pet.id === selectedPetId;
-              return (
-                <m.button
-                  key={pet.id}
-                  type="button"
-                  whileTap={{ scale: 0.985 }}
-                  onClick={() => setSelectedPetId((prev) => (prev === pet.id ? null : pet.id))}
-                  className="flex min-h-[76px] items-center gap-3 rounded-[20px] border bg-white px-4 text-left"
-                  style={{
-                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                    background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
-                  }}
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="font-heading text-[15px] font-extrabold text-ink">{pet.name}</p>
-                    <p className="mt-0.5 text-sm text-ink-3">
-                      {[
-                        pet.type,
-                        pet.breed,
-                        pet.birth_date
-                          ? `${new Date().getFullYear() - new Date(pet.birth_date).getFullYear()} tahun`
-                          : null,
-                      ]
-                        .filter(Boolean)
-                        .join(', ')}
+                <div className="mb-5 rounded-[14px] bg-stone px-4 py-4">
+                  {isHotel && (
+                    <p className="text-xs font-bold text-ink-4 mb-1">
+                      DP {selectedService?.dp_percentage}%
                     </p>
-                  </div>
-                  <RadioMark selected={selected} />
-                </m.button>
-              );
-            })}
-            {/* Tambah Pet — selalu tampil */}
-            {(() => {
-              const selected = selectedPetId === ADD_NEW_PET_ID;
-              return (
-                <m.button
+                  )}
+                  <p className="font-heading text-[24px] font-extrabold text-primary">
+                    {formatPrice(totalDue)}
+                  </p>
+                  {isHotel && (
+                    <p className="text-xs text-ink-4 mt-1">Total: {formatPrice(hotelTotal)}</p>
+                  )}
+                </div>
+
+                <button
                   type="button"
-                  whileTap={{ scale: 0.985 }}
-                  onClick={() =>
-                    setSelectedPetId((prev) => (prev === ADD_NEW_PET_ID ? null : ADD_NEW_PET_ID))
-                  }
-                  className="flex min-h-[76px] items-center gap-3 rounded-[20px] border bg-white px-4 text-left"
-                  style={{
-                    borderColor: selected ? 'var(--color-orange)' : 'var(--color-stone-2)',
-                    background: selected ? 'var(--color-orange-light)' : '#FFFFFF',
-                  }}
+                  onClick={goToCheckout}
+                  disabled={!canConfirm}
+                  className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] bg-primary font-heading text-[15px] font-extrabold text-white shadow-[0_8px_22px_rgba(224,123,57,0.28)] transition-transform active:scale-[0.98] disabled:opacity-50"
                 >
-                  <div className="min-w-0 flex-1">
-                    <p className="font-heading text-[15px] font-extrabold text-ink">Tambah Pet</p>
-                    <p className="mt-0.5 text-sm text-ink-3">Lengkapi nanti saat checkout</p>
-                  </div>
-                  <RadioMark selected={selected} />
-                </m.button>
-              );
-            })()}
+                  {canConfirm ? 'Lanjut ke Konfirmasi' : 'Pilih Pet dulu'}
+                  <ChevronRight size={18} strokeWidth={2.5} />
+                </button>
+              </div>
+            ) : (
+              <div className="p-6 text-center">
+                <PawPrint size={32} className="mx-auto mb-3 text-stone-3" />
+                <p className="font-heading text-sm font-bold text-ink-3">
+                  Pilih layanan untuk melihat ringkasan
+                </p>
+              </div>
+            )}
           </div>
-        </section>
+        </aside>
+      </div>
 
-        {/* 4. Catatan */}
-        <section className="mt-7">
-          <label
-            htmlFor="booking-notes"
-            className="font-heading text-[17px] font-extrabold text-ink"
-          >
-            Catatan tambahan
-          </label>
-          <textarea
-            id="booking-notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Contoh: kulit sensitif, takut hair dryer, minta update foto..."
-            className="mt-3 min-h-[104px] w-full resize-none rounded-[20px] border border-stone-2 bg-white px-4 py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-4 focus:border-primary"
-          />
-        </section>
-      </main>
-
-      {/* Floating summary — muncul saat service dipilih */}
+      {/* Floating summary — mobile only */}
       <AnimatePresence>
         {selectedServiceId !== null && (
           <m.aside
@@ -557,7 +672,7 @@ export default function BookingPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ type: 'spring', stiffness: 240, damping: 26 }}
-            className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-[clamp(16px,5vw,20px)]"
+            className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-[clamp(16px,5vw,20px)] lg:hidden"
           >
             <div className="rounded-[24px] border border-stone-2 bg-white p-4 shadow-[0_16px_42px_rgba(26,23,20,0.12)]">
               <div className="mb-3 flex items-start justify-between gap-4">
@@ -625,7 +740,9 @@ export default function BookingPage() {
         )}
       </AnimatePresence>
 
-      <BottomNav />
+      <div className="lg:hidden">
+        <BottomNav />
+      </div>
     </div>
   );
 }

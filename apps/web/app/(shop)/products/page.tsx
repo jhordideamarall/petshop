@@ -66,7 +66,7 @@ function ProductsContent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen pb-10">
+    <div className="flex flex-col min-h-screen pb-10 lg:mx-auto lg:w-full lg:max-w-[1052px]">
       <div className="flex-1 pt-14">
         <ProductGrid
           products={filtered as ProductCardData[]}

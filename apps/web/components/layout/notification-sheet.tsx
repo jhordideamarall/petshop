@@ -62,7 +62,7 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[150] bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-[290] bg-black/40 backdrop-blur-sm"
           />
 
           {/* Sheet */}
@@ -76,7 +76,7 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
               stiffness: 280,
               mass: 1,
             }}
-            className="fixed right-[-100px] top-0 z-[160] h-full bg-[#FDFCFB] shadow-2xl"
+            className="fixed right-[-100px] top-0 z-[300] h-full bg-[#FDFCFB] shadow-2xl"
             style={{
               width: 'calc(min(430px, 100%) + 100px)',
               paddingRight: 100,

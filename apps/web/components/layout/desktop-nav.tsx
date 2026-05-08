@@ -2,17 +2,30 @@
 
 import Link from 'next/link';
 import type { Route } from 'next';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { m, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import {
+  m,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+  LayoutGroup,
+  type Transition,
+} from 'framer-motion';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { NotificationSheet } from './notification-sheet';
 import { CategoryChip } from '@/components/shared/category-chip';
 import { useQuery } from '@tanstack/react-query';
 import { getActiveCategories, getActiveProducts } from '@/lib/services/product-client';
 import Image from 'next/image';
 import { Loader2, Search, X, ChevronRight, ShoppingCart, Bell } from 'lucide-react';
+
+// Lazy load — chunk only fetched after first interaction
+const NotificationSheet = dynamic(
+  () => import('./notification-sheet').then((mod) => ({ default: mod.NotificationSheet })),
+  { ssr: false },
+);
 
 const PawIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF8235" stroke="none">
@@ -82,12 +95,20 @@ export function DesktopNav() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifMounted, setNotifMounted] = useState(false);
+  useEffect(() => {
+    if (notifOpen) setNotifMounted(true);
+  }, [notifOpen]);
   const [badgeKey, setBadgeKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { showFilters, toggleFilters, setShowFilters } = useUIStore();
   const isProductPage = pathname === '/products' || pathname.startsWith('/categories');
+
+  // Shared high-precision transition for closing - perfectly synchronized
+  const closeTransition: Transition = { duration: 0.4, ease: [0.32, 0.72, 0, 1] };
+  const openSpring: Transition = { type: 'spring', stiffness: 260, damping: 26, mass: 1 };
 
   const { data: dbCategories = [] } = useQuery({
     queryKey: ['categories'],
@@ -128,8 +149,8 @@ export function DesktopNav() {
   };
 
   return (
-    <>
-      <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+    <LayoutGroup id="desktop-nav-sync">
+      {notifMounted && <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />}
 
       <AnimatePresence>
         {searchOpen && (
@@ -138,7 +159,8 @@ export function DesktopNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleSearchClose}
-            className="fixed inset-0 z-[190] bg-black/20 backdrop-blur-[2px]"
+            transition={closeTransition}
+            className="fixed inset-0 z-[190] bg-black/25 backdrop-blur-[2px]"
           />
         )}
       </AnimatePresence>
@@ -148,25 +170,27 @@ export function DesktopNav() {
         animate={{
           maxWidth: isProductPage && !searchOpen ? 1100 : 980,
           scale: scrolled && !searchOpen ? 0.94 : 1,
-          y: scrolled && !searchOpen ? -2 : 0,
+          y: searchOpen ? 12 : scrolled ? -2 : 0,
         }}
-        transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-        className="fixed top-6 left-1/2 z-[200] hidden -translate-x-1/2 flex-col items-center lg:flex w-full origin-top"
+        transition={searchOpen ? openSpring : closeTransition}
+        className="fixed top-8 left-1/2 z-[200] hidden -translate-x-1/2 flex-col items-center lg:flex w-full origin-top"
       >
         {/* Unified container: nav bar + search results as one pill */}
         <m.div
           layout
-          className="relative w-full rounded-[28px] border border-white/40 bg-white/80 shadow-[0_8px_32px_rgba(32,22,14,0.08)] backdrop-blur-xl overflow-visible"
+          className="relative w-full rounded-[28px] border border-white/40 bg-white/80 shadow-[0_8px_32px_rgba(32,22,14,0.08)] backdrop-blur-xl overflow-hidden"
         >
           {/* Nav row */}
           <m.nav
             layout
-            className="relative flex h-[56px] w-full items-center px-2 overflow-visible"
+            animate={{ height: searchOpen ? 72 : 56 }}
+            transition={searchOpen ? openSpring : closeTransition}
+            className="relative flex w-full items-center px-2 overflow-hidden"
           >
             <m.div
               layout
               animate={{ opacity: searchOpen ? 0 : 1, width: searchOpen ? 0 : 'auto' }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              transition={searchOpen ? { duration: 0.2 } : closeTransition}
               className="flex items-center overflow-hidden"
               style={{ flexShrink: 0 }}
             >
@@ -182,27 +206,46 @@ export function DesktopNav() {
             <m.div
               layout
               animate={{ opacity: searchOpen ? 0 : 1, width: searchOpen ? 0 : 'auto' }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="flex items-center overflow-hidden"
+              transition={searchOpen ? { duration: 0.2 } : closeTransition}
+              className={`flex items-center justify-center overflow-hidden ${searchOpen ? '' : 'flex-1'}`}
             >
               {links.map(({ href, label, match }) => {
                 const active = match(pathname);
                 return (
-                  <Link
-                    key={href}
-                    href={href as Route}
-                    className="relative rounded-full px-4 py-2 font-heading text-[14px] font-bold no-underline transition-colors whitespace-nowrap"
-                    style={{ color: active ? '#FF8235' : '#6b6460' }}
-                  >
-                    {active && (
-                      <m.span
-                        layoutId="desktop-nav-pill"
-                        className="absolute inset-0 rounded-full bg-[#fdf0e7]"
-                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10">{label}</span>
-                  </Link>
+                  <m.div key={href} layout className="relative px-1">
+                    <Link
+                      href={href as Route}
+                      className="group relative flex items-center justify-center rounded-full px-5 py-2.5 font-heading text-[14px] font-bold no-underline transition-all duration-300 whitespace-nowrap"
+                      style={{ color: active ? '#FF8235' : '#6b6460' }}
+                    >
+                      {/* Active Indicator: Liquid Glass Style */}
+                      {active && (
+                        <m.span
+                          layoutId="desktop-nav-pill"
+                          className="absolute inset-0 z-0 rounded-full border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(255,255,255,0.8)] backdrop-blur-xl"
+                          style={{
+                            background:
+                              'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%)',
+                          }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 400,
+                            damping: 32,
+                            mass: 0.8,
+                          }}
+                        />
+                      )}
+
+                      {/* Hover Indicator: Subtle Glass */}
+                      {!active && (
+                        <m.span className="absolute inset-0 z-0 rounded-full bg-white/0 opacity-0 transition-all duration-300 group-hover:bg-white/40 group-hover:opacity-100 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.02)] backdrop-blur-sm" />
+                      )}
+
+                      <span className="relative z-10 transition-transform duration-300 group-hover:scale-105">
+                        {label}
+                      </span>
+                    </Link>
+                  </m.div>
                 );
               })}
             </m.div>
@@ -210,26 +253,32 @@ export function DesktopNav() {
             {/* Unified Search Area */}
             <m.div
               layout
-              className={`flex items-center gap-2.5 rounded-full bg-[#f5f3f0]/80 px-4 h-[40px] ${
-                searchOpen ? 'flex-1 mx-2' : 'ml-auto w-[260px]'
+              className={`flex items-center gap-2.5 rounded-full bg-[#f5f3f0]/80 px-4 transition-all duration-300 ${
+                searchOpen
+                  ? 'flex-1 h-[48px] mx-1'
+                  : `ml-auto w-[320px] h-[40px] ${isProductPage ? 'mr-6' : ''}`
               }`}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              transition={searchOpen ? openSpring : closeTransition}
             >
-              <Search size={17} className="text-[#a09890]" strokeWidth={2.5} />
+              <Search size={searchOpen ? 20 : 17} className="text-[#a09890]" strokeWidth={2.5} />
               <input
                 ref={searchInputRef}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
                 placeholder={searchOpen ? 'Cari kebutuhan anabulmu...' : 'Cari...'}
-                className="flex-1 bg-transparent font-heading text-[14px] font-semibold text-ink outline-none placeholder:text-[#a09890]"
+                className={`flex-1 bg-transparent font-heading font-semibold text-ink outline-none placeholder:text-[#a09890] transition-all duration-200 ${
+                  searchOpen ? 'text-[16px]' : 'text-[14px]'
+                }`}
               />
               {searchOpen && (
                 <m.button
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
                   onClick={handleSearchClose}
                   className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-2/80 text-ink-3 hover:text-ink"
+                  transition={{ duration: 0.2 }}
                 >
                   <X size={14} strokeWidth={3} />
                 </m.button>
@@ -240,7 +289,7 @@ export function DesktopNav() {
             <m.div
               layout
               animate={{ opacity: searchOpen ? 0 : 1, width: searchOpen ? 0 : 'auto' }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              transition={searchOpen ? { duration: 0.2 } : closeTransition}
               className="flex items-center gap-2 pr-2 overflow-visible"
               style={{ flexShrink: 0 }}
             >
@@ -253,7 +302,7 @@ export function DesktopNav() {
                     exit={{ opacity: 0, scale: 0.8 }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.85, rotate: -5 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
                     onClick={toggleFilters}
                     className={`flex h-[40px] w-[40px] items-center justify-center rounded-full transition-all duration-300 ${
                       showFilters
@@ -263,7 +312,7 @@ export function DesktopNav() {
                   >
                     <m.div
                       animate={{ rotate: showFilters ? 180 : 0 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                     >
                       <FilterIcon />
                     </m.div>
@@ -278,7 +327,7 @@ export function DesktopNav() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setNotifOpen(true)}
-                  className="relative flex h-[38px] w-[38px] items-center justify-center text-ink-3 hover:text-ink transition-colors"
+                  className="relative flex h-[38px] w-[38px] min-w-[38px] items-center justify-center text-ink-3 hover:text-ink transition-colors"
                 >
                   <Bell size={20} strokeWidth={2.2} />
                   <div className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full border-2 border-white bg-primary" />
@@ -286,7 +335,7 @@ export function DesktopNav() {
 
                 <Link
                   href={'/cart' as Route}
-                  className="relative flex h-[38px] w-[38px] items-center justify-center text-ink-3 no-underline transition-colors hover:text-ink overflow-visible"
+                  className="relative flex h-[38px] w-[38px] min-w-[38px] items-center justify-center text-ink-3 no-underline transition-colors hover:text-ink overflow-visible"
                 >
                   <m.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.8 }}>
                     <ShoppingCart size={20} strokeWidth={2.2} />
@@ -317,10 +366,10 @@ export function DesktopNav() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ type: 'spring', stiffness: 350, damping: 32 }}
+                transition={searchOpen ? openSpring : closeTransition}
                 className="overflow-hidden border-t border-stone-2/20"
               >
-                <div className="grid grid-cols-2 gap-2 p-3">
+                <div className="grid grid-cols-2 gap-3 p-5">
                   {isSearchLoading ? (
                     <div className="col-span-2 flex h-32 items-center justify-center">
                       <Loader2 className="animate-spin text-primary" size={24} />
@@ -332,12 +381,12 @@ export function DesktopNav() {
                       </p>
                     </div>
                   ) : (
-                    searchResults.map((product, i) => (
+                    searchResults.map((product) => (
                       <m.div
                         key={`search-res-${product.id}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.02 }}
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                       >
                         <Link
                           href={`/products/${product.slug}`}
@@ -379,7 +428,7 @@ export function DesktopNav() {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 350, damping: 32 }}
+                transition={closeTransition}
                 className="overflow-hidden border-t border-stone-2/20"
               >
                 <m.div
@@ -429,6 +478,6 @@ export function DesktopNav() {
           </AnimatePresence>
         </m.div>
       </m.div>
-    </>
+    </LayoutGroup>
   );
 }

@@ -38,7 +38,7 @@ export function DesktopBannerSlider({ banners }: { banners: Banner[] }) {
 
   return (
     <div className="hidden lg:block mx-auto max-w-[1100px] px-6">
-      <div className="relative h-[480px] w-full overflow-hidden rounded-[32px] bg-[#1A1714]">
+      <div className="relative h-[440px] w-full overflow-hidden rounded-[32px] bg-[#1A1714]">
         {/* Background image & Color Overlay */}
         <AnimatePresence initial={false}>
           <m.div
