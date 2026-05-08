@@ -19,7 +19,14 @@ export function BestOffersGrid({ products = [] }: BestOffersGridProps) {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-3 px-[clamp(16px,5vw,20px)] lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: 12,
+        padding: '0 clamp(16px, 5vw, 20px)',
+      }}
+    >
       {products.map((p, index) => (
         <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} priority={index < 2} />
       ))}

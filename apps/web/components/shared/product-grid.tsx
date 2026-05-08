@@ -6,15 +6,23 @@ interface ProductGridProps {
   cols?: 2 | 3 | 4;
 }
 
-export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
+export function ProductGrid({ products, onAddToCart, cols = 2 }: ProductGridProps) {
+  const gap = 12;
   return (
-    <div className="grid grid-cols-2 gap-3 px-4 pb-4 lg:grid-cols-4 lg:gap-5 lg:px-0">
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gap,
+        padding: '0 16px 16px',
+      }}
+    >
       {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
           onAddToCart={onAddToCart}
-          priority={index < 4}
+          priority={index < 2}
         />
       ))}
     </div>

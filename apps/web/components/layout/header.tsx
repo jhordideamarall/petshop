@@ -5,7 +5,6 @@ import { m, AnimatePresence, useScroll, useSpring, useTransform, LayoutGroup } f
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useLocationStore } from '@/stores/location-store';
-import { useUIStore } from '@/stores/ui-store';
 import { CategoryChip } from '@/components/shared/category-chip';
 import { SearchModal } from '@/components/shared/search-modal';
 import { getCityFromCoords } from '@petshop/core';
@@ -139,7 +138,7 @@ export function Header() {
   });
 
   const isProductPage = pathname === '/products';
-  const { showFilters, toggleFilters } = useUIStore();
+  const [showFilters, setShowFilters] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [promptOpen, setPromptOpen] = useState(false);
@@ -373,7 +372,7 @@ export function Header() {
                     className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${
                       showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
                     }`}
-                    onClick={toggleFilters}
+                    onClick={() => setShowFilters(!showFilters)}
                     aria-label="Filter"
                   >
                     <m.div
