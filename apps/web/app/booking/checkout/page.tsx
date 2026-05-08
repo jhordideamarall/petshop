@@ -67,8 +67,8 @@ export default function BookingCheckoutPage() {
     // Fetch existing pet if not add-new
     if (parsed.petId !== 'add-new' && user) {
       getUserPets()
-        .then((pets) => {
-          const found = pets.find((p) => p.id === parsed.petId);
+        .then((pets: Pet[]) => {
+          const found = pets.find((p: Pet) => p.id === parsed.petId);
           if (found) setExistingPet(found);
         })
         .catch(console.error);
