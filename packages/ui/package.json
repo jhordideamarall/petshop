@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     "./components/*": "./src/components/*",
-    "./utils": "./src/lib/utils.ts"
+    "./utils": "./src/lib/utils.ts",
+    "./price-tag": "./src/components/price-tag.tsx",
+    "./skeleton": "./src/components/skeleton.tsx"
   },
   "peerDependencies": {
     "react": "^19.0.0",

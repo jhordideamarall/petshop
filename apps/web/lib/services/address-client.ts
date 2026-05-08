@@ -1,98 +1,15 @@
 import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@petshop/types/supabase';
+import {
+  getUserAddresses as _getUserAddresses,
+  setDefaultAddress as _setDefaultAddress,
+  updateAddress as _updateAddress,
+  deleteAddress as _deleteAddress,
+} from '@petshop/api-client/addresses';
 
-export type Address = Database['public']['Tables']['addresses']['Row'];
+export type { Address } from '@petshop/api-client/addresses';
 
-export async function getUserAddresses() {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return [];
-
-  const { data, error } = await supabase
-    .from('addresses')
-    .select('*')
-    .eq('is_active', true)
-    .order('is_default', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching addresses:', error);
-    return [];
-  }
-
-  return data;
-}
-
-export async function setDefaultAddress(addressId: string) {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
-
-  // First, set all addresses to not default
-  await supabase.from('addresses').update({ is_default: false }).eq('user_id', user.id);
-
-  // Then set the selected one to default
-  const { data, error } = await supabase
-    .from('addresses')
-    .update({ is_default: true })
-    .eq('id', addressId)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
-}
-
-export async function updateAddress(
-  addressId: string,
-  fields: Partial<
-    Pick<
-      Address,
-      | 'label'
-      | 'recipient_name'
-      | 'phone'
-      | 'full_address'
-      | 'city'
-      | 'district'
-      | 'postal_code'
-      | 'is_default'
-    >
-  >,
-) {
-  const supabase = createClient();
-
-  // If setting as default, unset others first
-  if (fields.is_default) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      await supabase.from('addresses').update({ is_default: false }).eq('user_id', user.id);
-    }
-  }
-
-  const { data, error } = await supabase
-    .from('addresses')
-    .update(fields)
-    .eq('id', addressId)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
-}
-
-export async function deleteAddress(addressId: string) {
-  const supabase = createClient();
-
-  const { error } = await supabase
-    .from('addresses')
-    .update({ is_active: false })
-    .eq('id', addressId);
-
-  if (error) throw error;
-}
+export const getUserAddresses = () => _getUserAddresses(createClient());
+export const setDefaultAddress = (id: string) => _setDefaultAddress(createClient(), id);
+export const updateAddress = (id: string, fields: Parameters<typeof _updateAddress>[2]) =>
+  _updateAddress(createClient(), id, fields);
+export const deleteAddress = (id: string) => _deleteAddress(createClient(), id);

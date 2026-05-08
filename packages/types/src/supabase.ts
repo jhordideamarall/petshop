@@ -6,15 +6,42 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '14.5';
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       addresses: {
         Row: {
+          biteship_area_id: string | null;
           city: string | null;
           created_at: string | null;
           district: string | null;
           full_address: string;
           id: string;
+          is_active: boolean | null;
           is_default: boolean | null;
           label: string | null;
           latitude: number | null;
@@ -25,11 +52,13 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          biteship_area_id?: string | null;
           city?: string | null;
           created_at?: string | null;
           district?: string | null;
           full_address: string;
           id?: string;
+          is_active?: boolean | null;
           is_default?: boolean | null;
           label?: string | null;
           latitude?: number | null;
@@ -40,11 +69,13 @@ export type Database = {
           user_id: string;
         };
         Update: {
+          biteship_area_id?: string | null;
           city?: string | null;
           created_at?: string | null;
           district?: string | null;
           full_address?: string;
           id?: string;
+          is_active?: boolean | null;
           is_default?: boolean | null;
           label?: string | null;
           latitude?: number | null;
@@ -710,18 +741,24 @@ export type Database = {
           order_number: string;
           paid_at: string | null;
           payment_id: string | null;
+          payment_metadata: Json | null;
           payment_method: string | null;
           payment_status: Database['public']['Enums']['payment_status'];
           profit: number | null;
+          service_fee: number | null;
           shipped_at: string | null;
           shipping_cost: number | null;
           shipping_courier: string | null;
+          shipping_courier_code: string | null;
+          shipping_metadata: Json | null;
           shipping_method: string | null;
+          shipping_service_code: string | null;
           shipping_tracking: string | null;
           status: Database['public']['Enums']['order_status'];
           subtotal: number;
           tax: number | null;
           total: number;
+          total_weight_grams: number | null;
           updated_at: string | null;
           user_id: string;
           voucher_id: string | null;
@@ -738,18 +775,24 @@ export type Database = {
           order_number: string;
           paid_at?: string | null;
           payment_id?: string | null;
+          payment_metadata?: Json | null;
           payment_method?: string | null;
           payment_status?: Database['public']['Enums']['payment_status'];
           profit?: number | null;
+          service_fee?: number | null;
           shipped_at?: string | null;
           shipping_cost?: number | null;
           shipping_courier?: string | null;
+          shipping_courier_code?: string | null;
+          shipping_metadata?: Json | null;
           shipping_method?: string | null;
+          shipping_service_code?: string | null;
           shipping_tracking?: string | null;
           status?: Database['public']['Enums']['order_status'];
           subtotal?: number;
           tax?: number | null;
           total?: number;
+          total_weight_grams?: number | null;
           updated_at?: string | null;
           user_id: string;
           voucher_id?: string | null;
@@ -766,18 +809,24 @@ export type Database = {
           order_number?: string;
           paid_at?: string | null;
           payment_id?: string | null;
+          payment_metadata?: Json | null;
           payment_method?: string | null;
           payment_status?: Database['public']['Enums']['payment_status'];
           profit?: number | null;
+          service_fee?: number | null;
           shipped_at?: string | null;
           shipping_cost?: number | null;
           shipping_courier?: string | null;
+          shipping_courier_code?: string | null;
+          shipping_metadata?: Json | null;
           shipping_method?: string | null;
+          shipping_service_code?: string | null;
           shipping_tracking?: string | null;
           status?: Database['public']['Enums']['order_status'];
           subtotal?: number;
           tax?: number | null;
           total?: number;
+          total_weight_grams?: number | null;
           updated_at?: string | null;
           user_id?: string;
           voucher_id?: string | null;
@@ -1188,6 +1237,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      shipping_rates_cache: {
+        Row: {
+          couriers_list: string;
+          created_at: string | null;
+          destination_area_id: string;
+          expires_at: string;
+          id: string;
+          origin_area_id: string;
+          rates_data: Json;
+          total_weight: number;
+        };
+        Insert: {
+          couriers_list: string;
+          created_at?: string | null;
+          destination_area_id: string;
+          expires_at?: string;
+          id?: string;
+          origin_area_id: string;
+          rates_data: Json;
+          total_weight: number;
+        };
+        Update: {
+          couriers_list?: string;
+          created_at?: string | null;
+          destination_area_id?: string;
+          expires_at?: string;
+          id?: string;
+          origin_area_id?: string;
+          rates_data?: Json;
+          total_weight?: number;
+        };
+        Relationships: [];
+      };
       stock_movements: {
         Row: {
           created_at: string | null;
@@ -1294,6 +1376,39 @@ export type Database = {
           phone?: string | null;
           services_available?: string[] | null;
           whatsapp?: string | null;
+        };
+        Relationships: [];
+      };
+      store_settings: {
+        Row: {
+          id: string;
+          origin_address: string | null;
+          origin_area_id: string | null;
+          origin_latitude: number | null;
+          origin_longitude: number | null;
+          origin_postal_code: number | null;
+          store_name: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          origin_address?: string | null;
+          origin_area_id?: string | null;
+          origin_latitude?: number | null;
+          origin_longitude?: number | null;
+          origin_postal_code?: number | null;
+          store_name?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          origin_address?: string | null;
+          origin_area_id?: string | null;
+          origin_latitude?: number | null;
+          origin_longitude?: number | null;
+          origin_postal_code?: number | null;
+          store_name?: string | null;
+          updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -1480,6 +1595,43 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      check_phone_in_auth: { Args: { p_phone: string }; Returns: boolean };
+      create_order_v1:
+        | {
+            Args: {
+              p_address_id: string;
+              p_discount?: number;
+              p_items: Json;
+              p_order_number: string;
+              p_service_fee?: number;
+              p_shipping_cost: number;
+              p_shipping_courier: string;
+              p_shipping_courier_code: string;
+              p_shipping_service_code: string;
+              p_subtotal: number;
+              p_tax?: number;
+              p_total: number;
+              p_total_weight: number;
+              p_user_id: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              p_address_id: string;
+              p_items: Json;
+              p_order_number: string;
+              p_shipping_cost: number;
+              p_shipping_courier: string;
+              p_shipping_courier_code?: string;
+              p_shipping_service_code?: string;
+              p_subtotal: number;
+              p_total: number;
+              p_total_weight: number;
+              p_user_id: string;
+            };
+            Returns: string;
+          };
       is_admin: { Args: never; Returns: boolean };
       is_admin_or_owner: { Args: never; Returns: boolean };
       is_owner: { Args: never; Returns: boolean };
@@ -1629,6 +1781,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       order_status: [

@@ -139,8 +139,8 @@ export default function LoyaltyPage() {
                 (
                   tx: {
                     id: string;
-                    description: string;
-                    created_at: string;
+                    description: string | null;
+                    created_at: string | null;
                     type: string;
                     points_change: number;
                   },

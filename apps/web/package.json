@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@petshop/api-client": "workspace:^",
     "@petshop/core": "workspace:^",
+    "@petshop/store": "workspace:^",
     "@petshop/types": "workspace:^",
     "@petshop/ui": "workspace:*",
     "@supabase/ssr": "^0.10.2",

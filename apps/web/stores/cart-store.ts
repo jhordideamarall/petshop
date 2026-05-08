@@ -1,18 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export interface CartItem {
-  id: string | number;
-  variantId?: string | null;
-  variantName?: string | null;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl?: string | null;
-  weight?: number;
-}
+// Re-export types from shared package
+export type { CartItem, CartState } from '@petshop/store/cart';
+import type { CartItem } from '@petshop/store/cart';
 
-interface CartState {
+/**
+ * React-bound cart store for web.
+ * Uses the same logic as @petshop/store/cart but with React's `create` for hook usage.
+ */
+
+const isSameItem = (item: CartItem, other: Omit<CartItem, 'quantity'>): boolean =>
+  item.id === other.id && (item.variantId ?? null) === (other.variantId ?? null);
+
+export const useCartStore = create<{
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
   setItemQuantity: (
@@ -23,24 +24,15 @@ interface CartState {
   removeItem: (id: string | number, variantId?: string | null) => void;
   clearCart: () => void;
   getTotalCount: () => number;
-}
-
-const isSameItem = (item: CartItem, newItem: Omit<CartItem, 'quantity'>): boolean => {
-  if (item.id !== newItem.id) return false;
-  const itemVariantId = item.variantId ?? null;
-  const newVariantId = newItem.variantId ?? null;
-  return itemVariantId === newVariantId;
-};
-
-export const useCartStore = create<CartState>()(
+}>()(
   persist(
     (set, get) => ({
       items: [],
       addItem: (newItem) => {
         const quantity = Math.max(1, newItem.quantity ?? 1);
         set((state) => {
-          const existingItem = state.items.find((item) => isSameItem(item, newItem));
-          if (existingItem) {
+          const existing = state.items.find((item) => isSameItem(item, newItem));
+          if (existing) {
             return {
               items: state.items.map((item) =>
                 isSameItem(item, newItem) ? { ...item, quantity: item.quantity + quantity } : item,
@@ -51,20 +43,19 @@ export const useCartStore = create<CartState>()(
         });
       },
       setItemQuantity: (id, variantId, quantity) => {
-        const nextQuantity = Math.max(0, quantity);
+        const next = Math.max(0, quantity);
         set((state) => {
-          if (nextQuantity === 0) {
+          if (next === 0) {
             return {
               items: state.items.filter(
                 (item) => !(item.id === id && (item.variantId ?? null) === (variantId ?? null)),
               ),
             };
           }
-
           return {
             items: state.items.map((item) =>
               item.id === id && (item.variantId ?? null) === (variantId ?? null)
-                ? { ...item, quantity: nextQuantity }
+                ? { ...item, quantity: next }
                 : item,
             ),
           };
@@ -78,12 +69,8 @@ export const useCartStore = create<CartState>()(
         }));
       },
       clearCart: () => set({ items: [] }),
-      getTotalCount: () => {
-        return get().items.reduce((total, item) => total + item.quantity, 0);
-      },
+      getTotalCount: () => get().items.reduce((total, item) => total + item.quantity, 0),
     }),
-    {
-      name: 'petshop-cart-storage',
-    },
+    { name: 'petshop-cart-storage' },
   ),
 );

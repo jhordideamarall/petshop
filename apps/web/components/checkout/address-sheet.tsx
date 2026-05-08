@@ -3,7 +3,16 @@
 import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { m } from 'framer-motion';
-import { X, Loader2, Navigation, Check, ExternalLink, ShieldCheck, ArrowRight, Search } from 'lucide-react';
+import {
+  X,
+  Loader2,
+  Navigation,
+  Check,
+  ExternalLink,
+  ShieldCheck,
+  ArrowRight,
+  Search,
+} from 'lucide-react';
 import { getDetailedAddress } from '@petshop/core';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
@@ -22,10 +31,6 @@ const AddressMap = dynamic(() => import('./address-map'), {
     </div>
   ),
 });
-
-interface ExtendedAddress extends Address {
-  biteship_area_id?: string | null;
-}
 
 interface AddressSheetProps {
   isOpen: boolean;
@@ -77,11 +82,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
       setPostalCode(initialData.postal_code || '');
       setIsDefault(initialData.is_default || false);
       setCoords([initialData.latitude || -6.2088, initialData.longitude || 106.8456]);
-      setBiteshipAreaId((initialData as ExtendedAddress).biteship_area_id || '');
+      setBiteshipAreaId(initialData.biteship_area_id || '');
       setStep('map'); // Start with the map for verification
     } else if (isOpen && user) {
       setIsLoadingAddresses(true);
-      getUserAddresses().then(addresses => {
+      getUserAddresses().then((addresses) => {
         setSavedAddresses(addresses);
         if (addresses.length > 0) {
           setStep('list');
@@ -94,8 +99,6 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
       setStep('map');
     }
   }, [isOpen, user, initialData]);
-
-
 
   const handleDetectLocation = () => {
     if ('geolocation' in navigator) {
@@ -191,10 +194,11 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
       setPostalCode(details.postcode || '');
 
       // 2. Search for Biteship Area ID
-      const searchQuery = `${details.district || details.village || details.city} ${details.postcode || ''}`.trim();
+      const searchQuery =
+        `${details.district || details.village || details.city} ${details.postcode || ''}`.trim();
       const areaRes = await fetch(`/api/shipping/areas?input=${encodeURIComponent(searchQuery)}`);
       const areaData = await areaRes.json();
-      
+
       if (areaRes.ok && areaData.areas?.length > 0) {
         // Pick the best match (usually the first one)
         setBiteshipAreaId(areaData.areas[0].id);
@@ -285,10 +289,7 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
     try {
       // 1. If this is marked as default, unset all other addresses for this user first
       if (isDefault) {
-        await supabase
-          .from('addresses')
-          .update({ is_default: false })
-          .eq('user_id', userId);
+        await supabase.from('addresses').update({ is_default: false }).eq('user_id', userId);
       }
 
       // 2. Insert or Update the address
@@ -374,7 +375,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
                 ? 'Pilih Titik Lokasi'
                 : step === 'otp'
                   ? 'Verifikasi Nomor HP'
-                  : initialData ? 'Edit Alamat' : 'Detail Alamat'}
+                  : initialData
+                    ? 'Edit Alamat'
+                    : 'Detail Alamat'}
           </h2>
           <button onClick={onClose} className="rounded-full bg-stone p-2 text-ink-3">
             <X size={20} />
@@ -528,7 +531,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Nomor HP</label>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
+                      Nomor HP
+                    </label>
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
@@ -561,7 +566,9 @@ export function AddressSheet({ isOpen, onClose, onSuccess, initialData }: Addres
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">Kecamatan</label>
+                    <label className="mb-1.5 block text-[12px] font-bold text-ink-3">
+                      Kecamatan
+                    </label>
                     <input
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
