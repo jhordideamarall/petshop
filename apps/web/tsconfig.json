@@ -14,7 +14,10 @@
     "paths": {
       "@/*": ["./*"],
       "@petshop/ui/*": ["../../packages/ui/src/*"],
-      "@petshop/utils/*": ["../../packages/utils/src/*"]
+      "@petshop/utils/*": ["../../packages/utils/src/*"],
+      "@petshop/api-client/*": ["../../packages/api-client/src/*"],
+      "@petshop/core/*": ["../../packages/core/src/*"],
+      "@petshop/store/*": ["../../packages/store/src/*"]
     },
     "isolatedModules": true
   },
