@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import { BestOffersGrid } from '@/components/home/best-offers';
+import { DesktopBannerSlider } from '@/components/home/desktop-banner-slider';
 import { ProductCard, type ProductCardData } from '@/components/shared/product-card';
 import { useCartStore } from '@/stores/cart-store';
 import { useQuery } from '@tanstack/react-query';
@@ -146,6 +147,7 @@ function BannerCard({ banner, index, scrollXProgress, count }: BannerCardProps) 
 
   return (
     <m.div
+      className="banner-card"
       style={{
         position: 'absolute',
         width: '100%',
@@ -312,6 +314,7 @@ export default function HomePage() {
     >
       {/* Background fill for Header area to prevent color jump */}
       <div
+        className="lg:hidden"
         style={{
           position: 'absolute',
           top: -200,
@@ -324,12 +327,19 @@ export default function HomePage() {
       />
 
       {/* Top Section (Grey Background) - Banner & Same Day */}
-      <div style={{ background: '#F5F3F0', paddingBottom: 48 }}>
-        {/* Hero Carousel */}
+      <div
+        style={{ paddingBottom: 48 }}
+        className="bg-[#F5F3F0] lg:bg-transparent lg:rounded-3xl lg:mx-6 lg:pb-6"
+      >
+        {/* Desktop simple slider */}
+        <DesktopBannerSlider banners={BANNERS} />
+
+        {/* Hero Carousel — mobile only */}
         <div
+          className="banner-container lg:mx-auto lg:max-w-[1100px] lg:mt-8"
           style={{
             position: 'relative',
-            marginTop: 40, // Turunin lagi bannernya biar dapet posisi tengah di area abu-abu
+            marginTop: 40,
             height: 'clamp(210px, 55vw, 240px)',
             width: '100%',
             overflow: 'hidden',
@@ -387,8 +397,8 @@ export default function HomePage() {
 
         {/* Feature strip */}
         <div
+          className="mx-[clamp(16px,5vw,20px)] mt-4 lg:mx-auto lg:mt-16 lg:max-w-[1052px]"
           style={{
-            margin: '16px clamp(16px, 5vw, 20px) 0',
             background: '#FDFCFB',
             borderRadius: 16,
             boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
@@ -423,6 +433,7 @@ export default function HomePage() {
 
       {/* Main Content Area (White Background with Rounded Top) */}
       <div
+        className="desktop-content lg:mx-auto lg:max-w-[1052px] lg:rounded-none lg:mt-0"
         style={{
           background: '#FDFCFB',
           borderTopLeftRadius: 32,
@@ -435,151 +446,148 @@ export default function HomePage() {
           minHeight: '100vh',
         }}
       >
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '20px clamp(16px, 5vw, 20px) 12px',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span
+        <div className="lg:bg-white lg:rounded-[32px] lg:p-8 lg:mb-10 lg:shadow-[0_8px_30px_rgba(0,0,0,0.04)] lg:border lg:border-stone-2">
+          <div>
+            <div
               style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 16,
-                color: '#1A1714',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '20px clamp(16px, 5vw, 20px) 12px',
+                justifyContent: 'space-between',
               }}
             >
-              Kategori
-            </span>
-            <Link
-              href="/products"
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 700,
+                  fontSize: 16,
+                  color: '#1A1714',
+                }}
+              >
+                Kategori
+              </span>
+              <Link
+                href="/products"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: 13,
+                  color: '#FF8235',
+                  textDecoration: 'none',
+                }}
+              >
+                Lihat semua
+              </Link>
+            </div>
+            <div
+              className="flex gap-2 overflow-x-auto px-4 pb-1 lg:flex-wrap lg:overflow-x-visible"
+              style={
+                {
+                  scrollbarWidth: 'none',
+                  WebkitOverflowScrolling: 'touch',
+                } as CSSProperties
+              }
+            >
+              {isLoadingCats
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-9 w-24 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
+                    />
+                  ))
+                : dbCategories.map((cat: Category) => (
+                    <Link
+                      key={cat.id}
+                      href={`/products?category=${cat.slug}`}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '8px 16px',
+                        borderRadius: 9999,
+                        border: '1.5px solid rgba(224, 123, 57, 0.3)',
+                        background: '#FDFCFB',
+                        color: '#1A1714',
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 600,
+                        fontSize: 13,
+                        whiteSpace: 'nowrap',
+                        textDecoration: 'none',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+            </div>
+          </div>
+
+          <div
+            style={{
+              margin: '32px clamp(16px, 5vw, 20px) 8px',
+              background: '#FDFCFB',
+              borderRadius: 16,
+              border: '1px solid rgba(224, 123, 57, 0.3)',
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
+            <div
               style={{
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                background: '#FDF0E7',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <ScissorsIcon />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: '#1A1714',
+                  marginBottom: 2,
+                }}
+              >
+                Grooming & Pet Hotel
+              </div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#6B6460' }}>
+                Booking jadwal sekarang, slot terbatas
+              </div>
+            </div>
+            <Link
+              href="/booking"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '8px 14px',
+                borderRadius: 9999,
+                border: '1.5px solid rgba(224, 123, 57, 0.3)',
+                background: '#FDFCFB',
+                boxShadow: '0 4px 14px rgba(224, 123, 57, 0.35)',
+                color: '#1A1714',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
                 fontSize: 13,
-                color: '#FF8235',
                 textDecoration: 'none',
+                flexShrink: 0,
               }}
             >
-              Lihat semua
+              Booking <ChevronRight />
             </Link>
           </div>
-          <div
-            style={
-              {
-                display: 'flex',
-                gap: 8,
-                paddingLeft: 16,
-                paddingRight: 16,
-                paddingBottom: 4,
-                overflowX: 'auto',
-                scrollbarWidth: 'none',
-                WebkitOverflowScrolling: 'touch',
-              } as CSSProperties
-            }
-          >
-            {isLoadingCats
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-9 w-24 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
-                  />
-                ))
-              : dbCategories.map((cat: Category) => (
-                  <Link
-                    key={cat.id}
-                    href={`/products?category=${cat.slug}`}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      padding: '8px 16px',
-                      borderRadius: 9999,
-                      border: '1.5px solid rgba(224, 123, 57, 0.3)',
-                      background: '#FDFCFB',
-                      color: '#1A1714',
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 600,
-                      fontSize: 13,
-                      whiteSpace: 'nowrap',
-                      textDecoration: 'none',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
-          </div>
         </div>
 
-        <div
-          style={{
-            margin: '16px clamp(16px, 5vw, 20px) 0',
-            background: '#FDFCFB',
-            borderRadius: 16,
-            border: '1px solid rgba(224, 123, 57, 0.3)',
-            padding: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-          }}
-        >
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
-              background: '#FDF0E7',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <ScissorsIcon />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 14,
-                color: '#1A1714',
-                marginBottom: 2,
-              }}
-            >
-              Grooming & Pet Hotel
-            </div>
-            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#6B6460' }}>
-              Booking jadwal sekarang, slot terbatas
-            </div>
-          </div>
-          <Link
-            href="/booking"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 4,
-              padding: '8px 14px',
-              borderRadius: 9999,
-              border: '1.5px solid rgba(224, 123, 57, 0.3)',
-              background: '#FDFCFB',
-              boxShadow: '0 4px 14px rgba(224, 123, 57, 0.35)',
-              color: '#1A1714',
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 600,
-              fontSize: 13,
-              textDecoration: 'none',
-              flexShrink: 0,
-            }}
-          >
-            Booking <ChevronRight />
-          </Link>
-        </div>
-
-        <div style={{ marginBottom: 8 }}>
+        <div style={{ marginBottom: 8, marginTop: 32 }} className="lg:mt-16">
           <div
             style={{
               display: 'flex',
@@ -669,14 +677,7 @@ export default function HomePage() {
               Lainnya
             </Link>
           </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 12,
-              padding: '0 clamp(16px, 5vw, 20px)',
-            }}
-          >
+          <div className="grid grid-cols-2 gap-3 px-[clamp(16px,5vw,20px)] lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="aspect-[4/5] w-full animate-pulse rounded-2xl bg-stone-2" />

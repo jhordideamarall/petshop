@@ -78,9 +78,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }
 
     return products.filter((p) =>
-      [p.name, p.slug]
-        .filter(Boolean)
-        .some((value) => value!.toLowerCase().includes(q)),
+      [p.name, p.slug].filter(Boolean).some((value) => value!.toLowerCase().includes(q)),
     );
   }, [query, products]);
 
@@ -109,37 +107,31 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {/* Modal card */}
           <m.div
             key="search-modal"
-            initial={{ opacity: 0, scale: 0.94, y: -16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: -12 }}
-            transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-            className="fixed z-[110] left-1/2 -translate-x-1/2"
+            initial={{ opacity: 0, y: -20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className="fixed z-[210] left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] lg:w-[680px]"
             style={{
-              top: 'calc(78px + env(safe-area-inset-top))',
-              width: 'calc(min(100vw, 430px) - 24px)',
-              maxWidth: 406,
-              background: 'rgba(253,252,251,0.98)',
-              borderRadius: 24,
-              border: '1px solid rgba(255,255,255,0.72)',
-              boxShadow: '0 28px 70px rgba(32,22,14,0.2), 0 8px 22px rgba(32,22,14,0.10)',
+              top: 'calc(24px + env(safe-area-inset-top))',
+              maxWidth: '92vw',
+              background: 'rgba(253,252,251,0.85)',
+              borderRadius: 36,
+              border: '1px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 20px 60px rgba(32,22,14,0.12), 0 4px 12px rgba(32,22,14,0.06)',
               overflow: 'hidden',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
             }}
           >
-            {/* Search input row */}
-            <div
-              className="flex items-center gap-3 px-3"
-              style={{
-                paddingTop: 12,
-                paddingBottom: 12,
-                borderBottom: '1px solid rgba(216,212,206,0.5)',
-              }}
-            >
+            {/* Subtle Search input row — No heavy border bottom for a 'joined' feel */}
+            <div className="flex items-center gap-3 px-4 lg:px-8 pt-6 pb-2">
               <div
-                className="flex min-w-0 flex-1 items-center gap-3 rounded-[18px] px-3"
+                className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-5"
                 style={{
-                  height: 48,
-                  background: '#F5F3F0',
-                  border: '1px solid rgba(216,212,206,0.75)',
+                  height: 56,
+                  background: 'rgba(245,243,240,0.5)',
+                  border: '1px solid rgba(216,212,206,0.3)',
                 }}
               >
                 <SearchInputIcon />
@@ -147,29 +139,30 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Cari makanan, vitamin, aksesoris..."
-                  className="min-w-0 flex-1 bg-transparent font-sans text-ink outline-none placeholder:text-[#A09890]"
-                  style={{ fontSize: 15, lineHeight: '20px' }}
+                  placeholder="Cari produk atau layanan..."
+                  className="min-w-0 flex-1 bg-transparent font-heading font-semibold text-ink outline-none placeholder:text-[#A09890]"
+                  style={{ fontSize: 17 }}
                 />
                 {trimmedQuery && (
-                  <button
+                  <m.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     type="button"
                     onClick={() => setQuery('')}
-                    className="rounded-full px-2 font-heading text-[11px] font-bold text-[#A09890]"
-                    style={{ height: 28, background: 'rgba(255,255,255,0.72)' }}
+                    className="rounded-full bg-white/60 px-3 py-1 font-heading text-[10px] font-bold tracking-wider text-[#A09890]"
                   >
-                    Hapus
-                  </button>
+                    HAPUS
+                  </m.button>
                 )}
               </div>
               <m.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="flex items-center justify-center rounded-full"
+                className="flex items-center justify-center rounded-full transition-colors hover:bg-white/40"
                 style={{
-                  width: 44,
-                  height: 44,
-                  background: 'rgba(216,212,206,0.45)',
+                  width: 56,
+                  height: 56,
                   color: '#7A746E',
                   flexShrink: 0,
                 }}
@@ -180,7 +173,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </div>
 
             {/* Section label */}
-            <div className="flex items-center justify-between px-4 pt-3 pb-2">
+            <div className="flex items-center justify-between px-6 pt-4 pb-2">
               <div>
                 <span className="font-heading text-[11px] font-bold tracking-widest uppercase text-[#A09890]">
                   {trimmedQuery ? 'Hasil Pencarian' : 'Diskon Spesial'}
@@ -193,139 +186,137 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </div>
               {!trimmedQuery && (
                 <span
-                  className="rounded-full px-2.5 py-1 font-heading text-[11px] font-bold"
+                  className="rounded-full px-3 py-1 font-heading text-[11px] font-bold"
                   style={{ background: '#FFF3EA', color: '#E07B39' }}
                 >
-                  Promo
+                  PROMO HARI INI
                 </span>
               )}
             </div>
 
             {/* Product list */}
-            <div className="overflow-y-auto px-2" style={{ maxHeight: 360, paddingBottom: 10 }}>
+            <div className="overflow-y-auto px-4 pb-6" style={{ maxHeight: '60vh' }}>
               {isLoading ? (
-                <div className="flex h-32 items-center justify-center">
-                  <Loader2 className="animate-spin text-primary" size={24} />
+                <div className="flex h-48 items-center justify-center">
+                  <Loader2 className="animate-spin text-primary" size={28} />
                 </div>
               ) : results.length === 0 ? (
-                <div className="flex flex-col items-center justify-center px-8 py-12 text-center text-[#A09890]">
+                <div className="flex flex-col items-center justify-center py-20 text-center text-[#A09890]">
                   <div
-                    className="flex items-center justify-center rounded-full"
-                    style={{ width: 56, height: 56, background: '#F5F3F0' }}
+                    className="flex items-center justify-center rounded-3xl"
+                    style={{ width: 64, height: 64, background: '#F5F3F0' }}
                   >
                     <svg
-                      width="28"
-                      height="28"
+                      width="32"
+                      height="32"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="1.7"
+                      strokeWidth="1.5"
                     >
                       <circle cx="11" cy="11" r="8" />
                       <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
                   </div>
-                  <p className="mt-4 font-heading text-[15px] font-extrabold text-ink">
-                    Produk tidak ditemukan
+                  <p className="mt-6 font-heading text-[17px] font-extrabold text-ink">
+                    Yah, produknya gak ketemu...
                   </p>
-                  <p className="mt-1 font-sans text-sm leading-5">
-                    Coba kata lain seperti "kucing", "vitamin", atau "grooming".
+                  <p className="mt-2 max-w-xs font-sans text-[14px] leading-relaxed">
+                    Coba ketik kata kunci lain atau cek ejaanmu lagi ya, Paw Parents!
                   </p>
                 </div>
               ) : (
-                results.map((product, i) => {
-                  const displayPrice = product.promoPrice ?? product.price;
-                  const hasDiscount = (product.promoPrice ?? 0) > 0;
-                  const discountPct = hasDiscount
-                    ? Math.round(((product.price - product.promoPrice!) / product.price) * 100)
-                    : 0;
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  {results.map((product, i) => {
+                    const displayPrice = product.promoPrice ?? product.price;
+                    const hasDiscount = (product.promoPrice ?? 0) > 0;
+                    const discountPct = hasDiscount
+                      ? Math.round(((product.price - product.promoPrice!) / product.price) * 100)
+                      : 0;
 
-                  return (
-                    <m.div
-                      key={product.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.035, type: 'spring', stiffness: 300, damping: 25 }}
-                      whileTap={{ backgroundColor: 'rgba(224,123,57,0.06)' }}
-                      className="rounded-[18px]"
-                    >
-                      <Link
-                        href={`/products/${product.slug}`}
-                        onClick={onClose}
-                        className="flex min-h-[78px] cursor-pointer items-center gap-3 rounded-[18px] px-2.5 py-2.5 no-underline"
-                        style={{
-                          border:
-                            i < results.length - 1
-                              ? '1px solid rgba(216,212,206,0.34)'
-                              : '1px solid rgba(216,212,206,0.18)',
-                          background: i % 2 === 0 ? 'rgba(255,255,255,0.64)' : 'transparent',
+                    return (
+                      <m.div
+                        key={product.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: i * 0.02,
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 25,
                         }}
+                        className="group"
                       >
-                        {/* Thumbnail */}
-                        <div
-                          className="relative flex-shrink-0 overflow-hidden rounded-[14px]"
-                          style={{ width: 58, height: 58, background: '#F5F3F0' }}
+                        <Link
+                          href={`/products/${product.slug}`}
+                          onClick={onClose}
+                          className="flex h-full cursor-pointer items-center gap-4 rounded-2xl border border-stone-2/30 bg-white/50 p-3 no-underline transition-all hover:bg-white hover:shadow-md hover:border-primary/20"
                         >
-                          <Image
-                            src={product.imageUrl || getSmartFallbackImage(product.name)}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                            sizes="58px"
-                            unoptimized
-                          />
-                          {hasDiscount && (
-                            <div
-                              className="absolute top-1 left-1 rounded-md px-1 font-heading text-[9px] font-bold text-white"
-                              style={{ background: '#E07B39', lineHeight: '14px' }}
-                            >
-                              -{discountPct}%
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Info */}
-                        <div className="min-w-0 flex-1">
-                          <p className="line-clamp-2 font-heading text-[14px] font-extrabold leading-[17px] text-ink">
-                            {product.name}
-                          </p>
-                          <div className="mt-1 flex items-center gap-2">
-                            <span className="font-sans text-[11px] font-semibold text-[#A09890]">
-                              Produk
-                            </span>
-                            <span className="h-1 w-1 rounded-full bg-[#D8D4CE]" />
-                            <span className="font-sans text-[11px] font-semibold text-[#A09890]">
-                              {product.soldCount?.toLocaleString('id-ID') ?? 0} terjual
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Price */}
-                        <div className="flex-shrink-0 text-right">
-                          <p className="font-heading text-[14px] font-extrabold text-primary">
-                            {formatPrice(displayPrice)}
-                          </p>
-                          {hasDiscount && (
-                            <p className="font-sans text-[11px] text-[#A09890] line-through">
-                              {formatPrice(product.price)}
-                            </p>
-                          )}
+                          {/* Thumbnail */}
                           <div
-                            className="ml-auto mt-1 flex items-center justify-center rounded-full font-heading text-[11px] font-bold"
-                            style={{
-                              width: 26,
-                              height: 26,
-                              background: '#FFF3EA',
-                              color: '#E07B39',
-                            }}
+                            className="relative flex-shrink-0 overflow-hidden rounded-xl"
+                            style={{ width: 64, height: 64, background: '#F5F3F0' }}
                           >
-                            &gt;
+                            <Image
+                              src={product.imageUrl || getSmartFallbackImage(product.name)}
+                              alt={product.name}
+                              fill
+                              className="object-cover transition-transform group-hover:scale-110"
+                              sizes="64px"
+                              unoptimized
+                            />
+                            {hasDiscount && (
+                              <div
+                                className="absolute top-1 left-1 rounded-md px-1 font-heading text-[9px] font-bold text-white shadow-sm"
+                                style={{ background: '#E07B39', lineHeight: '14px' }}
+                              >
+                                -{discountPct}%
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      </Link>
-                    </m.div>
-                  );
-                })
+
+                          {/* Info */}
+                          <div className="min-w-0 flex-1">
+                            <p className="line-clamp-1 font-heading text-[14px] font-extrabold leading-tight text-ink group-hover:text-primary transition-colors">
+                              {product.name}
+                            </p>
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="font-sans text-[11px] font-semibold text-[#A09890]">
+                                {product.soldCount?.toLocaleString('id-ID') ?? 0} terjual
+                              </span>
+                            </div>
+                            <div className="mt-1 flex items-center gap-2">
+                              <p className="font-heading text-[14px] font-extrabold text-primary">
+                                {formatPrice(displayPrice)}
+                              </p>
+                              {hasDiscount && (
+                                <p className="font-sans text-[11px] text-[#A09890] line-through">
+                                  {formatPrice(product.price)}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                              >
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                              </svg>
+                            </div>
+                          </div>
+                        </Link>
+                      </m.div>
+                    );
+                  })}
+                </div>
               )}
             </div>
           </m.div>

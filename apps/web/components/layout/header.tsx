@@ -5,6 +5,7 @@ import { m, AnimatePresence, useScroll, useSpring, useTransform, LayoutGroup } f
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
 import { useLocationStore } from '@/stores/location-store';
+import { useUIStore } from '@/stores/ui-store';
 import { CategoryChip } from '@/components/shared/category-chip';
 import { SearchModal } from '@/components/shared/search-modal';
 import { getCityFromCoords } from '@petshop/core';
@@ -138,7 +139,7 @@ export function Header() {
   });
 
   const isProductPage = pathname === '/products';
-  const [showFilters, setShowFilters] = useState(false);
+  const { showFilters, toggleFilters } = useUIStore();
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [promptOpen, setPromptOpen] = useState(false);
@@ -225,26 +226,22 @@ export function Header() {
             style={{ marginBottom: titleRowMb }}
           >
             <Link href="/" className="flex flex-col no-underline group">
-              <m.div
-                layout
-                className="mb-1 flex items-center gap-1.5"
-                whileHover="hover"
-              >
+              <m.div layout className="mb-1 flex items-center gap-1.5" whileHover="hover">
                 <m.div
                   initial={{ rotate: -180, scale: 0, opacity: 0 }}
                   animate={{ rotate: 0, scale: 1, opacity: 1 }}
                   transition={{
-                    type: "spring",
+                    type: 'spring',
                     stiffness: 260,
                     damping: 20,
-                    delay: 0.1
+                    delay: 0.1,
                   }}
                   variants={{
                     hover: {
                       rotate: [0, -15, 15, -15, 0],
                       scale: 1.15,
-                      transition: { duration: 0.4, ease: "easeInOut" }
-                    }
+                      transition: { duration: 0.4, ease: 'easeInOut' },
+                    },
                   }}
                 >
                   <PawIcon />
@@ -253,10 +250,10 @@ export function Header() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
-                    type: "spring",
+                    type: 'spring',
                     stiffness: 260,
                     damping: 20,
-                    delay: 0.15
+                    delay: 0.15,
                   }}
                   className="font-heading text-lg font-extrabold tracking-tight text-ink group-hover:text-primary transition-colors"
                 >
@@ -286,10 +283,7 @@ export function Header() {
                 aria-label="Notifikasi"
                 onClick={() => setNotifOpen(true)}
               >
-                <m.div
-                  whileHover={{ rotate: [0, -15, 15, -15, 0] }}
-                  transition={{ duration: 0.4 }}
-                >
+                <m.div whileHover={{ rotate: [0, -15, 15, -15, 0] }} transition={{ duration: 0.4 }}>
                   <Bell />
                 </m.div>
                 <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full border border-white/70 bg-primary" />
@@ -376,9 +370,10 @@ export function Header() {
                   <m.button
                     layout
                     whileTap={{ scale: 0.9 }}
-                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
-                      }`}
-                    onClick={() => setShowFilters(!showFilters)}
+                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[#FF8235]/30 transition-colors shadow-lg shadow-[#FF8235]/20 ${
+                      showFilters ? 'bg-white text-[#FF8235]' : 'bg-[#FF8235] text-white'
+                    }`}
+                    onClick={toggleFilters}
                     aria-label="Filter"
                   >
                     <m.div
@@ -451,33 +446,33 @@ export function Header() {
                   </m.div>
                   {isLoadingCats
                     ? Array.from({ length: 4 }).map((_, i) => (
-                      <m.div
-                        key={i}
-                        className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
-                      />
-                    ))
-                    : dbCategories.map((cat: Category) => (
-                      <m.div
-                        key={cat.id}
-                        variants={{
-                          hidden: { y: 10, opacity: 0, scale: 0.88 },
-                          show: {
-                            y: 0,
-                            opacity: 1,
-                            scale: 1,
-                            transition: { type: 'spring', stiffness: 300, damping: 22 },
-                          },
-                          exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
-                        }}
-                        style={{ flexShrink: 0 }}
-                      >
-                        <CategoryChip
-                          label={cat.name}
-                          active={activeCat === cat.slug}
-                          onClick={() => router.push(`/products?category=${cat.slug}`)}
+                        <m.div
+                          key={i}
+                          className="h-8 w-20 animate-pulse rounded-full bg-stone-2 flex-shrink-0"
                         />
-                      </m.div>
-                    ))}
+                      ))
+                    : dbCategories.map((cat: Category) => (
+                        <m.div
+                          key={cat.id}
+                          variants={{
+                            hidden: { y: 10, opacity: 0, scale: 0.88 },
+                            show: {
+                              y: 0,
+                              opacity: 1,
+                              scale: 1,
+                              transition: { type: 'spring', stiffness: 300, damping: 22 },
+                            },
+                            exit: { y: 6, opacity: 0, scale: 0.92, transition: { duration: 0.14 } },
+                          }}
+                          style={{ flexShrink: 0 }}
+                        >
+                          <CategoryChip
+                            label={cat.name}
+                            active={activeCat === cat.slug}
+                            onClick={() => router.push(`/products?category=${cat.slug}`)}
+                          />
+                        </m.div>
+                      ))}
                 </m.div>
               </m.div>
             )}

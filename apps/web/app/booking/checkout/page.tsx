@@ -136,7 +136,7 @@ export default function BookingCheckoutPage() {
   };
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[120px]">
+    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[120px] lg:max-w-[800px]">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/90 px-[clamp(16px,5vw,20px)] pb-4 pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl">
         <button
@@ -332,7 +332,7 @@ export default function BookingCheckoutPage() {
       </main>
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-[#FDFCFB]/95 px-[clamp(16px,5vw,20px)] py-4 pb-[max(16px,env(safe-area-inset-bottom))] backdrop-blur-xl">
+      <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-stone-2 bg-[#FDFCFB]/95 px-[clamp(16px,5vw,20px)] py-4 pb-[max(16px,env(safe-area-inset-bottom))] backdrop-blur-xl lg:max-w-[800px]">
         {isAddNew && !canSubmit && (
           <p className="mb-2 text-center text-[12px] font-semibold text-ink-4">
             Lengkapi nama dan berat hewan dulu

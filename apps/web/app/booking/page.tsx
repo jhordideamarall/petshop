@@ -212,7 +212,7 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[330px]">
+    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#FDFCFB] pb-[330px] lg:max-w-[800px] lg:pb-[200px]">
       <m.header
         className="sticky top-0 z-40 border-b border-stone-2 bg-[#FDFCFB]/90 px-[clamp(16px,5vw,20px)] pt-[max(18px,env(safe-area-inset-top))] backdrop-blur-xl"
         style={{ paddingBottom: headerPaddingBottom, boxShadow: headerShadow }}
@@ -557,7 +557,7 @@ export default function BookingPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ type: 'spring', stiffness: 240, damping: 26 }}
-            className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-[clamp(16px,5vw,20px)]"
+            className="fixed bottom-[88px] left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 px-[clamp(16px,5vw,20px)] lg:bottom-8 lg:max-w-[800px]"
           >
             <div className="rounded-[24px] border border-stone-2 bg-white p-4 shadow-[0_16px_42px_rgba(26,23,20,0.12)]">
               <div className="mb-3 flex items-start justify-between gap-4">
@@ -625,7 +625,9 @@ export default function BookingPage() {
         )}
       </AnimatePresence>
 
-      <BottomNav />
+      <div className="lg:hidden">
+        <BottomNav />
+      </div>
     </div>
   );
 }

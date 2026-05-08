@@ -159,7 +159,13 @@ export function Footer() {
             lineHeight: 1.6,
           }}
         >
-          Jakarta Selatan, Indonesia
+          Ruko Pisa Grande 2 Blok K No 19, Curug Sangereng,
+          <br />
+          Kec. Kelapa Dua, Kab. Tangerang, Banten 15811
+          <br />
+          <a href="tel:085810075612" style={{ color: '#F5A46A', textDecoration: 'none' }}>
+            0858-1007-5612
+          </a>
           <br />
           Buka setiap hari 09:00 - 21:00 WIB
         </p>
