@@ -14,6 +14,37 @@
     "./types": "./src/types.ts",
     "./bookings": "./src/bookings.ts"
   },
+  "typesVersions": {
+    "*": {
+      "orders": [
+        "./src/orders.ts"
+      ],
+      "addresses": [
+        "./src/addresses.ts"
+      ],
+      "products": [
+        "./src/products.ts"
+      ],
+      "shipping": [
+        "./src/shipping.ts"
+      ],
+      "pets": [
+        "./src/pets.ts"
+      ],
+      "loyalty": [
+        "./src/loyalty.ts"
+      ],
+      "wishlist": [
+        "./src/wishlist.ts"
+      ],
+      "types": [
+        "./src/types.ts"
+      ],
+      "bookings": [
+        "./src/bookings.ts"
+      ]
+    }
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
